@@ -1,0 +1,26 @@
+################################################################################
+#    Copyright (C) 2018 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
+#                                                                              #
+#              This software is distributed under the terms of the             #
+#              GNU Lesser General Public Licence (LGPL) version 3,             #
+#                  copied verbatim in the file "LICENSE"                       #
+################################################################################
+
+cmake_minimum_required(VERSION 3.9.4 FATAL_ERROR)
+
+@PACKAGE_INIT@
+
+### General variables for project discovery/inspection
+set(FairLogger_VERSION @PROJECT_VERSION@)
+set(FairLogger_GIT_VERSION @FairLogger_GIT_VERSION@)
+
+set_and_check(FairLogger_ROOT @PACKAGE_CMAKE_INSTALL_PREFIX@)
+set_and_check(FairLogger_BINDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_BINDIR@)
+set_and_check(FairLogger_INCDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_INCDIR@)
+set_and_check(FairLogger_LIBDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_LIBDIR@)
+set_and_check(FairLogger_DATADIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_DATADIR@)
+
+### Import targets
+include(@PACKAGE_CMAKE_INSTALL_PREFIX@/@PACKAGE_INSTALL_DESTINATION@/FairLoggerTargets.cmake)
+
+check_required_components(FairLogger)
