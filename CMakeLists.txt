@@ -33,8 +33,8 @@ configure_file(logger/Version.h.in
 )
 
 add_library(FairLogger SHARED
-    Logger.cxx
-    Logger.h
+  logger/Logger.cxx
+  logger/Logger.h
 )
 
 target_include_directories(FairLogger
@@ -54,15 +54,19 @@ endif()
 if(BUILD_TESTING)
   set(test_targets ${targets} loggerTest)
 endif()
-install(
-  TARGETS FairLogger ${test_targets}
+install(TARGETS
+  FairLogger
+  ${test_targets}
+
   EXPORT ${FairLogger_EXPORT_SET}
   LIBRARY DESTINATION ${FairLogger_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${FairLogger_INSTALL_BINDIR}
 )
 
-install(
-  FILES logger/Logger.h logger/Version.h
+install(FILES
+  logger/Logger.h
+  ${CMAKE_BINARY_DIR}/logger/Version.h
+
   DESTINATION ${FairLogger_INSTALL_INCDIR}
 )
 
@@ -70,15 +74,24 @@ install_fairlogger_cmake_package()
 ################################################################################
 
 
+# Testing ######################################################################
+if(BUILD_TESTING)
+  add_test(NAME loggerTest
+    COMMAND $<TARGET_FILE:loggerTest>
+  )
+endif()
+################################################################################
+
+
 # Summary ######################################################################
 message("  ")
 message("  ${Cyan}COMPONENT  BUILT?  INFO${CR}")
-message("  ${BWhite}library${CR}          ${BGreen}YES${CR}    (default, always built)")
+message("  ${BWhite}library${CR}     ${BGreen}YES${CR}    (default, always built)")
 if(BUILD_TESTING)
   set(testing_summary "${BGreen}YES${CR}    (default, disable with ${BMagenta}-DBUILD_TESTING=OFF${CR})")
 else()
   set(testing_summary "${BRed} NO${CR}    (enable with ${BMagenta}-DBUILD_TESTING=ON${CR})")
 endif()
-message("  ${BWhite}tests${CR}    ${testing_summary}")
+message("  ${BWhite}tests${CR}       ${testing_summary}")
 message("  ")
 ################################################################################

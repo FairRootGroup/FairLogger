@@ -131,7 +131,6 @@ macro(set_fairlogger_defaults)
   set(FairLogger_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME_LOWER})
   set(FairLogger_INSTALL_INCDIR ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME_LOWER})
   set(FairLogger_INSTALL_DATADIR ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME_LOWER})
-  set(FairLogger_INSTALL_CMAKEMODDIR ${FairLogger_INSTALL_DATADIR}/cmake)
 
   # Define export set, only one for now
   set(FairLogger_EXPORT_SET ${PROJECT_NAME}Targets)
