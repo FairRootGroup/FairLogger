@@ -2,6 +2,8 @@
 
 Lightweight and fast C++ Logging Library
 
+![example output](example.png)
+
 | Branch | Build Status |
 | :---: | :--- |
 | `master` | ![build status master branch](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/master) |
@@ -38,6 +40,7 @@ find_package(FairLogger)
 On command line:
 
   * `-DDISABLE_COLOR=ON` disables coloured console output.
+  * `-DBUILD_TESTING=OFF` disables building of unit tests.
 
 ## License
 
