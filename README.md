@@ -1,4 +1,4 @@
-![Build Status](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/dev)
+dev branch: ![build status dev branch](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/dev) master branch: ![build status master branch](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/master)
 
 # FairLogger
 
