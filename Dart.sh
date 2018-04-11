@@ -130,4 +130,4 @@ echo "************************"
 
 cd $SOURCEDIR
 
-ctest -D ${ctest_model} -V --VV
+ctest -S FairLoggerTest.cmake -V --VV

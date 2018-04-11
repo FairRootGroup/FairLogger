@@ -1,6 +1,8 @@
+![Build Status](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/dev)
+
 # FairLogger
 
-Lightweight C++ Logging Library
+Lightweight and fast C++ Logging Library
 
 ## Installation
 
