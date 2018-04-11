@@ -1,8 +1,11 @@
-dev branch: ![build status dev branch](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/dev) master branch: ![build status master branch](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/master)
-
 # FairLogger
 
 Lightweight and fast C++ Logging Library
+
+| Branch | Build Status |
+| :---: | :--- |
+| `master` | ![build status master branch](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/master) |
+| `dev` | ![build status dev branch](https://alfa-ci.gsi.de/buildStatus/icon?job=FairRootGroup/FairLogger/dev) |
 
 ## Installation
 
