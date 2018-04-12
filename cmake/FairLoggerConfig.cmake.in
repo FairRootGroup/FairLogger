@@ -18,7 +18,6 @@ set_and_check(FairLogger_ROOT @PACKAGE_CMAKE_INSTALL_PREFIX@)
 set_and_check(FairLogger_BINDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_BINDIR@)
 set_and_check(FairLogger_INCDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_INCDIR@)
 set_and_check(FairLogger_LIBDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_LIBDIR@)
-set_and_check(FairLogger_DATADIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_DATADIR@)
 
 ### Import targets
 include(@PACKAGE_CMAKE_INSTALL_PREFIX@/@PACKAGE_INSTALL_DESTINATION@/FairLoggerTargets.cmake)
