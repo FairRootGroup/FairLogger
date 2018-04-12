@@ -17,7 +17,7 @@ set_fairlogger_cmake_policies()
 get_git_version(OUTVAR_PREFIX FairLogger)
 
 project(FairLogger VERSION ${FairLogger_VERSION} LANGUAGES CXX)
-message("${BWhite}${PROJECT_NAME}${CR} ${FairLogger_GIT_VERSION} from ${FairLogger_DATE}")
+message(STATUS "${BWhite}${PROJECT_NAME}${CR} ${FairLogger_GIT_VERSION} from ${FairLogger_DATE}")
 
 set_fairlogger_defaults()
 
@@ -84,14 +84,14 @@ endif()
 
 
 # Summary ######################################################################
-message("  ")
-message("  ${Cyan}COMPONENT  BUILT?  INFO${CR}")
-message("  ${BWhite}library${CR}     ${BGreen}YES${CR}    (default, always built)")
+message(STATUS "  ")
+message(STATUS "  ${Cyan}COMPONENT  BUILT?  INFO${CR}")
+message(STATUS "  ${BWhite}library${CR}     ${BGreen}YES${CR}    (default, always built)")
 if(BUILD_TESTING)
   set(testing_summary "${BGreen}YES${CR}    (default, disable with ${BMagenta}-DBUILD_TESTING=OFF${CR})")
 else()
   set(testing_summary "${BRed} NO${CR}    (enable with ${BMagenta}-DBUILD_TESTING=ON${CR})")
 endif()
-message("  ${BWhite}tests${CR}       ${testing_summary}")
-message("  ")
+message(STATUS "  ${BWhite}tests${CR}       ${testing_summary}")
+message(STATUS "  ")
 ################################################################################
