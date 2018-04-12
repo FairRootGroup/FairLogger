@@ -16,7 +16,7 @@ include(FairLoggerLib)
 set_fairlogger_cmake_policies()
 get_git_version(OUTVAR_PREFIX FairLogger)
 
-project(FairLogger VERSION ${FairLogger_VERSION} LANGUAGES CXX)
+project(FairLogger VERSION ${FairLogger_VERSION} LANGUAGES C CXX)
 message(STATUS "${BWhite}${PROJECT_NAME}${CR} ${FairLogger_GIT_VERSION} from ${FairLogger_DATE}")
 
 set_fairlogger_defaults()
