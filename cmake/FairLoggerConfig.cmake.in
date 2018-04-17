@@ -16,7 +16,7 @@ set(FairLogger_GIT_VERSION @FairLogger_GIT_VERSION@)
 
 set_and_check(FairLogger_ROOT @PACKAGE_CMAKE_INSTALL_PREFIX@)
 set_and_check(FairLogger_BINDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_BINDIR@)
-set_and_check(FairLogger_INCDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_INCDIR@)
+set_and_check(FairLogger_INCDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@)
 set_and_check(FairLogger_LIBDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_LIBDIR@)
 
 ### Import targets
