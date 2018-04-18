@@ -40,7 +40,11 @@ add_library(FairLogger SHARED
 target_include_directories(FairLogger
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/logger>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+set_target_properties(FairLogger PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  SOVERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
 )
 
 if(BUILD_TESTING)
