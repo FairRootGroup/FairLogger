@@ -35,7 +35,9 @@ endif()
 macro(set_fairlogger_cmake_policies)
   # Find more details to each policy with cmake --help-policy CMPXXXX
   foreach(policy
+    CMP0025 # Compiler id for Apple Clang is now AppleClang.
     CMP0028 # Double colon in target name means ALIAS or IMPORTED target.
+    CMP0042 # MACOSX_RPATH is enabled by default.
     CMP0048 # The ``project()`` command manages VERSION variables.
     CMP0054 # Only interpret ``if()`` arguments as variables or keywords when unquoted.
   )
@@ -131,6 +133,13 @@ macro(set_fairlogger_defaults)
   set(FairLogger_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME_LOWER})
   set(FairLogger_INSTALL_INCDIR ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME_LOWER})
   set(FairLogger_INSTALL_DATADIR ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME_LOWER})
+
+  # https://cmake.org/Wiki/CMake_RPATH_handling#Always_full_RPATH
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}" isSystemDir)
+  if("${isSystemDir}" STREQUAL "-1")
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}")
+  endif()
 
   # Define export set, only one for now
   set(FairLogger_EXPORT_SET ${PROJECT_NAME}Targets)
