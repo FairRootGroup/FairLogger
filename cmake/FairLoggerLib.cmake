@@ -134,11 +134,19 @@ macro(set_fairlogger_defaults)
   set(FairLogger_INSTALL_INCDIR ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME_LOWER})
   set(FairLogger_INSTALL_DATADIR ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME_LOWER})
 
-  # https://cmake.org/Wiki/CMake_RPATH_handling#Always_full_RPATH
+  # https://cmake.org/Wiki/CMake_RPATH_handling
   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}" isSystemDir)
+  list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${FairLogger_INSTALL_LIBDIR}" isSystemDir)
   if("${isSystemDir}" STREQUAL "-1")
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+      set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-Wl,--enable-new-dtags")
+      set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "-Wl,--enable-new-dtags")
+      set(CMAKE_INSTALL_RPATH "$ORIGIN/../${FairLogger_INSTALL_LIBDIR}")
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+      set(CMAKE_INSTALL_RPATH "@loader_path/../${FairLogger_INSTALL_LIBDIR}")
+    else()
+      set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${FairLogger_INSTALL_LIBDIR}")
+    endif()
   endif()
 
   # Define export set, only one for now
