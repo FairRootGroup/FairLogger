@@ -320,6 +320,19 @@ bool Logger::Logging(Severity severity)
     }
 }
 
+bool Logger::Logging(const std::string& severityStr)
+{
+    if (fSeverityMap.count(severityStr))
+    {
+        return Logging(fSeverityMap.at(severityStr));
+    }
+    else
+    {
+        LOG(error) << "Unknown severity setting: '" << severityStr;
+        return false;
+    }
+}
+
 void Logger::SetVerbosity(const Verbosity verbosity)
 {
     fVerbosity = verbosity;

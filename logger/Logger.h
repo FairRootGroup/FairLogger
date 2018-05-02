@@ -124,6 +124,7 @@ class Logger
     static void SetCustomSeverity(const std::string& key, const std::string& severityStr);
 
     static bool Logging(const Severity severity);
+    static bool Logging(const std::string& severityStr);
 
     static void SetVerbosity(const Verbosity verbosity);
     static void SetVerbosity(const std::string& verbosityStr);
