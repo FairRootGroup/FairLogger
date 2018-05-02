@@ -151,6 +151,9 @@ macro(set_fairlogger_defaults)
 
   # Define export set, only one for now
   set(FairLogger_EXPORT_SET ${PROJECT_NAME}Targets)
+
+  set(CMAKE_CXX_FLAGS_NIGHTLY "-O2 -g -Wshadow -Wall -Wextra")
+  set(CMAKE_CXX_FLAGS_PROFILE "-g3 -fno-inline -ftest-coverage -fprofile-arcs -Wshadow -Wall -Wextra -Wunused-variable")
 endmacro()
 
 
