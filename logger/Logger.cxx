@@ -147,10 +147,12 @@ const unordered_map<string, Verbosity> Logger::fVerbosityMap =
     { "high",     Verbosity::high     },
     { "medium",   Verbosity::medium   },
     { "low",      Verbosity::low      },
+    { "verylow",  Verbosity::verylow  },
     { "VERYHIGH", Verbosity::veryhigh },
     { "HIGH",     Verbosity::high     },
     { "MEDIUM",   Verbosity::medium   },
-    { "LOW",      Verbosity::low      }
+    { "LOW",      Verbosity::low      },
+    { "VERYLOW",  Verbosity::verylow  }
 };
 
 const unordered_map<string, Severity> Logger::fSeverityMap =
@@ -161,16 +163,14 @@ const unordered_map<string, Severity> Logger::fSeverityMap =
     { "ERROR",   Severity::error   },
     { "warn",    Severity::warn    },
     { "WARN",    Severity::warn    },
-    { "warning", Severity::warning },
-    { "WARNING", Severity::warning },
+    { "warning", Severity::warn    },
+    { "WARNING", Severity::warn    },
     { "state",   Severity::state   },
     { "STATE",   Severity::state   },
     { "info",    Severity::info    },
     { "INFO",    Severity::info    },
     { "debug",   Severity::debug   },
     { "DEBUG",   Severity::debug   },
-    { "trace",   Severity::trace   },
-    { "TRACE",   Severity::trace   },
     { "debug1",  Severity::debug1  },
     { "DEBUG1",  Severity::debug1  },
     { "debug2",  Severity::debug2  },
@@ -178,7 +178,9 @@ const unordered_map<string, Severity> Logger::fSeverityMap =
     { "debug3",  Severity::debug3  },
     { "DEBUG3",  Severity::debug3  },
     { "debug4",  Severity::debug4  },
-    { "DEBUG4",  Severity::debug4  }
+    { "DEBUG4",  Severity::debug4  },
+    { "trace",   Severity::trace   },
+    { "TRACE",   Severity::trace   }
 };
 
 const array<string, 12> Logger::fSeverityNames =
@@ -199,9 +201,10 @@ const array<string, 12> Logger::fSeverityNames =
     }
 };
 
-const array<string, 4> Logger::fVerbosityNames =
+const array<string, 5> Logger::fVerbosityNames =
 {
     {
+        "verylow",
         "low",
         "medium",
         "high",
@@ -253,6 +256,11 @@ void Logger::SetConsoleSeverity(const string& severityStr)
     }
 }
 
+Severity Logger::GetConsoleSeverity()
+{
+    return fConsoleSeverity;
+}
+
 void Logger::SetFileSeverity(const Severity severity)
 {
     fFileSeverity = severity;
@@ -289,6 +297,82 @@ void Logger::SetCustomSeverity(const string& key, const string& severityStr)
         LOG(error) << "Unknown severity setting: '" << severityStr << "', setting to default 'info'.";
         SetCustomSeverity(key, Severity::info);
     }
+}
+
+auto Logger::CycleConsoleSeverityUp() -> void
+{
+    size_t current = static_cast<size_t>(fConsoleSeverity);
+    if (current == fSeverityNames.size() - 1) {
+        SetConsoleSeverity(static_cast<Severity>(0));
+    } else {
+        SetConsoleSeverity(static_cast<Severity>(current + 1));
+    }
+    size_t newCurrent = static_cast<size_t>(fConsoleSeverity);
+    stringstream ss;
+
+    for (int i = 0; i < fSeverityNames.size(); ++i) {
+        ss << (i == newCurrent ? ">" : " ") << fSeverityNames.at(i) << (i == newCurrent ? "<" : " ");
+    }
+
+    ss << "\n\n";
+    cout << ss.str() << flush;
+}
+
+auto Logger::CycleConsoleSeverityDown() -> void
+{
+    size_t current = static_cast<size_t>(fConsoleSeverity);
+    if (current == 0) {
+        SetConsoleSeverity(static_cast<Severity>(fSeverityNames.size() - 1));
+    } else {
+        SetConsoleSeverity(static_cast<Severity>(current - 1));
+    }
+    size_t newCurrent = static_cast<size_t>(fConsoleSeverity);
+    stringstream ss;
+
+    for (int i = 0; i < fSeverityNames.size(); ++i) {
+        ss << (i == newCurrent ? ">" : " ") << fSeverityNames.at(i) << (i == newCurrent ? "<" : " ");
+    }
+
+    ss << "\n\n";
+    cout << ss.str() << flush;
+}
+
+auto Logger::CycleVerbosityUp() -> void
+{
+    size_t current = static_cast<size_t>(fVerbosity);
+    if (current == fVerbosityNames.size() - 1) {
+        SetVerbosity(static_cast<Verbosity>(0));
+    } else {
+        SetVerbosity(static_cast<Verbosity>(current + 1));
+    }
+    size_t newCurrent = static_cast<size_t>(fVerbosity);
+    stringstream ss;
+
+    for (int i = 0; i < fVerbosityNames.size(); ++i) {
+        ss << (i == newCurrent ? ">" : " ") << fVerbosityNames.at(i) << (i == newCurrent ? "<" : " ");
+    }
+
+    ss << "\n\n";
+    cout << ss.str() << flush;
+}
+
+auto Logger::CycleVerbosityDown() -> void
+{
+    size_t current = static_cast<size_t>(fVerbosity);
+    if (current == 0) {
+        SetVerbosity(static_cast<Verbosity>(fVerbosityNames.size() - 1));
+    } else {
+        SetVerbosity(static_cast<Verbosity>(current - 1));
+    }
+    size_t newCurrent = static_cast<size_t>(fVerbosity);
+    stringstream ss;
+
+    for (int i = 0; i < fVerbosityNames.size(); ++i) {
+        ss << (i == newCurrent ? ">" : " ") << fVerbosityNames.at(i) << (i == newCurrent ? "<" : " ");
+    }
+
+    ss << "\n\n";
+    cout << ss.str() << flush;
 }
 
 void Logger::UpdateMinSeverity()
@@ -349,6 +433,11 @@ void Logger::SetVerbosity(const string& verbosityStr)
         LOG(error) << "Unknown verbosity setting: '" << verbosityStr << "', setting to default 'low'.";
         fVerbosity = Verbosity::low;
     }
+}
+
+Verbosity Logger::GetVerbosity()
+{
+    return fVerbosity;
 }
 
 void Logger::SetConsoleColor(const bool colored)
@@ -503,14 +592,20 @@ Logger& Logger::Log()
             fBWOut << "[" << tsstr << "]";
         }
 
-        fBWOut << "[" << fMetaData.severity_name << "]";
+        if (fVerbosity > Verbosity::verylow)
+        {
+            fBWOut << "[" << fMetaData.severity_name << "]";
+        }
 
         if (fVerbosity == Verbosity::veryhigh)
         {
             fBWOut << "[" << fMetaData.file << ":" << fMetaData.line << ":" << fMetaData.func << "]";
         }
 
-        fBWOut << " ";
+        if (fVerbosity != Verbosity::verylow)
+        {
+            fBWOut << " ";
+        }
     }
 
     if (fColored && (LoggingToConsole()))
@@ -525,14 +620,20 @@ Logger& Logger::Log()
             fColorOut << "[" << startColor(Color::fgCyan) << tsstr << endColor() << "]";
         }
 
-        fColorOut << "[" << ColoredSeverityWriter(fMetaData.severity) << "]";
+        if (fVerbosity > Verbosity::verylow)
+        {
+            fColorOut << "[" << ColoredSeverityWriter(fMetaData.severity) << "]";
+        }
 
         if (fVerbosity == Verbosity::veryhigh)
         {
             fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.file) << ":" << ColorOut(Color::fgYellow, fMetaData.line) << ":" << ColorOut(Color::fgBlue, fMetaData.func) << "]";
         }
 
-        fColorOut << " ";
+        if (fVerbosity != Verbosity::verylow)
+        {
+            fColorOut << " ";
+        }
     }
 
     return *this;

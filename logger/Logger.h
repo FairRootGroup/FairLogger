@@ -59,17 +59,20 @@ enum class Severity : int
 };
 
 // verbosity levels:
+// verylow:  message
 // low:      [severity] message
 // medium:   [HH:MM:SS][severity] message
 // high:     [process name][HH:MM:SS:µS][severity] message
 // veryhigh: [process name][HH:MM:SS:µS][severity][file:line:function] message
 enum class Verbosity : int
 {
+    verylow,
     low,
     medium,
     high,
     veryhigh,
     // backwards-compatibility:
+    VERYLOW = verylow,
     LOW = low,
     MEDIUM = medium,
     HIGH = high,
@@ -116,6 +119,7 @@ class Logger
 
     static void SetConsoleSeverity(const Severity severity);
     static void SetConsoleSeverity(const std::string& severityStr);
+    static Severity GetConsoleSeverity();
 
     static void SetFileSeverity(const Severity severity);
     static void SetFileSeverity(const std::string& severityStr);
@@ -123,11 +127,17 @@ class Logger
     static void SetCustomSeverity(const std::string& key, const Severity severity);
     static void SetCustomSeverity(const std::string& key, const std::string& severityStr);
 
+    static void CycleConsoleSeverityUp();
+    static void CycleConsoleSeverityDown();
+    static void CycleVerbosityUp();
+    static void CycleVerbosityDown();
+
     static bool Logging(const Severity severity);
     static bool Logging(const std::string& severityStr);
 
     static void SetVerbosity(const Verbosity verbosity);
     static void SetVerbosity(const std::string& verbosityStr);
+    static Verbosity GetVerbosity();
 
     static void SetConsoleColor(const bool colored = true);
 
@@ -178,7 +188,7 @@ class Logger
     static const std::unordered_map<std::string, Verbosity> fVerbosityMap;
     static const std::unordered_map<std::string, Severity> fSeverityMap;
     static const std::array<std::string, 12> fSeverityNames;
-    static const std::array<std::string, 4> fVerbosityNames;
+    static const std::array<std::string, 5> fVerbosityNames;
 
     virtual ~Logger() noexcept(false);
 
