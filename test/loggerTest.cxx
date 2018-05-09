@@ -39,6 +39,9 @@ void printAllVerbositiesWithSeverity(Severity sev)
 {
     Logger::SetConsoleSeverity(sev);
 
+    cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'verylow' verbosity..." << endl;
+    Logger::SetVerbosity(Verbosity::verylow);
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'low' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::low);
     printEverySeverity();
@@ -57,6 +60,8 @@ void silentlyPrintAllVerbositiesWithSeverity(Severity sev)
 {
     Logger::SetConsoleSeverity(sev);
 
+    Logger::SetVerbosity(Verbosity::verylow);
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::low);
     printEverySeverity();
     Logger::SetVerbosity(Verbosity::medium);
