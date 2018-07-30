@@ -575,9 +575,12 @@ void Logger::RemoveCustomSink(const string& key)
 Logger& Logger::Log()
 {
     char tsstr[32];
-    if (!strftime(tsstr, sizeof(tsstr), "%H:%M:%S", localtime(&(fMetaData.timestamp))))
     {
-        tsstr[0] = 'u';
+        lock_guard<mutex> lock(fMtx); // localtime is not threadsafe, guard it
+        if (!strftime(tsstr, sizeof(tsstr), "%H:%M:%S", localtime(&(fMetaData.timestamp))))
+        {
+            tsstr[0] = 'u';
+        }
     }
 
     if ((!fColored && LoggingToConsole()) || LoggingToFile())
