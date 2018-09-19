@@ -32,7 +32,7 @@ configure_file(logger/Version.h.in
   @ONLY
 )
 
-add_library(FairLogger SHARED
+add_library(FairLogger
   logger/Logger.cxx
   logger/Logger.h
 )
@@ -64,6 +64,7 @@ install(TARGETS
 
   EXPORT ${FairLogger_EXPORT_SET}
   LIBRARY DESTINATION ${FairLogger_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${FairLogger_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${FairLogger_INSTALL_BINDIR}
 )
 

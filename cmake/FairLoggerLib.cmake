@@ -125,6 +125,10 @@ macro(set_fairlogger_defaults)
   # Generate compile_commands.json file (https://clang.llvm.org/docs/JSONCompilationDatabase.html)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+  if(NOT BUILD_SHARED_LIBS)
+    set(BUILD_SHARED_LIBS ON CACHE BOOL "Whether to build shared libraries or static archives")
+  endif()
+
   # Define CMAKE_INSTALL_*DIR family of variables
   include(GNUInstallDirs)
 
