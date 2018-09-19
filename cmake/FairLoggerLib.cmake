@@ -129,6 +129,11 @@ macro(set_fairlogger_defaults)
     set(BUILD_SHARED_LIBS ON CACHE BOOL "Whether to build shared libraries or static archives")
   endif()
 
+  # Set -fPIC as default for all library types
+  if(NOT CMAKE_POSITION_INDEPENDENT_CODE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  endif()
+
   # Define CMAKE_INSTALL_*DIR family of variables
   include(GNUInstallDirs)
 
