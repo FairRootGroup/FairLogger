@@ -165,7 +165,7 @@ endmacro()
 macro(install_fairlogger_cmake_package)
   include(CMakePackageConfigHelpers)
   set(PACKAGE_INSTALL_DESTINATION
-    ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION}
+    ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${FairLogger_GIT_VERSION}
   )
   install(EXPORT ${FairLogger_EXPORT_SET}
     NAMESPACE ${PROJECT_NAME}::

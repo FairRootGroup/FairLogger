@@ -43,7 +43,7 @@ target_include_directories(FairLogger
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 set_target_properties(FairLogger PROPERTIES
-  VERSION ${PROJECT_VERSION}
+  VERSION ${FairLogger_GIT_VERSION}
   SOVERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
 )
 
