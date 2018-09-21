@@ -22,6 +22,15 @@ message(STATUS "${BWhite}${PROJECT_NAME}${CR} ${FairLogger_GIT_VERSION} from ${F
 set_fairlogger_defaults()
 
 include(CTest)
+
+option(USE_BOOST_PRETTY_FUNCTION "Use Boost BOOST_PRETTY_FUNCTION macro" OFF)
+################################################################################
+
+
+# Dependency ###################################################################
+if(USE_BOOST_PRETTY_FUNCTION)
+  find_package(Boost REQUIRED)
+endif()
 ################################################################################
 
 
@@ -36,6 +45,11 @@ add_library(FairLogger
   logger/Logger.cxx
   logger/Logger.h
 )
+
+if(USE_BOOST_PRETTY_FUNCTION)
+  target_link_libraries(FairLogger PUBLIC Boost::boost)
+  target_compile_definitions(FairLogger PUBLIC FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION)
+endif()
 
 target_include_directories(FairLogger
     PUBLIC

@@ -18,11 +18,19 @@
 #include <string>
 #include <unordered_map>
 #include <functional>
-#include <unordered_map>
+#include <map>
 #include <chrono>
 #include <mutex>
 #include <utility> // pair
 #include <time.h> // time_t
+#include <array>
+#include <type_traits>
+#include <cassert>
+#include <algorithm>
+
+#ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
+#include <boost/current_function.hpp>
+#endif
 
 namespace fair
 {
@@ -76,7 +84,64 @@ enum class Verbosity : int
     LOW = low,
     MEDIUM = medium,
     HIGH = high,
-    VERYHIGH = veryhigh
+    VERYHIGH = veryhigh,
+    // extra slots for user-defined verbosities:
+    user1,
+    user2,
+    user3,
+    user4,
+};
+
+struct VerbositySpec
+{
+    enum class Info : int
+    {
+        __empty__ = 0,         // used to initialize order array
+        process_name,          // [process name]
+        timestamp_s,           // [HH:MM:SS]
+        timestamp_us,          // [HH:MM:SS:µS]
+        severity,              // [severity]
+        file,                  // [file]
+        file_line,             // [file:line]
+        file_line_function,    // [file:line:function]
+        __max__                // needs to be last in enum
+    };
+
+    std::array<Info, static_cast<int>(Info::__max__)> fOrder;
+
+    VerbositySpec() : fOrder({Info::__empty__}) {}
+
+    template<typename ... Ts>
+    static VerbositySpec Make(Ts ... options)
+    {
+      static_assert(sizeof...(Ts) < static_cast<int>(Info::__max__),
+                    "Maximum number of VerbositySpec::Info parameters exceeded.");
+
+      return Make(VerbositySpec(), 0, options...);
+    }
+
+  private:
+    template<typename T, typename ... Ts>
+    static VerbositySpec Make(VerbositySpec spec, int i, T option, Ts ... options)
+    {
+        static_assert(std::is_same<T, Info>::value,
+                      "Only arguments of type VerbositySpec::Info are allowed.");
+
+        assert(option > Info::__empty__);
+        assert(option < Info::__max__);
+
+        if (std::find(spec.fOrder.begin(), spec.fOrder.end(), option) == spec.fOrder.end()) {
+            spec.fOrder[i] = option;
+            ++i;
+        }
+
+        return Make(spec, i, options ...);
+    }
+
+    static VerbositySpec Make(VerbositySpec spec, int)
+    {
+        return spec;
+    }
 };
 
 // non-std exception to avoid undesirable catches - fatal should exit in a way we want.
@@ -138,6 +203,8 @@ class Logger
     static void SetVerbosity(const Verbosity verbosity);
     static void SetVerbosity(const std::string& verbosityStr);
     static Verbosity GetVerbosity();
+    static void DefineVerbosity(const Verbosity, VerbositySpec);
+    static void DefineVerbosity(const std::string& verbosityStr, VerbositySpec);
 
     static void SetConsoleColor(const bool colored = true);
 
@@ -217,6 +284,8 @@ class Logger
     bool LoggingCustom(const Severity) const;
 
     static void UpdateMinSeverity();
+
+    static std::map<Verbosity, VerbositySpec> fVerbosities;
 };
 
 } // namespace fair
@@ -224,9 +293,15 @@ class Logger
 #define IMP_CONVERTTOSTRING(s) # s
 #define CONVERTTOSTRING(s) IMP_CONVERTTOSTRING(s)
 
+#ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
+#define LOG(severity) \
+    for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
+        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), BOOST_CURRENT_FUNCTION).Log()
+#else
 #define LOG(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
         fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), __FUNCTION__).Log()
+#endif
 
 // with custom file, line, function
 #define LOGD(severity, file, line, function) \
