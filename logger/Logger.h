@@ -182,6 +182,82 @@ class Logger
   public:
     Logger(Severity severity, const std::string& file, const std::string& line, const std::string& func);
 
+    enum class Color : int
+    {
+        bold           = 1,
+        dim            = 2,
+        underline      = 4,
+        blink          = 5,
+        reverse        = 7,
+        hidden         = 8,
+
+        fgDefault      = 39,
+        fgBlack        = 30,
+        fgRed          = 31,
+        fgGreen        = 32,
+        fgYellow       = 33,
+        fgBlue         = 34,
+        fgMagenta      = 35,
+        fgCyan         = 36,
+        fgLightGray    = 37,
+        fgDarkGray     = 90,
+        fgLightRed     = 91,
+        fgLightGreen   = 92,
+        fgLightYellow  = 93,
+        fgLightBlue    = 94,
+        fgLightMagenta = 95,
+        fgLightCyan    = 96,
+        fgWhite        = 97,
+
+        bgDefault      = 49,
+        bgBlack        = 40,
+        bgRed          = 41,
+        bgGreen        = 42,
+        bgYellow       = 43,
+        bgBlue         = 44,
+        bgMagenta      = 45,
+        bgCyan         = 46,
+        bgLightGray    = 47,
+        bgDarkGray     = 100,
+        bgLightRed     = 101,
+        bgLightGreen   = 102,
+        bgLightYellow  = 103,
+        bgLightBlue    = 104,
+        bgLightMagenta = 105,
+        bgLightCyan    = 106,
+        bgWhite        = 107
+    };
+
+    static std::string startColor(Color color)
+    {
+        std::ostringstream os;
+        os << "\033[01;" << static_cast<int>(color) << "m";
+        return os.str();
+    }
+
+    static std::string endColor()
+    {
+        return "\033[0m";
+    }
+
+    class ColorOut
+    {
+      public:
+        ColorOut(Color color, const std::string& str)
+            : fColor(color)
+            , fStr(str)
+        {}
+
+        friend std::ostream& operator<<(std::ostream& os, const ColorOut& w)
+        {
+            return os << "\033[01;" << static_cast<int>(w.fColor) << "m" << w.fStr << "\033[0m";
+        }
+
+      private:
+        Color fColor;
+        const std::string& fStr;
+    };
+
     static void SetConsoleSeverity(const Severity severity);
     static void SetConsoleSeverity(const std::string& severityStr);
     static Severity GetConsoleSeverity();
