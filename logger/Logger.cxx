@@ -75,8 +75,7 @@ class ColoredSeverityWriter
 
     friend ostream& operator<<(ostream& os, const ColoredSeverityWriter& w)
     {
-        switch (w.fSeverity)
-        {
+        switch (w.fSeverity) {
             case Severity::nolog:
                 return os << "\033[01;" << static_cast<int>(Color::fgDefault) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
@@ -218,30 +217,21 @@ const array<string, 5> Logger::fVerbosityNames =
 
 std::map<Verbosity, VerbositySpec> Logger::fVerbosities =
 {
-    {   Verbosity::verylow,  VerbositySpec::Make()
-    },
-    {   Verbosity::low,      VerbositySpec::Make(VerbositySpec::Info::severity)
-    },
+    {   Verbosity::verylow,  VerbositySpec::Make()                                        },
+    {   Verbosity::low,      VerbositySpec::Make(VerbositySpec::Info::severity)           },
     {   Verbosity::medium,   VerbositySpec::Make(VerbositySpec::Info::timestamp_s,
-                                                 VerbositySpec::Info::severity)
-    },
+                                                 VerbositySpec::Info::severity)           },
     {   Verbosity::high,     VerbositySpec::Make(VerbositySpec::Info::process_name,
                                                  VerbositySpec::Info::timestamp_s,
-                                                 VerbositySpec::Info::severity)
-    },
+                                                 VerbositySpec::Info::severity)           },
     {   Verbosity::veryhigh, VerbositySpec::Make(VerbositySpec::Info::process_name,
                                                  VerbositySpec::Info::timestamp_s,
                                                  VerbositySpec::Info::severity,
-                                                 VerbositySpec::Info::file_line_function)
-    },
-    {   Verbosity::user1,    VerbositySpec::Make(VerbositySpec::Info::severity)
-    },
-    {   Verbosity::user2,    VerbositySpec::Make(VerbositySpec::Info::severity)
-    },
-    {   Verbosity::user3,    VerbositySpec::Make(VerbositySpec::Info::severity)
-    },
-    {   Verbosity::user4,    VerbositySpec::Make(VerbositySpec::Info::severity)
-    }
+                                                 VerbositySpec::Info::file_line_function) },
+    {   Verbosity::user1,    VerbositySpec::Make(VerbositySpec::Info::severity)           },
+    {   Verbosity::user2,    VerbositySpec::Make(VerbositySpec::Info::severity)           },
+    {   Verbosity::user3,    VerbositySpec::Make(VerbositySpec::Info::severity)           },
+    {   Verbosity::user4,    VerbositySpec::Make(VerbositySpec::Info::severity)           }
 };
 
 string Logger::SeverityName(Severity severity)
@@ -277,12 +267,9 @@ void Logger::SetConsoleSeverity(const Severity severity)
 
 void Logger::SetConsoleSeverity(const string& severityStr)
 {
-    if (fSeverityMap.count(severityStr))
-    {
+    if (fSeverityMap.count(severityStr)) {
         SetConsoleSeverity(fSeverityMap.at(severityStr));
-    }
-    else
-    {
+    } else {
         LOG(error) << "Unknown severity setting: '" << severityStr << "', setting to default 'info'.";
         SetConsoleSeverity(Severity::info);
     }
@@ -301,12 +288,9 @@ void Logger::SetFileSeverity(const Severity severity)
 
 void Logger::SetFileSeverity(const string& severityStr)
 {
-    if (fSeverityMap.count(severityStr))
-    {
+    if (fSeverityMap.count(severityStr)) {
         SetFileSeverity(fSeverityMap.at(severityStr));
-    }
-    else
-    {
+    } else {
         LOG(error) << "Unknown severity setting: '" << severityStr << "', setting to default 'info'.";
         SetFileSeverity(Severity::info);
     }
@@ -320,12 +304,9 @@ void Logger::SetCustomSeverity(const string& key, const Severity severity)
 
 void Logger::SetCustomSeverity(const string& key, const string& severityStr)
 {
-    if (fSeverityMap.count(severityStr))
-    {
+    if (fSeverityMap.count(severityStr)) {
         SetCustomSeverity(key, fSeverityMap.at(severityStr));
-    }
-    else
-    {
+    } else {
         LOG(error) << "Unknown severity setting: '" << severityStr << "', setting to default 'info'.";
         SetCustomSeverity(key, Severity::info);
     }
@@ -411,10 +392,8 @@ void Logger::UpdateMinSeverity()
 {
     fMinSeverity = (fConsoleSeverity <= fFileSeverity) ? fFileSeverity : fConsoleSeverity;
 
-    for (auto& it : fCustomSinks)
-    {
-        if (fMinSeverity <= it.second.first)
-        {
+    for (auto& it : fCustomSinks) {
+        if (fMinSeverity <= it.second.first) {
             fMinSeverity = it.second.first;
         }
     }
@@ -422,28 +401,21 @@ void Logger::UpdateMinSeverity()
 
 bool Logger::Logging(Severity severity)
 {
-    if (Severity::fatal == severity)
-    {
+    if (Severity::fatal == severity) {
         return true;
     }
-    if (severity <= fMinSeverity && severity > Severity::nolog)
-    {
+    if (severity <= fMinSeverity && severity > Severity::nolog) {
         return true;
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
 
 bool Logger::Logging(const std::string& severityStr)
 {
-    if (fSeverityMap.count(severityStr))
-    {
+    if (fSeverityMap.count(severityStr)) {
         return Logging(fSeverityMap.at(severityStr));
-    }
-    else
-    {
+    } else {
         LOG(error) << "Unknown severity setting: '" << severityStr;
         return false;
     }
@@ -456,12 +428,9 @@ void Logger::SetVerbosity(const Verbosity verbosity)
 
 void Logger::SetVerbosity(const string& verbosityStr)
 {
-    if (fVerbosityMap.count(verbosityStr))
-    {
+    if (fVerbosityMap.count(verbosityStr)) {
         fVerbosity = fVerbosityMap.at(verbosityStr);
-    }
-    else
-    {
+    } else {
         LOG(error) << "Unknown verbosity setting: '" << verbosityStr << "', setting to default 'low'.";
         fVerbosity = Verbosity::low;
     }
@@ -479,12 +448,9 @@ void Logger::DefineVerbosity(const Verbosity verbosity, const VerbositySpec spec
 
 void Logger::DefineVerbosity(const std::string& verbosityStr, const VerbositySpec spec)
 {
-    if (fVerbosityMap.count(verbosityStr))
-    {
+    if (fVerbosityMap.count(verbosityStr)) {
         DefineVerbosity(fVerbosityMap.at(verbosityStr), spec);
-    }
-    else
-    {
+    } else {
         LOG(error) << "Unknown verbosity: '" << verbosityStr;
     }
 }
@@ -497,15 +463,13 @@ void Logger::SetConsoleColor(const bool colored)
 void Logger::InitFileSink(const Severity severity, const string& filename, bool customizeName)
 {
     lock_guard<mutex> lock(fMtx);
-    if (fFileStream.is_open())
-    {
+    if (fFileStream.is_open()) {
         fFileStream.close();
     }
 
     string fullName = filename;
 
-    if (customizeName)
-    {
+    if (customizeName) {
         // TODO: customize file name
         auto now = chrono::system_clock::to_time_t(chrono::system_clock::now());
         stringstream ss;
@@ -521,13 +485,10 @@ void Logger::InitFileSink(const Severity severity, const string& filename, bool 
 
     fFileStream.open(fullName, fstream::out | fstream::app);
 
-    if (fFileStream.is_open())
-    {
+    if (fFileStream.is_open()) {
         fFileSeverity = severity;
         UpdateMinSeverity();
-    }
-    else
-    {
+    } else {
         cout << "Error opening file: " << fullName;
     }
 
@@ -535,12 +496,9 @@ void Logger::InitFileSink(const Severity severity, const string& filename, bool 
 
 void Logger::InitFileSink(const string& severityStr, const string& filename, bool customizeName)
 {
-    if (fSeverityMap.count(severityStr))
-    {
+    if (fSeverityMap.count(severityStr)) {
         InitFileSink(fSeverityMap.at(severityStr), filename, customizeName);
-    }
-    else
-    {
+    } else {
         LOG(error) << "Unknown severity setting: '" << severityStr << "', setting to default 'info'.";
         InitFileSink(Severity::info, filename);
     }
@@ -549,8 +507,7 @@ void Logger::InitFileSink(const string& severityStr, const string& filename, boo
 void Logger::RemoveFileSink()
 {
     lock_guard<mutex> lock(fMtx);
-    if (fFileStream.is_open())
-    {
+    if (fFileStream.is_open()) {
         fFileStream.close();
     }
 }
@@ -584,25 +541,19 @@ void Logger::OnFatal(function<void()> func)
 void Logger::AddCustomSink(const string& key, Severity severity, function<void(const string& content, const LogMetaData& metadata)> func)
 {
     lock_guard<mutex> lock(fMtx);
-    if (fCustomSinks.count(key) == 0)
-    {
+    if (fCustomSinks.count(key) == 0) {
         fCustomSinks.insert(make_pair(key, make_pair(severity, func)));
         UpdateMinSeverity();
-    }
-    else
-    {
+    } else {
         cout << "Logger::AddCustomSink: sink '" << key << "' already exists, will not add again. Remove first with Logger::RemoveCustomSink(const string& key)" << endl;
     }
 }
 
 void Logger::AddCustomSink(const string& key, const string& severityStr, function<void(const string& content, const LogMetaData& metadata)> func)
 {
-    if (fSeverityMap.count(severityStr))
-    {
+    if (fSeverityMap.count(severityStr)) {
         AddCustomSink(key, fSeverityMap.at(severityStr), func);
-    }
-    else
-    {
+    } else {
         LOG(error) << "Unknown severity setting: '" << severityStr << "', setting to default 'info'.";
         AddCustomSink(key, Severity::info, func);
     }
@@ -610,13 +561,10 @@ void Logger::AddCustomSink(const string& key, const string& severityStr, functio
 
 void Logger::RemoveCustomSink(const string& key)
 {
-    if (fCustomSinks.count(key) > 0)
-    {
+    if (fCustomSinks.count(key) > 0) {
         fCustomSinks.erase(key);
         UpdateMinSeverity();
-    }
-    else
-    {
+    } else {
         cout << "Logger::RemoveCustomSink: sink '" << key << "' doesn't exists, will not remove." << endl;
     }
 }
@@ -626,106 +574,97 @@ Logger& Logger::Log()
     char tsstr[32];
     {
         lock_guard<mutex> lock(fMtx); // localtime is not threadsafe, guard it
-        if (!strftime(tsstr, sizeof(tsstr), "%H:%M:%S", localtime(&(fMetaData.timestamp))))
-        {
+        if (!strftime(tsstr, sizeof(tsstr), "%H:%M:%S", localtime(&(fMetaData.timestamp)))) {
             tsstr[0] = 'u';
         }
     }
 
     auto spec = fVerbosities[fVerbosity];
 
-    if ((!fColored && LoggingToConsole()) || LoggingToFile())
-    {
-        bool append_space = false;
-        for (const auto info : spec.fOrder)
-        {
-            switch (info)
-            {
+    if ((!fColored && LoggingToConsole()) || LoggingToFile()) {
+        bool appendSpace = false;
+        for (const auto info : spec.fOrder) {
+            switch (info) {
               case VerbositySpec::Info::process_name:
                 fBWOut << "[" << fMetaData.process_name << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::timestamp_us:
                 fBWOut << "[" << tsstr << "." << setw(6) << setfill('0') << fMetaData.us.count() << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::timestamp_s:
                 fBWOut << "[" << tsstr << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::severity:
                 fBWOut << "[" << fMetaData.severity_name << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::file_line_function:
                 fBWOut << "[" << fMetaData.file << ":" << fMetaData.line << ":" << fMetaData.func << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::file_line:
                 fBWOut << "[" << fMetaData.file << ":" << fMetaData.line << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::file:
                 fBWOut << "[" << fMetaData.file << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               default:
                 break;
             }
         }
 
-        if (append_space)
-        {
+        if (appendSpace) {
             fBWOut << " ";
         }
     }
 
-    if (fColored && LoggingToConsole())
-    {
-        bool append_space = false;
-        for (const auto info : spec.fOrder)
-        {
-            switch (info)
-            {
+    if (fColored && LoggingToConsole()) {
+        bool appendSpace = false;
+        for (const auto info : spec.fOrder) {
+            switch (info) {
               case VerbositySpec::Info::process_name:
                 fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.process_name) << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::timestamp_us:
                 fColorOut << "[" << startColor(Color::fgCyan) << tsstr << "."
                                  << setw(6) << setfill('0') << fMetaData.us.count() << endColor() << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::timestamp_s:
                 fColorOut << "[" << startColor(Color::fgCyan) << tsstr << endColor() << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::severity:
                 fColorOut << "[" << ColoredSeverityWriter(fMetaData.severity) << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::file_line_function:
                 fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.file) << ":"
                                  << ColorOut(Color::fgYellow, fMetaData.line) << ":"
                                  << ColorOut(Color::fgBlue, fMetaData.func) << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::file_line:
                 fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.file) << ":"
                                  << ColorOut(Color::fgYellow, fMetaData.line) << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               case VerbositySpec::Info::file:
                 fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.file) << "]";
-                append_space = true;
+                appendSpace = true;
                 break;
               default:
                 break;
             }
         }
 
-        if (append_space)
-        {
+        if (appendSpace) {
             fColorOut << " ";
         }
     }
@@ -747,10 +686,8 @@ Logger& Logger::operator<<(ostream& (*manip) (ostream&))
 
 Logger::~Logger() noexcept(false)
 {
-    for (auto& it : fCustomSinks)
-    {
-        if (LoggingCustom(it.second.first))
-        {
+    for (auto& it : fCustomSinks) {
+        if (LoggingCustom(it.second.first)) {
             lock_guard<mutex> lock(fMtx);
             it.second.second(fContent.str(), fMetaData);
         }
@@ -760,32 +697,24 @@ Logger::~Logger() noexcept(false)
 
     fBWOut << fContent.str();
 
-    if (LoggingToConsole())
-    {
-        if (fColored)
-        {
+    if (LoggingToConsole()) {
+        if (fColored) {
             fColorOut << fContent.str();
             cout << fColorOut.str() << flush;
-        }
-        else
-        {
+        } else {
             cout << fBWOut.str() << flush;
         }
     }
 
-    if (LoggingToFile())
-    {
+    if (LoggingToFile()) {
         lock_guard<mutex> lock(fMtx);
-        if (fFileStream.is_open())
-        {
+        if (fFileStream.is_open()) {
             fFileStream << fBWOut.str() << flush;
         }
     }
 
-    if (fMetaData.severity == Severity::fatal)
-    {
-        if (fFatalCallback)
-        {
+    if (fMetaData.severity == Severity::fatal) {
+        if (fFatalCallback) {
             fFatalCallback();
         }
     }
