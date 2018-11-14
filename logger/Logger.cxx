@@ -19,53 +19,6 @@ using namespace std;
 namespace fair
 {
 
-enum class Color : int
-{
-    fgBlack    = 30,
-    fgRed      = 31,
-    fgGreen    = 32,
-    fgYellow   = 33,
-    fgBlue     = 34,
-    fgMagenta  = 35,
-    fgCyan     = 36,
-    fgWhite    = 37,
-    fgDefault  = 39,
-    bgRed      = 41,
-    bgGreen    = 42,
-    bgBlue     = 44,
-    bgDefault  = 49
-};
-
-string startColor(Color color)
-{
-    ostringstream os;
-    os << "\033[01;" << static_cast<int>(color) << "m";
-    return os.str();
-}
-
-string endColor()
-{
-    return "\033[0m";
-}
-
-class ColorOut
-{
-  public:
-    ColorOut(Color color, const string& str)
-        : fColor(color)
-        , fStr(str)
-    {}
-
-    friend ostream& operator<<(ostream& os, const ColorOut& w)
-    {
-        return os << "\033[01;" << static_cast<int>(w.fColor) << "m" << w.fStr << "\033[0m";
-    }
-
-  private:
-    Color fColor;
-    const string& fStr;
-};
-
 class ColoredSeverityWriter
 {
   public:
@@ -77,40 +30,40 @@ class ColoredSeverityWriter
     {
         switch (w.fSeverity) {
             case Severity::nolog:
-                return os << "\033[01;" << static_cast<int>(Color::fgDefault) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgDefault) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::fatal:
-                return os << "\033[01;" << static_cast<int>(Color::bgRed) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::bgRed) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::error:
-                return os << "\033[01;" << static_cast<int>(Color::fgRed) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgRed) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::warn:
-                return os << "\033[01;" << static_cast<int>(Color::fgYellow) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgYellow) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::state:
-                return os << "\033[01;" << static_cast<int>(Color::fgMagenta) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgMagenta) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::info:
-                return os << "\033[01;" << static_cast<int>(Color::fgGreen) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgGreen) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::debug:
-                return os << "\033[01;" << static_cast<int>(Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::debug1:
-                return os << "\033[01;" << static_cast<int>(Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::debug2:
-                return os << "\033[01;" << static_cast<int>(Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::debug3:
-                return os << "\033[01;" << static_cast<int>(Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::debug4:
-                return os << "\033[01;" << static_cast<int>(Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgBlue) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             case Severity::trace:
-                return os << "\033[01;" << static_cast<int>(Color::fgCyan) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
+                return os << "\033[01;" << static_cast<int>(Logger::Color::fgCyan) << "m" << Logger::SeverityName(w.fSeverity) << "\033[0m";
                 break;
             default:
                 return os << "UNKNOWN";
