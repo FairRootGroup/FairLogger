@@ -4,24 +4,45 @@ def specToLabel(Map spec) {
   return "${spec.os}-${spec.arch}-${spec.compiler}-FairSoft_${spec.fairsoft}"
 }
 
-def buildMatrix(List specs, Closure callback) {
+def jobMatrix(String prefix, List specs, Closure callback) {
   def nodes = [:]
   for (spec in specs) {
     def label = specToLabel(spec)
-    nodes[label] = {
+    nodes["${prefix}/${label}"] = {
       node(label) {
-        githubNotify(context: "alfa-ci/${label}", description: 'Building ...', status: 'PENDING')
+        githubNotify(context: "${prefix}/${label}", description: 'Building ...', status: 'PENDING')
         try {
           deleteDir()
           checkout scm
 
+          sh """\
+            echo "export SIMPATH=\${SIMPATH_PREFIX}${spec.fairsoft}" >> Dart.cfg
+            echo "export FAIRSOFT_VERSION=${spec.fairsoft}" >> Dart.cfg
+          """
+          if ((spec.os == 'Debian8') && (spec.compiler == 'gcc8.1.0')) {
+            sh '''\
+              echo "source /etc/profile.d/modules.sh" >> Dart.cfg
+              echo "module use /cvmfs/it.gsi.de/modulefiles" >> Dart.cfg
+              echo "module load compiler/gcc/8" >> Dart.cfg
+            '''
+          }
+          sh '''\
+            echo "export BUILDDIR=$PWD/build" >> Dart.cfg
+            echo "export SOURCEDIR=$PWD" >> Dart.cfg
+            echo "export PATH=\\\$SIMPATH/bin:\\\$PATH" >> Dart.cfg
+            echo "export GIT_BRANCH=$JOB_BASE_NAME" >> Dart.cfg
+            echo "export EXTRA_FLAGS='-DCMAKE_CXX_COMPILER=g++'" >> Dart.cfg
+            echo "echo \\\$PATH" >> Dart.cfg
+          '''
+          sh 'cat Dart.cfg'
+
           callback.call(spec, label)
 
           deleteDir()
-          githubNotify(context: "alfa-ci/${label}", description: 'Success', status: 'SUCCESS')
+          githubNotify(context: "${prefix}/${label}", description: 'Success', status: 'SUCCESS')
         } catch (e) {
           deleteDir()
-          githubNotify(context: "alfa-ci/${label}", description: 'Error', status: 'ERROR')
+          githubNotify(context: "${prefix}/${label}", description: 'Error', status: 'ERROR')
           throw e
         }
       }
@@ -33,21 +54,17 @@ def buildMatrix(List specs, Closure callback) {
 pipeline{
   agent none
   stages {
-    stage("Run Build/Test Matrix") {
+    stage("Run CI Matrix") {
       steps{
         script {
-          parallel(buildMatrix([
-            [os: 'Debian8',    arch: 'x86_64', compiler: 'gcc4.9',         fairsoft: 'may18'],
-            [os: 'MacOS10.13', arch: 'x86_64', compiler: 'AppleLLVM9.0.0', fairsoft: 'may18'],
+          def build_jobs = jobMatrix('alfa-ci/build', [
+            [os: 'Debian8',    arch: 'x86_64', compiler: 'gcc8.1.0',        fairsoft: 'fairmq_dev'],
+            [os: 'MacOS10.13', arch: 'x86_64', compiler: 'AppleLLVM10.0.0', fairsoft: 'fairmq_dev'],
           ]) { spec, label ->
-            sh '''\
-              echo "export BUILDDIR=$PWD/build" >> Dart.cfg
-              echo "export SOURCEDIR=$PWD" >> Dart.cfg
-              echo "export PATH=$SIMPATH/bin:$PATH" >> Dart.cfg
-              echo "export GIT_BRANCH=$JOB_BASE_NAME" >> Dart.cfg
-            '''
             sh './Dart.sh alfa_ci Dart.cfg'
-          })
+          }
+
+          parallel(build_jobs)
         }
       }
     }
