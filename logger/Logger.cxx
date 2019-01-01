@@ -5,7 +5,7 @@
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
-#include <Logger.h>
+#include "Logger.h"
 
 #include <iostream>
 #include <ostream>
