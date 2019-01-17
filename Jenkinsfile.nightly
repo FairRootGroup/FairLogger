@@ -8,11 +8,39 @@ def buildMatrix(List specs, Closure callback) {
   def nodes = [:]
   for (spec in specs) {
     def label = specToLabel(spec)
+    def fairsoft = spec.fairsoft
+    def os = spec.os
+    def compiler = spec.compiler
     nodes[label] = {
       node(label) {
         try {
           deleteDir()
           checkout scm
+
+          sh """\
+            echo "export SIMPATH=\${SIMPATH_PREFIX}${fairsoft}" >> Dart.cfg
+            echo "export FAIRSOFT_VERSION=${fairsoft}" >> Dart.cfg
+          """
+          if (os =~ /Debian/ && compiler =~ /gcc8/) {
+            sh '''\
+              echo "source /etc/profile.d/modules.sh" >> Dart.cfg
+              echo "module use /cvmfs/it.gsi.de/modulefiles" >> Dart.cfg
+              echo "module load compiler/gcc/8" >> Dart.cfg
+            '''
+          }
+          if (os =~ /MacOS/) {
+            sh "echo \"export EXTRA_FLAGS='-DCMAKE_CXX_COMPILER=clang++'\" >> Dart.cfg"
+          } else {
+            sh "echo \"export EXTRA_FLAGS='-DCMAKE_CXX_COMPILER=g++'\" >> Dart.cfg"
+          }
+          sh '''\
+            echo "export BUILDDIR=$PWD/build" >> Dart.cfg
+            echo "export SOURCEDIR=$PWD" >> Dart.cfg
+            echo "export PATH=\\\$SIMPATH/bin:\\\$PATH" >> Dart.cfg
+            echo "export GIT_BRANCH=dev" >> Dart.cfg
+            echo "echo \\\$PATH" >> Dart.cfg
+          '''
+          sh 'cat Dart.cfg'
 
           callback.call(spec, label)
 
@@ -35,16 +63,9 @@ pipeline{
       steps{
         script {
           parallel(buildMatrix([
-            [os: 'Debian8',    arch: 'x86_64', compiler: 'gcc4.9',         fairsoft: 'may18'],
-            [os: 'MacOS10.11', arch: 'x86_64', compiler: 'AppleLLVM8.0.0', fairsoft: 'may18'],
-            [os: 'MacOS10.13', arch: 'x86_64', compiler: 'AppleLLVM9.0.0', fairsoft: 'may18'],
+            [os: 'Debian8',    arch: 'x86_64', compiler: 'gcc8.1.0',        fairsoft: 'fairmq_dev'],
+            [os: 'MacOS10.13', arch: 'x86_64', compiler: 'AppleLLVM10.0.0', fairsoft: 'fairmq_dev'],
           ]) { spec, label ->
-            sh '''\
-              echo "export BUILDDIR=$PWD/build" >> Dart.cfg
-              echo "export SOURCEDIR=$PWD" >> Dart.cfg
-              echo "export PATH=$SIMPATH/bin:$PATH" >> Dart.cfg
-              echo "export GIT_BRANCH=dev" >> Dart.cfg
-            '''
             sh './Dart.sh Nightly Dart.cfg'
             sh './Dart.sh Profile Dart.cfg'
           })
