@@ -335,6 +335,10 @@ class Logger
 
     virtual ~Logger() noexcept(false);
 
+    // protection for use after static destruction took place
+    static bool fIsDestructed;
+    static struct DestructionHelper { ~DestructionHelper() { Logger::fIsDestructed = true; }} fDestructionHelper;
+
   private:
     LogMetaData fMetaData;
 
