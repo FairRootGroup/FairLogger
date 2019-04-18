@@ -49,21 +49,21 @@ enum class Severity : int
     debug3,
     debug4,
     trace,
-    // backwards-compatibility:
-    NOLOG = nolog,
-    FATAL = fatal,
-    ERROR = error,
-    WARN = warn,
     warning = warn,
-    WARNING = warn,
-    STATE = state,
-    INFO = info,
-    DEBUG = debug,
-    DEBUG1 = debug1,
-    DEBUG2 = debug2,
-    DEBUG3 = debug3,
-    DEBUG4 = debug4,
-    TRACE = trace
+    // backwards-compatibility:
+    NOLOG __attribute__((deprecated("Use LOG(nolog) instead (lowercase severity name)."))) = nolog,
+    FATAL __attribute__((deprecated("Use LOG(fatal) instead (lowercase severity name)."))) = fatal,
+    ERROR __attribute__((deprecated("Use LOG(error) instead (lowercase severity name)."))) = error,
+    WARN __attribute__((deprecated("Use LOG(warn) instead (lowercase severity name)."))) = warn,
+    WARNING __attribute__((deprecated("Use LOG(warning) instead (lowercase severity name)."))) = warn,
+    STATE __attribute__((deprecated("Use LOG(state) instead (lowercase severity name)."))) = state,
+    INFO __attribute__((deprecated("Use LOG(info) instead (lowercase severity name)."))) = info,
+    DEBUG __attribute__((deprecated("Use LOG(debug) instead (lowercase severity name)."))) = debug,
+    DEBUG1 __attribute__((deprecated("Use LOG(debug1) instead (lowercase severity name)."))) = debug1,
+    DEBUG2 __attribute__((deprecated("Use LOG(debug2) instead (lowercase severity name)."))) = debug2,
+    DEBUG3 __attribute__((deprecated("Use LOG(debug3) instead (lowercase severity name)."))) = debug3,
+    DEBUG4 __attribute__((deprecated("Use LOG(debug4) instead (lowercase severity name)."))) = debug4,
+    TRACE __attribute__((deprecated("Use LOG(trace) instead (lowercase severity name)."))) = trace
 };
 
 // verbosity levels:
