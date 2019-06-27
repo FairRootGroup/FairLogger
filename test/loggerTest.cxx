@@ -1,5 +1,5 @@
 /********************************************************************************
- *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
+ * Copyright (C) 2014-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  *
  *                                                                              *
  *              This software is distributed under the terms of the             *
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
@@ -192,7 +192,7 @@ int main()
 
     cout << endl << "cout: removing custom sink with info severity" << endl;
 
-    Logger::AddCustomSink("CustomSink", Severity::error, [](const string& content, const LogMetaData& metadata){});
+    Logger::AddCustomSink("CustomSink", Severity::error, [](const string& /*content*/, const LogMetaData& /*metadata*/){});
     Logger::RemoveCustomSink("CustomSink");
     Logger::RemoveCustomSink("bla");
 
