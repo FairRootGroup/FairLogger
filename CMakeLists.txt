@@ -13,10 +13,10 @@ cmake_policy(VERSION 3.9...3.14)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(FairLoggerLib)
 
-get_git_version(OUTVAR_PREFIX FairLogger)
+get_git_version()
 
-project(FairLogger VERSION ${FairLogger_VERSION} LANGUAGES C CXX)
-message(STATUS "${BWhite}${PROJECT_NAME}${CR} ${FairLogger_GIT_VERSION} from ${FairLogger_DATE}")
+project(FairLogger VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
+message(STATUS "${BWhite}${PROJECT_NAME}${CR} ${PROJECT_GIT_VERSION} from ${PROJECT_DATE}")
 
 set_fairlogger_defaults()
 
@@ -56,7 +56,7 @@ target_include_directories(FairLogger
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 set_target_properties(FairLogger PROPERTIES
-  VERSION ${FairLogger_GIT_VERSION}
+  VERSION ${PROJECT_GIT_VERSION}
   SOVERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
 )
 
