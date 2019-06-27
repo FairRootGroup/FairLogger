@@ -1,5 +1,5 @@
 /********************************************************************************
- *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
+ * Copyright (C) 2014-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  *
  *                                                                              *
  *              This software is distributed under the terms of the             *
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
@@ -272,16 +272,16 @@ void Logger::SetCustomSeverity(const string& key, const string& severityStr)
 
 auto Logger::CycleConsoleSeverityUp() -> void
 {
-    size_t current = static_cast<size_t>(fConsoleSeverity);
-    if (current == fSeverityNames.size() - 1) {
+    int current = static_cast<int>(fConsoleSeverity);
+    if (current == static_cast<int>(fSeverityNames.size()) - 1) {
         SetConsoleSeverity(static_cast<Severity>(0));
     } else {
         SetConsoleSeverity(static_cast<Severity>(current + 1));
     }
-    size_t newCurrent = static_cast<size_t>(fConsoleSeverity);
+    int newCurrent = static_cast<int>(fConsoleSeverity);
     stringstream ss;
 
-    for (int i = 0; i < fSeverityNames.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(fSeverityNames.size()); ++i) {
         ss << (i == newCurrent ? ">" : " ") << fSeverityNames.at(i) << (i == newCurrent ? "<" : " ");
     }
 
@@ -291,16 +291,16 @@ auto Logger::CycleConsoleSeverityUp() -> void
 
 auto Logger::CycleConsoleSeverityDown() -> void
 {
-    size_t current = static_cast<size_t>(fConsoleSeverity);
+    int current = static_cast<int>(fConsoleSeverity);
     if (current == 0) {
         SetConsoleSeverity(static_cast<Severity>(fSeverityNames.size() - 1));
     } else {
         SetConsoleSeverity(static_cast<Severity>(current - 1));
     }
-    size_t newCurrent = static_cast<size_t>(fConsoleSeverity);
+    int newCurrent = static_cast<int>(fConsoleSeverity);
     stringstream ss;
 
-    for (int i = 0; i < fSeverityNames.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(fSeverityNames.size()); ++i) {
         ss << (i == newCurrent ? ">" : " ") << fSeverityNames.at(i) << (i == newCurrent ? "<" : " ");
     }
 
@@ -310,16 +310,16 @@ auto Logger::CycleConsoleSeverityDown() -> void
 
 auto Logger::CycleVerbosityUp() -> void
 {
-    size_t current = static_cast<size_t>(fVerbosity);
-    if (current == fVerbosityNames.size() - 1) {
+    int current = static_cast<int>(fVerbosity);
+    if (current == static_cast<int>(fVerbosityNames.size() - 1)) {
         SetVerbosity(static_cast<Verbosity>(0));
     } else {
         SetVerbosity(static_cast<Verbosity>(current + 1));
     }
-    size_t newCurrent = static_cast<size_t>(fVerbosity);
+    int newCurrent = static_cast<int>(fVerbosity);
     stringstream ss;
 
-    for (int i = 0; i < fVerbosityNames.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(fVerbosityNames.size()); ++i) {
         ss << (i == newCurrent ? ">" : " ") << fVerbosityNames.at(i) << (i == newCurrent ? "<" : " ");
     }
 
@@ -329,16 +329,16 @@ auto Logger::CycleVerbosityUp() -> void
 
 auto Logger::CycleVerbosityDown() -> void
 {
-    size_t current = static_cast<size_t>(fVerbosity);
+    int current = static_cast<int>(fVerbosity);
     if (current == 0) {
         SetVerbosity(static_cast<Verbosity>(fVerbosityNames.size() - 1));
     } else {
         SetVerbosity(static_cast<Verbosity>(current - 1));
     }
-    size_t newCurrent = static_cast<size_t>(fVerbosity);
+    int newCurrent = static_cast<int>(fVerbosity);
     stringstream ss;
 
-    for (int i = 0; i < fVerbosityNames.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(fVerbosityNames.size()); ++i) {
         ss << (i == newCurrent ? ">" : " ") << fVerbosityNames.at(i) << (i == newCurrent ? "<" : " ");
     }
 
