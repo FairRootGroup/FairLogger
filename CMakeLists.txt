@@ -109,6 +109,8 @@ endif()
 
 # Summary ######################################################################
 message(STATUS "  ")
+message(STATUS "  ${Cyan}CXX STANDARD${CR}       ${BGreen}C++${CMAKE_CXX_STANDARD}${CR} (>= C++${PROJECT_MIN_CXX_STANDARD}, change with ${BMagenta}-DCMAKE_CXX_STANDARD=17${CR})")
+message(STATUS "  ")
 message(STATUS "  ${Cyan}COMPONENT  BUILT?  INFO${CR}")
 message(STATUS "  ${BWhite}library${CR}     ${BGreen}YES${CR}    (default, always built)")
 if(BUILD_TESTING)
