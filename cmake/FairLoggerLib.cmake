@@ -37,7 +37,7 @@ function(get_git_version)
   cmake_parse_arguments(ARGS "" "DEFAULT_VERSION;DEFAULT_DATE;OUTVAR_PREFIX" "" ${ARGN})
 
   if(NOT ARGS_OUTVAR_PREFIX)
-    set(ARGS_OUTVAR_PREFIX FairLogger)
+    set(ARGS_OUTVAR_PREFIX PROJECT)
   endif()
 
   if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
@@ -151,7 +151,7 @@ endmacro()
 macro(install_fairlogger_cmake_package)
   include(CMakePackageConfigHelpers)
   set(PACKAGE_INSTALL_DESTINATION
-    ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${FairLogger_GIT_VERSION}
+    ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_GIT_VERSION}
   )
   install(EXPORT ${FairLogger_EXPORT_SET}
     NAMESPACE ${PROJECT_NAME}::

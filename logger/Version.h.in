@@ -1,5 +1,5 @@
 /********************************************************************************
- *    Copyright (C) 2018 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
+ * Copyright (C) 2018-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  *
  *                                                                              *
  *              This software is distributed under the terms of the             *
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
@@ -13,7 +13,7 @@
 #define FAIRLOGGER_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
 #define FAIRLOGGER_VERSION_MINOR @PROJECT_VERSION_MINOR@
 #define FAIRLOGGER_VERSION_PATCH @PROJECT_VERSION_PATCH@
-#define FAIRLOGGER_GIT_VERSION "@FairLogger_GIT_VERSION@"
-#define FAIRLOGGER_GIT_DATE "@FairLogger_GIT_DATE@"
+#define FAIRLOGGER_GIT_VERSION "@PROJECT_GIT_VERSION@"
+#define FAIRLOGGER_GIT_DATE "@PROJECT_GIT_DATE@"
 
 #endif // FAIR_LOGGER_VERSION_H
