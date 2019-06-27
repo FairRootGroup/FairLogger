@@ -142,10 +142,40 @@ macro(set_fairlogger_defaults)
   # Define export set, only one for now
   set(PROJECT_EXPORT_SET ${PROJECT_NAME}Targets)
 
-  set(CMAKE_CXX_FLAGS_NIGHTLY "-O2 -g -Wshadow -Wall -Wextra")
-  set(CMAKE_CXX_FLAGS_PROFILE "-g3 -fno-inline -ftest-coverage -fprofile-arcs -Wshadow -Wall -Wextra -Wunused-variable")
+  set(CMAKE_CONFIGURATION_TYPES "Debug" "Release" "RelWithDebInfo" "Nightly" "Profile" "Experimental" "AdressSan" "ThreadSan")
+  set(CMAKE_CXX_FLAGS_DEBUG          "-g -Wshadow -Wall -Wextra")
+  set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -Wshadow -Wall -Wextra -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_NIGHTLY        "-O2 -g -Wshadow -Wall -Wextra")
+  set(CMAKE_CXX_FLAGS_PROFILE        "-g3 -Wshadow -Wall -Wextra -fno-inline -ftest-coverage -fprofile-arcs")
+  set(CMAKE_CXX_FLAGS_EXPERIMENTAL   "-O2 -g -Wshadow -Wall -Wextra -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_ADRESSSAN      "-O2 -g -Wshadow -Wall -Wextra -fsanitize=address -fno-omit-frame-pointer")
+  set(CMAKE_CXX_FLAGS_THREADSAN      "-O2 -g -Wshadow -Wall -Wextra -fsanitize=thread")
+
+  if(CMAKE_GENERATOR STREQUAL "Ninja" AND
+     ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9) OR
+      (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5)))
+    # Force colored warnings in Ninja's output, if the compiler has -fdiagnostics-color support.
+    # Rationale in https://github.com/ninja-build/ninja/issues/814
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+  endif()
 endmacro()
 
+function(pad str width char out)
+  cmake_parse_arguments(ARGS "" "COLOR" "" ${ARGN})
+  string(LENGTH ${str} length)
+  if(ARGS_COLOR)
+    math(EXPR padding "${width}-(${length}-10*${ARGS_COLOR})")
+  else()
+    math(EXPR padding "${width}-${length}")
+  endif()
+  if(padding GREATER 0)
+    foreach(i RANGE ${padding})
+      set(str "${str}${char}")
+    endforeach()
+  endif()
+  set(${out} ${str} PARENT_SCOPE)
+endfunction()
 
 function(join VALUES GLUE OUTPUT)
   string(REGEX REPLACE "([^\\]|^);" "\\1${GLUE}" _TMP_STR "${VALUES}")
