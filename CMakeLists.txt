@@ -75,20 +75,20 @@ install(TARGETS
   FairLogger
   ${test_targets}
 
-  EXPORT ${FairLogger_EXPORT_SET}
-  LIBRARY DESTINATION ${FairLogger_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${FairLogger_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${FairLogger_INSTALL_BINDIR}
+  EXPORT ${PROJECT_EXPORT_SET}
+  LIBRARY DESTINATION ${PROJECT_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${PROJECT_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${PROJECT_INSTALL_BINDIR}
 )
 
 install(FILES
   logger/Logger.h
   ${CMAKE_BINARY_DIR}/logger/Version.h
 
-  DESTINATION ${FairLogger_INSTALL_INCDIR}
+  DESTINATION ${PROJECT_INSTALL_INCDIR}
 )
 
-install_fairlogger_cmake_package()
+install_cmake_package()
 ################################################################################
 
 
