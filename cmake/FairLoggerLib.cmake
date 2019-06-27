@@ -86,6 +86,7 @@ endfunction()
 # Set defaults
 macro(set_fairlogger_defaults)
   string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+  string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
   # Set a default build type
   if(NOT CMAKE_BUILD_TYPE)
@@ -93,15 +94,14 @@ macro(set_fairlogger_defaults)
   endif()
 
   # Handle C++ standard level
+  set(PROJECT_MIN_CXX_STANDARD 11)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 11)
-  elseif(${CMAKE_CXX_STANDARD} LESS 11)
-    message(FATAL_ERROR "A minimum CMAKE_CXX_STANDARD of 11 is required.")
+    set(CMAKE_CXX_STANDARD ${PROJECT_MIN_CXX_STANDARD})
+  elseif(${CMAKE_CXX_STANDARD} LESS ${PROJECT_MIN_CXX_STANDARD})
+    message(FATAL_ERROR "A minimum CMAKE_CXX_STANDARD of ${PROJECT_MIN_CXX_STANDARD} is required.")
   endif()
-  if(NOT CMAKE_CXX_EXTENSIONS)
-    set(CMAKE_CXX_EXTENSIONS OFF)
-  endif()
+  set(CMAKE_CXX_EXTENSIONS OFF)
 
   # Generate compile_commands.json file (https://clang.llvm.org/docs/JSONCompilationDatabase.html)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
