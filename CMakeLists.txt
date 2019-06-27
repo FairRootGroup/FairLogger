@@ -1,5 +1,5 @@
 ################################################################################
-#    Copyright (C) 2018 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
+# Copyright (C) 2018-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  #
 #                                                                              #
 #              This software is distributed under the terms of the             #
 #              GNU Lesser General Public Licence (LGPL) version 3,             #
@@ -7,13 +7,12 @@
 ################################################################################
 
 cmake_minimum_required(VERSION 3.9.4 FATAL_ERROR)
-
+cmake_policy(VERSION 3.9...3.14)
 
 # Project ######################################################################
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(FairLoggerLib)
 
-set_fairlogger_cmake_policies()
 get_git_version(OUTVAR_PREFIX FairLogger)
 
 project(FairLogger VERSION ${FairLogger_VERSION} LANGUAGES C CXX)
