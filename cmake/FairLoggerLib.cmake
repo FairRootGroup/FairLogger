@@ -119,49 +119,87 @@ macro(set_fairlogger_defaults)
   include(GNUInstallDirs)
 
   # Define install dirs
-  set(FairLogger_INSTALL_BINDIR ${CMAKE_INSTALL_BINDIR})
-  set(FairLogger_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
-  set(FairLogger_INSTALL_INCDIR ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME_LOWER})
-  set(FairLogger_INSTALL_DATADIR ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME_LOWER})
+  set(PROJECT_INSTALL_BINDIR ${CMAKE_INSTALL_BINDIR})
+  set(PROJECT_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
+  set(PROJECT_INSTALL_INCDIR ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME_LOWER})
+  set(PROJECT_INSTALL_DATADIR ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME_LOWER})
 
   # https://cmake.org/Wiki/CMake_RPATH_handling
   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${FairLogger_INSTALL_LIBDIR}" isSystemDir)
+  list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}" isSystemDir)
   if("${isSystemDir}" STREQUAL "-1")
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-Wl,--enable-new-dtags")
       set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "-Wl,--enable-new-dtags")
-      set(CMAKE_INSTALL_RPATH "$ORIGIN/../${FairLogger_INSTALL_LIBDIR}")
+      set(CMAKE_INSTALL_RPATH "$ORIGIN/../${PROJECT_INSTALL_LIBDIR}")
     elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-      set(CMAKE_INSTALL_RPATH "@loader_path/../${FairLogger_INSTALL_LIBDIR}")
+      set(CMAKE_INSTALL_RPATH "@loader_path/../${PROJECT_INSTALL_LIBDIR}")
     else()
-      set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${FairLogger_INSTALL_LIBDIR}")
+      set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}")
     endif()
   endif()
 
   # Define export set, only one for now
-  set(FairLogger_EXPORT_SET ${PROJECT_NAME}Targets)
+  set(PROJECT_EXPORT_SET ${PROJECT_NAME}Targets)
 
   set(CMAKE_CXX_FLAGS_NIGHTLY "-O2 -g -Wshadow -Wall -Wextra")
   set(CMAKE_CXX_FLAGS_PROFILE "-g3 -fno-inline -ftest-coverage -fprofile-arcs -Wshadow -Wall -Wextra -Wunused-variable")
 endmacro()
 
 
+function(join VALUES GLUE OUTPUT)
+  string(REGEX REPLACE "([^\\]|^);" "\\1${GLUE}" _TMP_STR "${VALUES}")
+  string(REGEX REPLACE "[\\](.)" "\\1" _TMP_STR "${_TMP_STR}") #fixes escaping
+  set(${OUTPUT} "${_TMP_STR}" PARENT_SCOPE)
+endfunction()
+
+function(generate_package_dependencies)
+  join("${PROJECT_INTERFACE_PACKAGE_DEPENDENCIES}" " " DEPS)
+  set(PACKAGE_DEPENDENCIES "\
+####### Expanded from @PACKAGE_DEPENDENCIES@ by configure_package_config_file() #######
+
+set(${PROJECT_NAME}_PACKAGE_DEPENDENCIES ${DEPS})
+
+")
+  foreach(dep IN LISTS PROJECT_INTERFACE_PACKAGE_DEPENDENCIES)
+    join("${PROJECT_INTERFACE_${dep}_COMPONENTS}" " " COMPS)
+    if(COMPS)
+      string(CONCAT PACKAGE_DEPENDENCIES ${PACKAGE_DEPENDENCIES} "\
+set(${PROJECT_NAME}_${dep}_COMPONENTS ${COMPS})
+")
+    endif()
+    if(PROJECT_INTERFACE_${dep}_VERSION)
+      string(CONCAT PACKAGE_DEPENDENCIES ${PACKAGE_DEPENDENCIES} "\
+set(${PROJECT_NAME}_${dep}_VERSION ${PROJECT_INTERFACE_${dep}_VERSION})
+")
+    endif()
+  endforeach()
+  string(CONCAT PACKAGE_DEPENDENCIES ${PACKAGE_DEPENDENCIES} "\
+
+#######################################################################################
+")
+set(PACKAGE_DEPENDENCIES ${PACKAGE_DEPENDENCIES} PARENT_SCOPE)
+endfunction()
+
 # Configure/Install CMake package
-macro(install_fairlogger_cmake_package)
+macro(install_cmake_package)
   include(CMakePackageConfigHelpers)
   set(PACKAGE_INSTALL_DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_GIT_VERSION}
   )
-  install(EXPORT ${FairLogger_EXPORT_SET}
+  install(EXPORT ${PROJECT_EXPORT_SET}
     NAMESPACE ${PROJECT_NAME}::
     DESTINATION ${PACKAGE_INSTALL_DESTINATION}
     EXPORT_LINK_INTERFACE_LIBRARIES
   )
   write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
   )
+  generate_package_dependencies() # fills ${PACKAGE_DEPENDENCIES}
+  string(TOUPPER ${CMAKE_BUILD_TYPE} PROJECT_BUILD_TYPE_UPPER)
+  set(PROJECT_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${PROJECT_BUILD_TYPE_UPPER}})
   configure_package_config_file(
     ${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake

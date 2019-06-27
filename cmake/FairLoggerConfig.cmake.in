@@ -1,5 +1,5 @@
 ################################################################################
-#    Copyright (C) 2018 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
+# Copyright (C) 2018-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  #
 #                                                                              #
 #              This software is distributed under the terms of the             #
 #              GNU Lesser General Public Licence (LGPL) version 3,             #
@@ -9,19 +9,26 @@
 @PACKAGE_INIT@
 
 ### General variables for project discovery/inspection
-set(FairLogger_VERSION @PROJECT_VERSION@)
-set(FairLogger_GIT_VERSION @FairLogger_GIT_VERSION@)
+set(@PROJECT_NAME@_VERSION @PROJECT_VERSION@)
+set(@PROJECT_NAME@_GIT_VERSION @PROJECT_GIT_VERSION@)
+set(@PROJECT_NAME@_GIT_DATE @PROJECT_GIT_DATE@)
 
-set_and_check(FairLogger_ROOT @PACKAGE_CMAKE_INSTALL_PREFIX@)
-set_and_check(FairLogger_BINDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_BINDIR@)
-set_and_check(FairLogger_INCDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@)
-set_and_check(FairLogger_LIBDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@FairLogger_INSTALL_LIBDIR@)
+set_and_check(@PROJECT_NAME@_PREFIX @PACKAGE_CMAKE_INSTALL_PREFIX@)
+set(@PROJECT_NAME@_BINDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@PROJECT_INSTALL_BINDIR@)
+set_and_check(@PROJECT_NAME@_INCDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@)
+set_and_check(@PROJECT_NAME@_LIBDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@PROJECT_INSTALL_LIBDIR@)
 
 set(@PROJECT_NAME@_CXX_STANDARD_REQUIRED @CMAKE_CXX_STANDARD_REQUIRED@)
 set(@PROJECT_NAME@_CXX_STANDARD @CMAKE_CXX_STANDARD@)
 set(@PROJECT_NAME@_CXX_EXTENSIONS @CMAKE_CXX_EXTENSIONS@)
+set(@PROJECT_NAME@_BUILD_TYPE @CMAKE_BUILD_TYPE@)
+set(@PROJECT_NAME@_BUILD_TYPE_UPPER @PROJECT_BUILD_TYPE_UPPER@)
+set(@PROJECT_NAME@_CXX_FLAGS @PROJECT_CXX_FLAGS@)
+
+
+@PACKAGE_DEPENDENCIES@
 
 ### Import targets
-include(@PACKAGE_CMAKE_INSTALL_PREFIX@/@PACKAGE_INSTALL_DESTINATION@/FairLoggerTargets.cmake)
+include(@PACKAGE_CMAKE_INSTALL_PREFIX@/@PACKAGE_INSTALL_DESTINATION@/@PROJECT_EXPORT_SET@.cmake)
 
 check_required_components(FairLogger)
