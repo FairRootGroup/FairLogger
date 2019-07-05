@@ -376,11 +376,11 @@ class Logger
 #ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
 #define LOG(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), BOOST_CURRENT_FUNCTION).Log()
+        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(BOOST_CURRENT_FUNCTION)).Log()
 #else
 #define LOG(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), __FUNCTION__).Log()
+        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(__FUNCTION__)).Log()
 #endif
 
 // with custom file, line, function
