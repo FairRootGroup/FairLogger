@@ -1,8 +1,8 @@
-fairlogger (1.5.0-1ubuntu1) bionic; urgency=medium
+fairlogger (1.5.0-2) bionic; urgency=high
 
-  * Add dependency from dev package to lib package
+  * Fix lib package
 
- -- Dennis Klein <d.klein@gsi.de>  Sat, 10 Aug 2019 00:03:41 +0200
+ -- Dennis Klein <d.klein@gsi.de>  Sat, 10 Aug 2019 00:41:10 +0200
 
 fairlogger (1.5.0-1) bionic; urgency=medium
 
