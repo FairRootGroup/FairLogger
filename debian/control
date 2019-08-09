@@ -1,0 +1,26 @@
+Source: fairlogger
+Priority: optional
+Maintainer: Dennis Klein <d.klein@gsi.de>
+Build-Depends: debhelper (>= 10), cmake (>= 3.9.4), libboost1.65-dev
+Standards-Version: 4.1.2
+Section: libs
+Homepage: https://github.com/FairRootGroup/FairLogger
+Vcs-Git: https://github.com/FairRootGroup/FairLogger
+Vcs-Browser: https://github.com/FairRootGroup/FairLogger
+
+Package: fairlogger
+Architecture: amd64
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Lightweight and fast C++ Logging Library
+ Logging to stdout, file, and/or custom sinks. Configurable verbosity
+ and severity levels. Thread-safe ostream logging via LOG(severity) macro.
+
+Package: fairlogger-dev
+Architecture: amd64
+Multi-Arch: same
+Section: libdevel
+Depends: libboost1.65-dev, ${shlibs:Depends}, ${misc:Depends}
+Description: Lightweight and fast C++ Logging Library
+ Logging to stdout, file, and/or custom sinks. Configurable verbosity
+ and severity levels. Thread-safe ostream logging via LOG(severity) macro.

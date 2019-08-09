@@ -1,0 +1,35 @@
+From: Dennis Klein <d.klein@gsi.de>
+Date: Fri, 9 Aug 2019 22:16:06 +0200
+Subject: CMake: Do not bake git version into installed files
+
+---
+ CMakeLists.txt            | 2 +-
+ cmake/FairLoggerLib.cmake | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 673e2ac..159cda3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -62,7 +62,7 @@ target_include_directories(FairLogger
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ )
+ set_target_properties(FairLogger PROPERTIES
+-  VERSION ${PROJECT_GIT_VERSION}
++  VERSION ${PROJECT_VERSION}
+   SOVERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+ )
+ 
+diff --git a/cmake/FairLoggerLib.cmake b/cmake/FairLoggerLib.cmake
+index b038058..ca4f52f 100644
+--- a/cmake/FairLoggerLib.cmake
++++ b/cmake/FairLoggerLib.cmake
+@@ -215,7 +215,7 @@ endfunction()
+ macro(install_cmake_package)
+   include(CMakePackageConfigHelpers)
+   set(PACKAGE_INSTALL_DESTINATION
+-    ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_GIT_VERSION}
++    ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION}
+   )
+   install(EXPORT ${PROJECT_EXPORT_SET}
+     NAMESPACE ${PROJECT_NAME}::

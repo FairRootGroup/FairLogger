@@ -1,0 +1,3 @@
+0001-CMake-Do-not-bake-git-version-into-installed-files.patch
+0002-CMake-Disable-relative-install-RPATH.patch
+0003-CMake-Workaround-broken-pristine-tar.patch

@@ -1,0 +1,26 @@
+From: Dennis Klein <d.klein@gsi.de>
+Date: Fri, 9 Aug 2019 22:18:31 +0200
+Subject: CMake: Disable relative install RPATH
+
+---
+ cmake/FairLoggerLib.cmake | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/FairLoggerLib.cmake b/cmake/FairLoggerLib.cmake
+index ca4f52f..d15d163 100644
+--- a/cmake/FairLoggerLib.cmake
++++ b/cmake/FairLoggerLib.cmake
+@@ -131,11 +131,9 @@ macro(set_fairlogger_defaults)
+     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+       set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-Wl,--enable-new-dtags")
+       set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "-Wl,--enable-new-dtags")
+-      set(CMAKE_INSTALL_RPATH "$ORIGIN/../${PROJECT_INSTALL_LIBDIR}")
++      # set(CMAKE_INSTALL_RPATH "$ORIGIN/../${PROJECT_INSTALL_LIBDIR}")
+     elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+-      set(CMAKE_INSTALL_RPATH "@loader_path/../${PROJECT_INSTALL_LIBDIR}")
+-    else()
+-      set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}")
++      # set(CMAKE_INSTALL_RPATH "@loader_path/../${PROJECT_INSTALL_LIBDIR}")
+     endif()
+   endif()
+ 

@@ -1,0 +1,21 @@
+From: Dennis Klein <d.klein@gsi.de>
+Date: Fri, 9 Aug 2019 22:24:46 +0200
+Subject: CMake: Workaround broken pristine tar
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 159cda3..7a457cb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,7 +13,7 @@ cmake_policy(VERSION 3.9...3.14)
+ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+ include(FairLoggerLib)
+ 
+-get_git_version()
++get_git_version(DEFAULT_VERSION 1.5.0)
+ 
+ project(FairLogger VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
+ message(STATUS "${BWhite}${PROJECT_NAME}${CR} ${PROJECT_GIT_VERSION} from ${PROJECT_DATE}")
