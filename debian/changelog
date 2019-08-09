@@ -1,3 +1,9 @@
+fairlogger (1.5.0-4) bionic; urgency=low
+
+  * Refine package descriptions
+
+ -- Dennis Klein <d.klein@gsi.de>  Sat, 10 Aug 2019 01:44:53 +0200
+
 fairlogger (1.5.0-3) bionic; urgency=high
 
   * Fix dependency
