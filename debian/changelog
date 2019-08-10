@@ -1,3 +1,9 @@
+fairlogger (1.5.0-4ubuntu1) disco; urgency=medium
+
+  * Depend on Boost 1.67
+
+ -- Dennis Klein <d.klein@gsi.de>  Sat, 10 Aug 2019 02:49:02 +0200
+
 fairlogger (1.5.0-4) bionic; urgency=low
 
   * Refine package descriptions
