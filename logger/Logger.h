@@ -13,20 +13,22 @@
 #warning "The symbol 'DEBUG' is used in FairRoot Logger. undefining..."
 #endif
 
-#include <sstream>
-#include <fstream>
-#include <string>
-#include <unordered_map>
-#include <functional>
-#include <map>
-#include <chrono>
-#include <mutex>
-#include <utility> // pair
-#include <time.h> // time_t
-#include <array>
-#include <type_traits>
-#include <cassert>
 #include <algorithm>
+#include <array>
+#include <cassert>
+#include <chrono>
+#include <fstream>
+#include <functional>
+#include <initializer_list>
+#include <map>
+#include <mutex>
+#include <sstream>
+#include <string>
+#include <time.h> // time_t
+#include <type_traits>
+#include <unordered_map>
+#include <utility> // pair
+#include <vector>
 
 #ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
 #include <boost/current_function.hpp>
@@ -114,8 +116,7 @@ struct VerbositySpec
     template<typename ... Ts>
     static VerbositySpec Make(Ts ... options)
     {
-      static_assert(sizeof...(Ts) < static_cast<int>(Info::__max__),
-                    "Maximum number of VerbositySpec::Info parameters exceeded.");
+      static_assert(sizeof...(Ts) < static_cast<int>(Info::__max__), "Maximum number of VerbositySpec::Info parameters exceeded.");
 
       return Make(VerbositySpec(), 0, options...);
     }
@@ -124,8 +125,7 @@ struct VerbositySpec
     template<typename T, typename ... Ts>
     static VerbositySpec Make(VerbositySpec spec, int i, T option, Ts ... options)
     {
-        static_assert(std::is_same<T, Info>::value,
-                      "Only arguments of type VerbositySpec::Info are allowed.");
+        static_assert(std::is_same<T, Info>::value, "Only arguments of type VerbositySpec::Info are allowed.");
 
         assert(option > Info::__empty__);
         assert(option < Info::__max__);
@@ -181,6 +181,7 @@ class Logger
 {
   public:
     Logger(Severity severity, const std::string& file, const std::string& line, const std::string& func);
+    virtual ~Logger() noexcept(false);
 
     enum class Color : int
     {
@@ -298,8 +299,6 @@ class Logger
     static void AddCustomSink(const std::string& key, const std::string& severityStr, std::function<void(const std::string& content, const LogMetaData& metadata)> sink);
     static void RemoveCustomSink(const std::string& key);
 
-    Logger& Log();
-
     template<typename T>
     Logger& operator<<(const T& t)
     {
@@ -332,8 +331,6 @@ class Logger
     static const std::unordered_map<std::string, Severity> fSeverityMap;
     static const std::array<std::string, 12> fSeverityNames;
     static const std::array<std::string, 5> fVerbosityNames;
-
-    virtual ~Logger() noexcept(false);
 
     // protection for use after static destruction took place
     static bool fIsDestructed;
@@ -376,17 +373,17 @@ class Logger
 #ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
 #define LOG(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(BOOST_CURRENT_FUNCTION)).Log()
+        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(BOOST_CURRENT_FUNCTION))
 #else
 #define LOG(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(__FUNCTION__)).Log()
+        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(__FUNCTION__))
 #endif
 
 // with custom file, line, function
 #define LOGD(severity, file, line, function) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(severity, file, line, function).Log()
+        fair::Logger(severity, file, line, function)
 
 #define LOG_IF(severity, condition) \
     for (bool fairLOggerunLikelyvariable2 = false; condition && !fairLOggerunLikelyvariable2; fairLOggerunLikelyvariable2 = true) \
