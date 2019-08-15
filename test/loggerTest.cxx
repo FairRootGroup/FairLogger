@@ -18,9 +18,6 @@
 using namespace std;
 using namespace fair;
 
-namespace test
-{
-
 void printEverySeverity()
 {
     static int i = 1;
@@ -38,39 +35,37 @@ void printEverySeverity()
     LOG(trace) << "trace message "   << i++;
 }
 
-}
-
 void printAllVerbositiesWithSeverity(Severity sev)
 {
     Logger::SetConsoleSeverity(sev);
 
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'verylow' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::verylow);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'low' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::low);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'medium' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::medium);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'high' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::high);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'veryhigh' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::veryhigh);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'user1' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::user1);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'user2' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::user2);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'user3' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::user3);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << endl << "cout: >>> testing severity '" << Logger::SeverityName(sev) << "' with 'user4' verbosity..." << endl;
     Logger::SetVerbosity(Verbosity::user4);
-    test::printEverySeverity();
+    printEverySeverity();
 }
 
 void silentlyPrintAllVerbositiesWithSeverity(Severity sev)
@@ -78,23 +73,23 @@ void silentlyPrintAllVerbositiesWithSeverity(Severity sev)
     Logger::SetConsoleSeverity(sev);
 
     Logger::SetVerbosity(Verbosity::verylow);
-    test::printEverySeverity();
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::low);
-    test::printEverySeverity();
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::medium);
-    test::printEverySeverity();
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::high);
-    test::printEverySeverity();
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::veryhigh);
-    test::printEverySeverity();
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::user1);
-    test::printEverySeverity();
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::user2);
-    test::printEverySeverity();
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::user3);
-    test::printEverySeverity();
+    printEverySeverity();
     Logger::SetVerbosity(Verbosity::user4);
-    test::printEverySeverity();
+    printEverySeverity();
 }
 
 int main()
@@ -102,7 +97,8 @@ int main()
     Logger::SetConsoleColor(true);
 
     auto spec = VerbositySpec::Make(VerbositySpec::Info::file_line_function,
-                                    VerbositySpec::Info::process_name,VerbositySpec::Info::process_name);
+                                    VerbositySpec::Info::process_name,
+                                    VerbositySpec::Info::process_name);
     cout << "Defining custom verbosity \"user2\"" << endl;
     Logger::DefineVerbosity(Verbosity::user2, spec);
 
@@ -163,7 +159,7 @@ int main()
     cout << "cout: ----------------------------" << endl;
     cout << "cout: open log file with severity 'error'" << endl;
     Logger::InitFileSink(Severity::error, "test_log", true);
-    test::printEverySeverity();
+    printEverySeverity();
     cout << "cout: closing log file" << endl;
     Logger::RemoveFileSink();
 
@@ -188,7 +184,7 @@ int main()
         cout << "CustomSink: \tfair::Severity severity: " << static_cast<int>(metadata.severity) << endl;
     });
 
-    test::printEverySeverity();
+    printEverySeverity();
 
     cout << endl << "cout: removing custom sink with info severity" << endl;
 
