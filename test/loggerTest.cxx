@@ -117,7 +117,7 @@ int main()
     printAllVerbositiesWithSeverity(Severity::nolog);
 
     cout << endl;
-    cout << "cout: resetting severity to 'info' and verbosity to 'medium'" << endl;
+    cout << "cout: setting severity to 'info' and verbosity to 'medium'" << endl;
     Logger::SetConsoleSeverity(Severity::info);
     Logger::SetVerbosity(Verbosity::medium);
 
@@ -139,7 +139,7 @@ int main()
         silentlyPrintAllVerbositiesWithSeverity(Severity::nolog);
     }
     cout << endl;
-    cout << "cout: resetting severity to 'trace' and verbosity to 'veryhigh'" << endl;
+    cout << "cout: setting severity to 'trace' and verbosity to 'veryhigh'" << endl;
     Logger::SetConsoleSeverity(Severity::trace);
     Logger::SetVerbosity(Verbosity::veryhigh);
 
@@ -153,7 +153,7 @@ int main()
     LOG(info) << "x = " << x << " (after conditional increment)";
 
     cout << endl;
-    cout << "cout: resetting severity to 'nolog'" << endl;
+    cout << "cout: setting severity to 'nolog'" << endl;
     Logger::SetConsoleSeverity(Severity::nolog);
 
     cout << "cout: ----------------------------" << endl;
@@ -164,7 +164,7 @@ int main()
     Logger::RemoveFileSink();
 
 
-    cout << "cout: resetting severity to 'nolog'" << endl;
+    cout << "cout: setting severity to 'nolog'" << endl;
     Logger::SetConsoleSeverity(Severity::nolog);
     cout << "cout: ----------------------------" << endl;
     cout << "cout: adding custom sink with error severity" << endl << endl;
@@ -191,6 +191,22 @@ int main()
     Logger::AddCustomSink("CustomSink", Severity::error, [](const string& /*content*/, const LogMetaData& /*metadata*/){});
     Logger::RemoveCustomSink("CustomSink");
     Logger::RemoveCustomSink("bla");
+
+    cout << "cout: setting severity to 'trace'" << endl;
+    Logger::SetConsoleSeverity(Severity::trace);
+
+    LOGF(info, "Hello {} {}!", "world", ":-)");
+    LOGP(info, "Hello %s %s!", "world", ":-)");
+
+    cout << "cout: setting verbosity to 'veryhigh'" << endl;
+    Logger::SetVerbosity(Verbosity::veryhigh);
+
+    LOGV(info, verylow) << "I should be printed with very low verbosity";
+
+    LOGN();
+    LOGN();
+    LOGN();
+    LOGN();
 
     return 0;
 }

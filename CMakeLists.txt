@@ -23,10 +23,10 @@ set_fairlogger_defaults()
 include(CTest)
 
 option(USE_BOOST_PRETTY_FUNCTION "Use Boost BOOST_PRETTY_FUNCTION macro" OFF)
+option(USE_EXTERNAL_FMT "Use external fmt library instead of the bundled one" OFF)
 ################################################################################
 
-
-# Dependency ###################################################################
+# Dependencies ###################################################################
 if(USE_BOOST_PRETTY_FUNCTION)
   if(NOT DEFINED Boost_NO_BOOST_CMAKE AND CMAKE_VERSION VERSION_LESS 3.15)
     # Since Boost 1.70 a CMake package is shipped by default. Unfortunately, it has a number
@@ -36,8 +36,11 @@ if(USE_BOOST_PRETTY_FUNCTION)
   endif()
   find_package2(PUBLIC Boost REQUIRED)
 endif()
-################################################################################
 
+if(USE_EXTERNAL_FMT)
+  find_package2(PUBLIC fmt REQUIRED VERSION 5.3.0)
+endif()
+################################################################################
 
 # Targets ######################################################################
 # Configure Version.h
@@ -56,6 +59,18 @@ if(USE_BOOST_PRETTY_FUNCTION)
   target_compile_definitions(FairLogger PUBLIC FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION)
 endif()
 
+if(USE_EXTERNAL_FMT)
+  target_link_libraries(FairLogger PUBLIC fmt::fmt)
+else()
+  add_library(fmt INTERFACE)
+  target_include_directories(fmt INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/logger/bundled>
+    $<INSTALL_INTERFACE:${PROJECT_INSTALL_INCDIR}/bundled>
+  )
+  target_compile_definitions(fmt INTERFACE FMT_HEADER_ONLY)
+  target_link_libraries(FairLogger PUBLIC fmt)
+endif()
+
 target_include_directories(FairLogger
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/logger>
@@ -72,14 +87,17 @@ if(BUILD_TESTING)
 endif()
 ################################################################################
 
-
 # Installation #################################################################
 if(BUILD_TESTING)
   set(test_targets ${targets} loggerTest)
 endif()
+if(NOT USE_EXTERNAL_FMT)
+  set(fmt_target fmt)
+endif()
 install(TARGETS
   FairLogger
   ${test_targets}
+  ${fmt_target}
 
   EXPORT ${PROJECT_EXPORT_SET}
   LIBRARY DESTINATION ${PROJECT_INSTALL_LIBDIR}
@@ -94,18 +112,21 @@ install(FILES
   DESTINATION ${PROJECT_INSTALL_INCDIR}
 )
 
+if(NOT USE_EXTERNAL_FMT)
+  install(DIRECTORY
+    logger/bundled
+    DESTINATION ${PROJECT_INSTALL_INCDIR}
+  )
+endif()
+
 install_cmake_package()
 ################################################################################
 
-
 # Testing ######################################################################
 if(BUILD_TESTING)
-  add_test(NAME loggerTest
-    COMMAND $<TARGET_FILE:loggerTest>
-  )
+  add_test(NAME loggerTest COMMAND $<TARGET_FILE:loggerTest>)
 endif()
 ################################################################################
-
 
 # Summary ######################################################################
 message(STATUS "  ")
@@ -166,6 +187,9 @@ if(PROJECT_PACKAGE_DEPENDENCIES)
         get_target_property(boost_include Boost::boost INTERFACE_INCLUDE_DIRECTORIES)
       endif()
       get_filename_component(prefix ${boost_include}/.. ABSOLUTE)
+    elseif(${dep} STREQUAL fmt)
+      get_target_property(fmt_include fmt::fmt INTERFACE_INCLUDE_DIRECTORIES)
+      get_filename_component(prefix ${fmt_include}/.. ABSOLUTE)
     else()
       get_filename_component(prefix ${${dep}_INCLUDE_DIR}/.. ABSOLUTE)
     endif()
