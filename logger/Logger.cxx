@@ -7,13 +7,10 @@
  ********************************************************************************/
 #include "Logger.h"
 
-#include <iostream>
-#include <ostream>
-#include <array>
-#include <chrono>
+#include <cstdio> // printf
 #include <ctime> // strftime
 #include <iomanip> // setw, setfill
-#include <cstdio> // printf
+#include <iostream>
 
 using namespace std;
 
@@ -23,11 +20,9 @@ namespace fair
 class ColoredSeverityWriter
 {
   public:
-    ColoredSeverityWriter(Severity severity)
-        : fSeverity(severity)
-    {}
+    ColoredSeverityWriter(Severity severity) : fSeverity(severity) {}
 
-    friend ostream& operator<<(ostream& os, const ColoredSeverityWriter& w)
+    friend std::ostream& operator<<(std::ostream& os, const ColoredSeverityWriter& w)
     {
         switch (w.fSeverity) {
             case Severity::nolog:
@@ -160,14 +155,18 @@ const array<string, 12> Logger::fSeverityNames =
     }
 };
 
-const array<string, 5> Logger::fVerbosityNames =
+const array<string, 9> Logger::fVerbosityNames =
 {
     {
         "verylow",
         "low",
         "medium",
         "high",
-        "veryhigh"
+        "veryhigh",
+        "user1",
+        "user2",
+        "user3",
+        "user4"
     }
 };
 
@@ -195,6 +194,10 @@ string Logger::VerbosityName(Verbosity verbosity)
 }
 
 Logger::Logger(Severity severity, const string& file, const string& line, const string& func)
+    : Logger(severity, fVerbosity, file, line, func)
+{}
+
+Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const string& line, const string& func)
 {
     if (!fIsDestructed) {
         chrono::time_point<chrono::system_clock> now = chrono::system_clock::now();
@@ -217,7 +220,7 @@ Logger::Logger(Severity severity, const string& file, const string& line, const 
             }
         }
 
-        auto spec = fVerbosities[fVerbosity];
+        auto spec = fVerbosities[verbosity];
 
         if ((!fColored && LoggingToConsole()) || LoggingToFile()) {
             bool appendSpace = false;
@@ -349,6 +352,11 @@ Logger::~Logger() noexcept(false)
             fFatalCallback();
         }
     }
+}
+
+void Logger::PrintEmptyLine()
+{
+    cout << "\n" << flush;
 }
 
 void Logger::SetConsoleSeverity(const Severity severity)
@@ -606,22 +614,22 @@ void Logger::RemoveFileSink()
 bool Logger::LoggingToConsole() const
 {
     return (fMetaData.severity <= fConsoleSeverity &&
-           fMetaData.severity > Severity::nolog) ||
-           fMetaData.severity == Severity::fatal;
+            fMetaData.severity >  Severity::nolog) ||
+            fMetaData.severity == Severity::fatal;
 }
 
 bool Logger::LoggingToFile() const
 {
     return (fMetaData.severity <= fFileSeverity &&
-           fMetaData.severity > Severity::nolog) ||
-           fMetaData.severity == Severity::fatal;
+            fMetaData.severity >  Severity::nolog) ||
+            fMetaData.severity == Severity::fatal;
 }
 
 bool Logger::LoggingCustom(const Severity severity) const
 {
     return (fMetaData.severity <= severity &&
-           fMetaData.severity > Severity::nolog) ||
-           fMetaData.severity == Severity::fatal;
+            fMetaData.severity >  Severity::nolog) ||
+            fMetaData.severity == Severity::fatal;
 }
 
 void Logger::OnFatal(function<void()> func)

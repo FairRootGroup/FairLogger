@@ -13,26 +13,33 @@
 #warning "The symbol 'DEBUG' is used in FairRoot Logger. undefining..."
 #endif
 
+#ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
+#include <boost/current_function.hpp>
+#endif
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+
+#include <fmt/core.h>
+#include <fmt/printf.h>
+
+#pragma GCC diagnostic pop
+
 #include <algorithm>
 #include <array>
 #include <cassert>
 #include <chrono>
 #include <fstream>
 #include <functional>
-#include <initializer_list>
 #include <map>
 #include <mutex>
+#include <ostream>
 #include <sstream>
 #include <string>
 #include <time.h> // time_t
 #include <type_traits>
 #include <unordered_map>
 #include <utility> // pair
-#include <vector>
-
-#ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
-#include <boost/current_function.hpp>
-#endif
 
 namespace fair
 {
@@ -116,9 +123,8 @@ struct VerbositySpec
     template<typename ... Ts>
     static VerbositySpec Make(Ts ... options)
     {
-      static_assert(sizeof...(Ts) < static_cast<int>(Info::__max__), "Maximum number of VerbositySpec::Info parameters exceeded.");
-
-      return Make(VerbositySpec(), 0, options...);
+        static_assert(sizeof...(Ts) < static_cast<int>(Info::__max__), "Maximum number of VerbositySpec::Info parameters exceeded.");
+        return Make(VerbositySpec(), 0, options...);
     }
 
   private:
@@ -138,28 +144,17 @@ struct VerbositySpec
         return Make(spec, i, options ...);
     }
 
-    static VerbositySpec Make(VerbositySpec spec, int)
-    {
-        return spec;
-    }
+    static VerbositySpec Make(VerbositySpec spec, int) { return spec; }
 };
 
 // non-std exception to avoid undesirable catches - fatal should exit in a way we want.
 class FatalException
 {
   public:
-    FatalException()
-        : fWhat()
-    {}
+    FatalException() : fWhat() {}
+    FatalException(std::string what) : fWhat(what) {}
 
-    FatalException(std::string what)
-        : fWhat(what)
-    {}
-
-    std::string What()
-    {
-        return fWhat;
-    }
+    std::string What() { return fWhat; }
 
   private:
     std::string fWhat;
@@ -181,7 +176,12 @@ class Logger
 {
   public:
     Logger(Severity severity, const std::string& file, const std::string& line, const std::string& func);
+    Logger(Severity severity, Verbosity verbosity, const std::string& file, const std::string& line, const std::string& func);
     virtual ~Logger() noexcept(false);
+
+    Logger& Log() { return *this; }
+
+    static void PrintEmptyLine();
 
     enum class Color : int
     {
@@ -330,7 +330,7 @@ class Logger
     static const std::unordered_map<std::string, Verbosity> fVerbosityMap;
     static const std::unordered_map<std::string, Severity> fSeverityMap;
     static const std::array<std::string, 12> fSeverityNames;
-    static const std::array<std::string, 5> fVerbosityNames;
+    static const std::array<std::string, 9> fVerbosityNames;
 
     // protection for use after static destruction took place
     static bool fIsDestructed;
@@ -371,19 +371,32 @@ class Logger
 #define CONVERTTOSTRING(s) IMP_CONVERTTOSTRING(s)
 
 #ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
-#define LOG(severity) \
-    for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(BOOST_CURRENT_FUNCTION))
+#define MESSAGE_ORIGIN __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(BOOST_CURRENT_FUNCTION)
 #else
-#define LOG(severity) \
-    for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(__FUNCTION__))
+#define MESSAGE_ORIGIN __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(__FUNCTION__)
 #endif
 
-// with custom file, line, function
-#define LOGD(severity, file, line, function) \
+// Log line if the provided severity is below or equals the configured one
+#define LOG(severity) \
+    for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
+        fair::Logger(fair::Severity::severity, MESSAGE_ORIGIN)
+
+// Log line with the given verbosity if the provided severity is below or equals the configured one
+#define LOGV(severity, verbosity) \
+    for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
+        fair::Logger(fair::Severity::severity, fair::Verbosity::verbosity, MESSAGE_ORIGIN)
+
+// Log with fmt- or printf-like formatting
+#define LOGF(severity, ...) LOG(severity) << fmt::format(__VA_ARGS__)
+#define LOGP(severity, ...) LOG(severity) << fmt::sprintf(__VA_ARGS__)
+
+// Log an empty line
+#define LOGN() fair::Logger::PrintEmptyLine()
+
+// Log with custom file, line, function
+#define LOGD(severity, file, line, f) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(severity, file, line, function)
+        fair::Logger(severity, file, line, f)
 
 #define LOG_IF(severity, condition) \
     for (bool fairLOggerunLikelyvariable2 = false; condition && !fairLOggerunLikelyvariable2; fairLOggerunLikelyvariable2 = true) \
