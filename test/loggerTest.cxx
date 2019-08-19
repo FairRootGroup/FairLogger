@@ -203,10 +203,11 @@ int main()
 
     LOGV(info, verylow) << "I should be printed with very low verbosity";
 
-    LOGN();
-    LOGN();
-    LOGN();
-    LOGN();
+    cout << "cout: pushing 4 new lines with LOGN() in info verbosity" << endl;
+    LOGN(info);
+    LOGN(info);
+    LOGN(info);
+    LOGN(info);
 
     return 0;
 }

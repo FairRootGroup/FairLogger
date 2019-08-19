@@ -181,7 +181,7 @@ class Logger
 
     Logger& Log() { return *this; }
 
-    static void PrintEmptyLine();
+    void LogEmptyLine();
 
     enum class Color : int
     {
@@ -391,7 +391,9 @@ class Logger
 #define LOGP(severity, ...) LOG(severity) << fmt::sprintf(__VA_ARGS__)
 
 // Log an empty line
-#define LOGN() fair::Logger::PrintEmptyLine()
+#define LOGN(severity) \
+    for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
+        fair::Logger(fair::Severity::severity, fair::Verbosity::verylow, MESSAGE_ORIGIN).LogEmptyLine()
 
 // Log with custom file, line, function
 #define LOGD(severity, file, line, f) \
