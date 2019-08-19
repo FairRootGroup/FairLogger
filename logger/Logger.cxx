@@ -354,9 +354,10 @@ Logger::~Logger() noexcept(false)
     }
 }
 
-void Logger::PrintEmptyLine()
+void Logger::LogEmptyLine()
 {
-    cout << "\n" << flush;
+    // do nothing, line break is added by the destructor
+    // this call just to prevent any output to be added to the logger object
 }
 
 void Logger::SetConsoleSeverity(const Severity severity)
