@@ -134,8 +134,7 @@ int main()
     cout << "cout: is logging fatal: " << fair::Logger::Logging(Severity::fatal) << endl;
     cout << "cout: is logging nolog: " << fair::Logger::Logging(Severity::nolog) << endl;
 
-    for (int i = 0; i < 1000000; ++i)
-    {
+    for (int i = 0; i < 1000000; ++i) {
         silentlyPrintAllVerbositiesWithSeverity(Severity::nolog);
     }
     cout << endl;
@@ -198,8 +197,8 @@ int main()
     LOGF(info, "Hello {} {}!", "world", ":-)");
     LOGP(info, "Hello %s %s!", "world", ":-)");
 
-    cout << "cout: setting verbosity to 'veryhigh'" << endl;
-    Logger::SetVerbosity(Verbosity::veryhigh);
+    cout << "cout: setting verbosity to 'high'" << endl;
+    Logger::SetVerbosity(Verbosity::high);
 
     LOGV(info, verylow) << "I should be printed with very low verbosity";
 
