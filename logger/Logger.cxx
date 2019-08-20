@@ -7,9 +7,9 @@
  ********************************************************************************/
 #include "Logger.h"
 
+#include <fmt/time.h>
+
 #include <cstdio> // printf
-#include <ctime> // strftime
-#include <iomanip> // setw, setfill
 #include <iostream>
 
 using namespace std;
@@ -172,15 +172,15 @@ const array<string, 9> Logger::fVerbosityNames =
 
 map<Verbosity, VerbositySpec> Logger::fVerbosities =
 {
-    { Verbosity::verylow,  VerbositySpec::Make()                                                                                                                                            },
-    { Verbosity::low,      VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                               },
-    { Verbosity::medium,   VerbositySpec::Make(VerbositySpec::Info::timestamp_s, VerbositySpec::Info::severity)                                                                             },
-    { Verbosity::high,     VerbositySpec::Make(VerbositySpec::Info::process_name, VerbositySpec::Info::timestamp_s, VerbositySpec::Info::severity)                                          },
-    { Verbosity::veryhigh, VerbositySpec::Make(VerbositySpec::Info::process_name, VerbositySpec::Info::timestamp_s, VerbositySpec::Info::severity, VerbositySpec::Info::file_line_function) },
-    { Verbosity::user1,    VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                               },
-    { Verbosity::user2,    VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                               },
-    { Verbosity::user3,    VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                               },
-    { Verbosity::user4,    VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                               }
+    { Verbosity::verylow,  VerbositySpec::Make()                                                                                                                                             },
+    { Verbosity::low,      VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                                },
+    { Verbosity::medium,   VerbositySpec::Make(VerbositySpec::Info::timestamp_s, VerbositySpec::Info::severity)                                                                              },
+    { Verbosity::high,     VerbositySpec::Make(VerbositySpec::Info::process_name, VerbositySpec::Info::timestamp_s, VerbositySpec::Info::severity)                                           },
+    { Verbosity::veryhigh, VerbositySpec::Make(VerbositySpec::Info::process_name, VerbositySpec::Info::timestamp_us, VerbositySpec::Info::severity, VerbositySpec::Info::file_line_function) },
+    { Verbosity::user1,    VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                                },
+    { Verbosity::user2,    VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                                },
+    { Verbosity::user3,    VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                                },
+    { Verbosity::user4,    VerbositySpec::Make(VerbositySpec::Info::severity)                                                                                                                }
 };
 
 string Logger::SeverityName(Severity severity)
@@ -212,14 +212,6 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
         fMetaData.severity_name = fSeverityNames.at(static_cast<size_t>(severity));
         fMetaData.severity = severity;
 
-        char tsstr[32];
-        {
-            lock_guard<mutex> lock(fMtx); // localtime is not threadsafe, guard it
-            if (!strftime(tsstr, sizeof(tsstr), "%H:%M:%S", localtime(&(fMetaData.timestamp)))) {
-                tsstr[0] = 'u';
-            }
-        }
-
         auto spec = fVerbosities[verbosity];
 
         if ((!fColored && LoggingToConsole()) || LoggingToFile()) {
@@ -231,11 +223,11 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
                         appendSpace = true;
                         break;
                     case VerbositySpec::Info::timestamp_us:
-                        fBWOut << "[" << tsstr << "." << setw(6) << setfill('0') << fMetaData.us.count() << "]";
+                        fBWOut << fmt::format("[{:%H:%M:%S}.{:06}]", fmt::localtime(fMetaData.timestamp), fMetaData.us.count());
                         appendSpace = true;
                         break;
                     case VerbositySpec::Info::timestamp_s:
-                        fBWOut << "[" << tsstr << "]";
+                        fBWOut << fmt::format("[{:%H:%M:%S}]", fmt::localtime(fMetaData.timestamp));
                         appendSpace = true;
                         break;
                     case VerbositySpec::Info::severity:
@@ -273,12 +265,11 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
                         appendSpace = true;
                         break;
                     case VerbositySpec::Info::timestamp_us:
-                        fColorOut << "[" << startColor(Color::fgCyan) << tsstr << "."
-                                        << setw(6) << setfill('0') << fMetaData.us.count() << endColor() << "]";
+                        fColorOut << fmt::format("[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), fmt::localtime(fMetaData.timestamp), fMetaData.us.count(), endColor());
                         appendSpace = true;
                         break;
                     case VerbositySpec::Info::timestamp_s:
-                        fColorOut << "[" << startColor(Color::fgCyan) << tsstr << endColor() << "]";
+                        fColorOut << fmt::format("[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), fmt::localtime(fMetaData.timestamp), endColor());
                         appendSpace = true;
                         break;
                     case VerbositySpec::Info::severity:
