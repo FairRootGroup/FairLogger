@@ -293,8 +293,8 @@ class Logger
 
     static void RemoveFileSink();
 
-    static std::string SeverityName(Severity);
-    static std::string VerbosityName(Verbosity);
+    static std::string SeverityName(Severity s) { return fSeverityNames.at(static_cast<size_t>(s)); }
+    static std::string VerbosityName(Verbosity v) { return fVerbosityNames.at(static_cast<size_t>(v)); }
 
     static void OnFatal(std::function<void()> func);
 
@@ -364,6 +364,9 @@ class Logger
     bool LoggingCustom(const Severity) const;
 
     static void UpdateMinSeverity();
+
+    void FillTimeInfos();
+    bool fTimeCalculated;
 
     static std::map<Verbosity, VerbositySpec> fVerbosities;
 };
