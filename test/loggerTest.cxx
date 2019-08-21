@@ -134,8 +134,8 @@ int main()
     cout << "cout: is logging fatal: " << fair::Logger::Logging(Severity::fatal) << endl;
     cout << "cout: is logging nolog: " << fair::Logger::Logging(Severity::nolog) << endl;
 
-    for (int i = 0; i < 1000000; ++i) {
-        silentlyPrintAllVerbositiesWithSeverity(Severity::nolog);
+    for (int i = 0; i < 100000; ++i) {
+        silentlyPrintAllVerbositiesWithSeverity(Severity::trace);
     }
     cout << endl;
     cout << "cout: setting severity to 'trace' and verbosity to 'veryhigh'" << endl;

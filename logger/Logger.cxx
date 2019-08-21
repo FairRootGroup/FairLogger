@@ -22,7 +22,7 @@ class ColoredSeverityWriter
   public:
     ColoredSeverityWriter(Severity severity) : fSeverity(severity) {}
 
-    friend std::ostream& operator<<(std::ostream& os, const ColoredSeverityWriter& w)
+    friend ostream& operator<<(ostream& os, const ColoredSeverityWriter& w)
     {
         switch (w.fSeverity) {
             case Severity::nolog:
@@ -203,100 +203,81 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
         chrono::time_point<chrono::system_clock> now = chrono::system_clock::now();
         size_t pos = file.rfind("/");
 
-        fMetaData.timestamp = chrono::system_clock::to_time_t(now);
-        fMetaData.us = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()) % 1000000;
-        fMetaData.process_name = fProcessName;
-        fMetaData.file = file.substr(pos + 1);
-        fMetaData.line = line;
-        fMetaData.func = func;
-        fMetaData.severity_name = fSeverityNames.at(static_cast<size_t>(severity));
-        fMetaData.severity = severity;
+        fInfos.timestamp = chrono::system_clock::to_time_t(now);
+        fInfos.us = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()) % 1000000;
+        fInfos.process_name = fProcessName;
+        fInfos.file = file.substr(pos + 1);
+        fInfos.line = line;
+        fInfos.func = func;
+        fInfos.severity_name = fSeverityNames.at(static_cast<size_t>(severity));
+        fInfos.severity = severity;
 
         auto spec = fVerbosities[verbosity];
 
         if ((!fColored && LoggingToConsole()) || LoggingToFile()) {
-            bool appendSpace = false;
-            for (const auto info : spec.fOrder) {
+            for (const auto info : spec.fInfos) {
                 switch (info) {
                     case VerbositySpec::Info::process_name:
-                        fBWOut << "[" << fMetaData.process_name << "]";
-                        appendSpace = true;
+                        fBWOut << fmt::format("[{}]", fInfos.process_name);
                         break;
                     case VerbositySpec::Info::timestamp_us:
-                        fBWOut << fmt::format("[{:%H:%M:%S}.{:06}]", fmt::localtime(fMetaData.timestamp), fMetaData.us.count());
-                        appendSpace = true;
+                        fBWOut << fmt::format("[{:%H:%M:%S}.{:06}]", fmt::localtime(fInfos.timestamp), fInfos.us.count());
                         break;
                     case VerbositySpec::Info::timestamp_s:
-                        fBWOut << fmt::format("[{:%H:%M:%S}]", fmt::localtime(fMetaData.timestamp));
-                        appendSpace = true;
+                        fBWOut << fmt::format("[{:%H:%M:%S}]", fmt::localtime(fInfos.timestamp));
                         break;
                     case VerbositySpec::Info::severity:
-                        fBWOut << "[" << fMetaData.severity_name << "]";
-                        appendSpace = true;
+                        fBWOut << fmt::format("[{}]", fInfos.severity_name);
                         break;
                     case VerbositySpec::Info::file_line_function:
-                        fBWOut << "[" << fMetaData.file << ":" << fMetaData.line << ":" << fMetaData.func << "]";
-                        appendSpace = true;
+                        fBWOut << fmt::format("[{}:{}:{}]", fInfos.file, fInfos.line, fInfos.func);
                         break;
                     case VerbositySpec::Info::file_line:
-                        fBWOut << "[" << fMetaData.file << ":" << fMetaData.line << "]";
-                        appendSpace = true;
+                        fBWOut << fmt::format("[{}:{}]", fInfos.file, fInfos.line);
                         break;
                     case VerbositySpec::Info::file:
-                        fBWOut << "[" << fMetaData.file << "]";
-                        appendSpace = true;
+                        fBWOut << fmt::format("[{}]", fInfos.file);
                         break;
                     default:
                         break;
                 }
             }
 
-            if (appendSpace) {
+            if (spec.fSize > 0) {
                 fBWOut << " ";
             }
         }
 
         if (fColored && LoggingToConsole()) {
-            bool appendSpace = false;
-            for (const auto info : spec.fOrder) {
+            for (const auto info : spec.fInfos) {
                 switch (info) {
                     case VerbositySpec::Info::process_name:
-                        fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.process_name) << "]";
-                        appendSpace = true;
+                        fColorOut << fmt::format("[{}]", ColorOut(Color::fgBlue, fInfos.process_name));
                         break;
                     case VerbositySpec::Info::timestamp_us:
-                        fColorOut << fmt::format("[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), fmt::localtime(fMetaData.timestamp), fMetaData.us.count(), endColor());
-                        appendSpace = true;
+                        fColorOut << fmt::format("[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), fInfos.us.count(), endColor());
                         break;
                     case VerbositySpec::Info::timestamp_s:
-                        fColorOut << fmt::format("[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), fmt::localtime(fMetaData.timestamp), endColor());
-                        appendSpace = true;
+                        fColorOut << fmt::format("[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), endColor());
                         break;
                     case VerbositySpec::Info::severity:
-                        fColorOut << "[" << ColoredSeverityWriter(fMetaData.severity) << "]";
-                        appendSpace = true;
+                        fColorOut << fmt::format("[{}]", ColoredSeverityWriter(fInfos.severity));
                         break;
                     case VerbositySpec::Info::file_line_function:
-                        fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.file) << ":"
-                                        << ColorOut(Color::fgYellow, fMetaData.line) << ":"
-                                        << ColorOut(Color::fgBlue, fMetaData.func) << "]";
-                        appendSpace = true;
+                        fColorOut << fmt::format("[{}:{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line), ColorOut(Color::fgBlue, fInfos.func));
                         break;
                     case VerbositySpec::Info::file_line:
-                        fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.file) << ":"
-                                        << ColorOut(Color::fgYellow, fMetaData.line) << "]";
-                        appendSpace = true;
+                        fColorOut << fmt::format("[{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line));
                         break;
                     case VerbositySpec::Info::file:
-                        fColorOut << "[" << ColorOut(Color::fgBlue, fMetaData.file) << "]";
-                        appendSpace = true;
+                        fColorOut << fmt::format("[{}]", ColorOut(Color::fgBlue, fInfos.file));
                         break;
                     default:
                         break;
                 }
             }
 
-            if (appendSpace) {
+            if (spec.fSize > 0) {
                 fColorOut << " ";
             }
         }
@@ -314,7 +295,7 @@ Logger::~Logger() noexcept(false)
     for (auto& it : fCustomSinks) {
         if (LoggingCustom(it.second.first)) {
             lock_guard<mutex> lock(fMtx);
-            it.second.second(fContent.str(), fMetaData);
+            it.second.second(fContent.str(), fInfos);
         }
     }
 
@@ -338,7 +319,7 @@ Logger::~Logger() noexcept(false)
         }
     }
 
-    if (fMetaData.severity == Severity::fatal) {
+    if (fInfos.severity == Severity::fatal) {
         if (fFatalCallback) {
             fFatalCallback();
         }
@@ -605,23 +586,23 @@ void Logger::RemoveFileSink()
 
 bool Logger::LoggingToConsole() const
 {
-    return (fMetaData.severity <= fConsoleSeverity &&
-            fMetaData.severity >  Severity::nolog) ||
-            fMetaData.severity == Severity::fatal;
+    return (fInfos.severity <= fConsoleSeverity &&
+            fInfos.severity >  Severity::nolog) ||
+            fInfos.severity == Severity::fatal;
 }
 
 bool Logger::LoggingToFile() const
 {
-    return (fMetaData.severity <= fFileSeverity &&
-            fMetaData.severity >  Severity::nolog) ||
-            fMetaData.severity == Severity::fatal;
+    return (fInfos.severity <= fFileSeverity &&
+            fInfos.severity >  Severity::nolog) ||
+            fInfos.severity == Severity::fatal;
 }
 
 bool Logger::LoggingCustom(const Severity severity) const
 {
-    return (fMetaData.severity <= severity &&
-            fMetaData.severity >  Severity::nolog) ||
-            fMetaData.severity == Severity::fatal;
+    return (fInfos.severity <= severity &&
+            fInfos.severity >  Severity::nolog) ||
+            fInfos.severity == Severity::fatal;
 }
 
 void Logger::OnFatal(function<void()> func)

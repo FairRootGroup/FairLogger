@@ -116,9 +116,10 @@ struct VerbositySpec
         __max__                // needs to be last in enum
     };
 
-    std::array<Info, static_cast<int>(Info::__max__)> fOrder;
+    std::array<Info, static_cast<int>(Info::__max__)> fInfos;
+    int fSize;
 
-    VerbositySpec() : fOrder({Info::__empty__}) {}
+    VerbositySpec() : fInfos({Info::__empty__}), fSize(0) {}
 
     template<typename ... Ts>
     static VerbositySpec Make(Ts ... options)
@@ -136,10 +137,12 @@ struct VerbositySpec
         assert(option > Info::__empty__);
         assert(option < Info::__max__);
 
-        if (std::find(spec.fOrder.begin(), spec.fOrder.end(), option) == spec.fOrder.end()) {
-            spec.fOrder[i] = option;
+        if (std::find(spec.fInfos.begin(), spec.fInfos.end(), option) == spec.fInfos.end()) {
+            spec.fInfos[i] = option;
             ++i;
         }
+
+        spec.fSize = i;
 
         return Make(spec, i, options ...);
     }
@@ -337,7 +340,7 @@ class Logger
     static struct DestructionHelper { ~DestructionHelper() { Logger::fIsDestructed = true; }} fDestructionHelper;
 
   private:
-    LogMetaData fMetaData;
+    LogMetaData fInfos;
 
     std::ostringstream fContent;
     std::ostringstream fColorOut;
