@@ -1,5 +1,5 @@
 /********************************************************************************
- *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
+ * Copyright (C) 2014-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  *
  *                                                                              *
  *              This software is distributed under the terms of the             *
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
@@ -142,12 +142,10 @@ struct VerbositySpec
             ++i;
         }
 
-        spec.fSize = i;
-
         return Make(spec, i, options ...);
     }
 
-    static VerbositySpec Make(VerbositySpec spec, int) { return spec; }
+    static VerbositySpec Make(VerbositySpec spec, int i) { spec.fSize = i; return spec; }
 };
 
 // non-std exception to avoid undesirable catches - fatal should exit in a way we want.
@@ -178,8 +176,10 @@ struct LogMetaData
 class Logger
 {
   public:
-    Logger(Severity severity, const std::string& file, const std::string& line, const std::string& func);
     Logger(Severity severity, Verbosity verbosity, const std::string& file, const std::string& line, const std::string& func);
+    Logger(Severity severity, const std::string& file, const std::string& line, const std::string& func)
+        : Logger(severity, fVerbosity, file, line, func)
+    {}
     virtual ~Logger() noexcept(false);
 
     Logger& Log() { return *this; }
@@ -232,35 +232,9 @@ class Logger
         bgWhite        = 107
     };
 
-    static std::string startColor(Color color)
-    {
-        std::ostringstream os;
-        os << "\033[01;" << static_cast<int>(color) << "m";
-        return os.str();
-    }
-
-    static std::string endColor()
-    {
-        return "\033[0m";
-    }
-
-    class ColorOut
-    {
-      public:
-        ColorOut(Color color, const std::string& str)
-            : fColor(color)
-            , fStr(str)
-        {}
-
-        friend std::ostream& operator<<(std::ostream& os, const ColorOut& w)
-        {
-            return os << "\033[01;" << static_cast<int>(w.fColor) << "m" << w.fStr << "\033[0m";
-        }
-
-      private:
-        Color fColor;
-        const std::string& fStr;
-    };
+    static std::string startColor(Color color) { return fmt::format("\033[01;{}m", static_cast<int>(color)); }
+    static std::string endColor() { return "\033[0m"; }
+    static std::string ColorOut(Color c, const std::string& s) { return fmt::format("\033[01;{}m{}\033[0m", static_cast<int>(c), s); }
 
     static void SetConsoleSeverity(const Severity severity);
     static void SetConsoleSeverity(const std::string& severityStr);
@@ -343,8 +317,8 @@ class Logger
     LogMetaData fInfos;
 
     std::ostringstream fContent;
-    std::ostringstream fColorOut;
-    std::ostringstream fBWOut;
+    fmt::memory_buffer fColorPrefix;
+    fmt::memory_buffer fBWPrefix;
     static const std::string fProcessName;
     static bool fColored;
     static std::fstream fFileStream;
@@ -377,20 +351,20 @@ class Logger
 #define CONVERTTOSTRING(s) IMP_CONVERTTOSTRING(s)
 
 #ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
-#define MESSAGE_ORIGIN __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(BOOST_CURRENT_FUNCTION)
+#define MSG_ORIGIN __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(BOOST_CURRENT_FUNCTION)
 #else
-#define MESSAGE_ORIGIN __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(__FUNCTION__)
+#define MSG_ORIGIN __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(__FUNCTION__)
 #endif
 
 // Log line if the provided severity is below or equals the configured one
 #define LOG(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, MESSAGE_ORIGIN)
+        fair::Logger(fair::Severity::severity, MSG_ORIGIN)
 
 // Log line with the given verbosity if the provided severity is below or equals the configured one
 #define LOGV(severity, verbosity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, fair::Verbosity::verbosity, MESSAGE_ORIGIN)
+        fair::Logger(fair::Severity::severity, fair::Verbosity::verbosity, MSG_ORIGIN)
 
 // Log with fmt- or printf-like formatting
 #define LOGF(severity, ...) LOG(severity) << fmt::format(__VA_ARGS__)
@@ -399,7 +373,7 @@ class Logger
 // Log an empty line
 #define LOGN(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
-        fair::Logger(fair::Severity::severity, fair::Verbosity::verylow, MESSAGE_ORIGIN).LogEmptyLine()
+        fair::Logger(fair::Severity::severity, fair::Verbosity::verylow, MSG_ORIGIN).LogEmptyLine()
 
 // Log with custom file, line, function
 #define LOGD(severity, file, line, f) \

@@ -5,10 +5,6 @@
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
-
-// WARNING : pragma commands to hide boost warning
-// TODO : remove these pragma commands when boost will fix this issue in future release
-
 #include <Logger.h>
 
 #include <iostream>
@@ -134,8 +130,8 @@ int main()
     cout << "cout: is logging fatal: " << fair::Logger::Logging(Severity::fatal) << endl;
     cout << "cout: is logging nolog: " << fair::Logger::Logging(Severity::nolog) << endl;
 
-    for (int i = 0; i < 100000; ++i) {
-        silentlyPrintAllVerbositiesWithSeverity(Severity::trace);
+    for (int i = 0; i < 1000000; ++i) {
+        silentlyPrintAllVerbositiesWithSeverity(Severity::nolog);
     }
     cout << endl;
     cout << "cout: setting severity to 'trace' and verbosity to 'veryhigh'" << endl;
