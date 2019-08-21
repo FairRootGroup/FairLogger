@@ -22,45 +22,19 @@ using VSpec = VerbositySpec;
 string GetColoredSeverityString(Severity severity)
 {
     switch (severity) {
-        case Severity::nolog:
-            return "\033[01;39mNOLOG\033[0m";
-            break;
-        case Severity::fatal:
-            return "\033[01;31mFATAL\033[0m";
-            break;
-        case Severity::error:
-            return "\033[01;39mERROR\033[0m";
-            break;
-        case Severity::warn:
-            return "\033[01;33mWARN\033[0m";
-            break;
-        case Severity::state:
-            return "\033[01;35mSTATE\033[0m";
-            break;
-        case Severity::info:
-            return "\033[01;32mINFO\033[0m";
-            break;
-        case Severity::debug:
-            return "\033[01;34mDEBUG\033[0m";
-            break;
-        case Severity::debug1:
-            return "\033[01;34mDEBUG1\033[0m";
-            break;
-        case Severity::debug2:
-            return "\033[01;34mDEBUG2\033[0m";
-            break;
-        case Severity::debug3:
-            return "\033[01;34mDEBUG3\033[0m";
-            break;
-        case Severity::debug4:
-            return "\033[01;34mDEBUG4\033[0m";
-            break;
-        case Severity::trace:
-            return "\033[01;36mTRACE\033[0m";
-            break;
-        default:
-            return "UNKNOWN";
-            break;
+        case Severity::nolog:  return "\033[01;39mNOLOG\033[0m";  break;
+        case Severity::fatal:  return "\033[01;31mFATAL\033[0m";  break;
+        case Severity::error:  return "\033[01;31mERROR\033[0m";  break;
+        case Severity::warn:   return "\033[01;33mWARN\033[0m";   break;
+        case Severity::state:  return "\033[01;35mSTATE\033[0m";  break;
+        case Severity::info:   return "\033[01;32mINFO\033[0m";   break;
+        case Severity::debug:  return "\033[01;34mDEBUG\033[0m";  break;
+        case Severity::debug1: return "\033[01;34mDEBUG1\033[0m"; break;
+        case Severity::debug2: return "\033[01;34mDEBUG2\033[0m"; break;
+        case Severity::debug3: return "\033[01;34mDEBUG3\033[0m"; break;
+        case Severity::debug4: return "\033[01;34mDEBUG4\033[0m"; break;
+        case Severity::trace:  return "\033[01;36mTRACE\033[0m";  break;
+        default:               return "UNKNOWN";                  break;
     }
 }
 
@@ -86,20 +60,20 @@ const string Logger::fProcessName = "?";
 
 const unordered_map<string, Verbosity> Logger::fVerbosityMap =
 {
-    { "veryhigh",  Verbosity::veryhigh  },
-    { "high",      Verbosity::high      },
-    { "medium",    Verbosity::medium    },
-    { "low",       Verbosity::low       },
-    { "verylow",   Verbosity::verylow   },
-    { "VERYHIGH",  Verbosity::veryhigh  },
-    { "HIGH",      Verbosity::high      },
-    { "MEDIUM",    Verbosity::medium    },
-    { "LOW",       Verbosity::low       },
-    { "VERYLOW",   Verbosity::verylow   },
-    { "user1",     Verbosity::user1     },
-    { "user2",     Verbosity::user2     },
-    { "user3",     Verbosity::user3     },
-    { "user4",     Verbosity::user4     }
+    { "veryhigh", Verbosity::veryhigh  },
+    { "high",     Verbosity::high      },
+    { "medium",   Verbosity::medium    },
+    { "low",      Verbosity::low       },
+    { "verylow",  Verbosity::verylow   },
+    { "VERYHIGH", Verbosity::veryhigh  },
+    { "HIGH",     Verbosity::high      },
+    { "MEDIUM",   Verbosity::medium    },
+    { "LOW",      Verbosity::low       },
+    { "VERYLOW",  Verbosity::verylow   },
+    { "user1",    Verbosity::user1     },
+    { "user2",    Verbosity::user2     },
+    { "user3",    Verbosity::user3     },
+    { "user4",    Verbosity::user4     }
 };
 
 const unordered_map<string, Severity> Logger::fSeverityMap =
@@ -176,20 +150,6 @@ map<Verbosity, VSpec> Logger::fVerbosities =
     { Verbosity::user4,    VSpec::Make(VSpec::Info::severity)                                                                                        }
 };
 
-Logger::Logger(Severity severity, const string& file, const string& line, const string& func)
-    : Logger(severity, fVerbosity, file, line, func)
-{}
-
-void Logger::FillTimeInfos()
-{
-    if (!fTimeCalculated) {
-        chrono::time_point<chrono::system_clock> now = chrono::system_clock::now();
-        fInfos.timestamp = chrono::system_clock::to_time_t(now);
-        fInfos.us = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()) % 1000000;
-        fTimeCalculated = true;
-    }
-}
-
 Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const string& line, const string& func)
     : fTimeCalculated(false)
 {
@@ -211,27 +171,27 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
             for (const auto info : spec.fInfos) {
                 switch (info) {
                     case VSpec::Info::process_name:
-                        fBWOut << fmt::format("[{}]", fInfos.process_name);
+                        fmt::format_to(fBWPrefix, "[{}]", fInfos.process_name);
                         break;
                     case VSpec::Info::timestamp_us:
                         FillTimeInfos();
-                        fBWOut << fmt::format("[{:%H:%M:%S}.{:06}]", fmt::localtime(fInfos.timestamp), fInfos.us.count());
+                        fmt::format_to(fBWPrefix, "[{:%H:%M:%S}.{:06}]", fmt::localtime(fInfos.timestamp), fInfos.us.count());
                         break;
                     case VSpec::Info::timestamp_s:
                         FillTimeInfos();
-                        fBWOut << fmt::format("[{:%H:%M:%S}]", fmt::localtime(fInfos.timestamp));
+                        fmt::format_to(fBWPrefix, "[{:%H:%M:%S}]", fmt::localtime(fInfos.timestamp));
                         break;
                     case VSpec::Info::severity:
-                        fBWOut << fmt::format("[{}]", fInfos.severity_name);
+                        fmt::format_to(fBWPrefix, "[{}]", fInfos.severity_name);
                         break;
                     case VSpec::Info::file_line_function:
-                        fBWOut << fmt::format("[{}:{}:{}]", fInfos.file, fInfos.line, fInfos.func);
+                        fmt::format_to(fBWPrefix, "[{}:{}:{}]", fInfos.file, fInfos.line, fInfos.func);
                         break;
                     case VSpec::Info::file_line:
-                        fBWOut << fmt::format("[{}:{}]", fInfos.file, fInfos.line);
+                        fmt::format_to(fBWPrefix, "[{}:{}]", fInfos.file, fInfos.line);
                         break;
                     case VSpec::Info::file:
-                        fBWOut << fmt::format("[{}]", fInfos.file);
+                        fmt::format_to(fBWPrefix, "[{}]", fInfos.file);
                         break;
                     default:
                         break;
@@ -239,7 +199,7 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
             }
 
             if (spec.fSize > 0) {
-                fBWOut << " ";
+                fmt::format_to(fBWPrefix, " ");
             }
         }
 
@@ -247,27 +207,27 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
             for (const auto info : spec.fInfos) {
                 switch (info) {
                     case VSpec::Info::process_name:
-                        fColorOut << fmt::format("[{}]", ColorOut(Color::fgBlue, fInfos.process_name));
+                        fmt::format_to(fColorPrefix, "[{}]", ColorOut(Color::fgBlue, fInfos.process_name));
                         break;
                     case VSpec::Info::timestamp_us:
                         FillTimeInfos();
-                        fColorOut << fmt::format("[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), fInfos.us.count(), endColor());
+                        fmt::format_to(fColorPrefix, "[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), fInfos.us.count(), endColor());
                         break;
                     case VSpec::Info::timestamp_s:
                         FillTimeInfos();
-                        fColorOut << fmt::format("[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), endColor());
+                        fmt::format_to(fColorPrefix, "[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), endColor());
                         break;
                     case VSpec::Info::severity:
-                        fColorOut << fmt::format("[{}]", GetColoredSeverityString(fInfos.severity));
+                        fmt::format_to(fColorPrefix, "[{}]", GetColoredSeverityString(fInfos.severity));
                         break;
                     case VSpec::Info::file_line_function:
-                        fColorOut << fmt::format("[{}:{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line), ColorOut(Color::fgBlue, fInfos.func));
+                        fmt::format_to(fColorPrefix, "[{}:{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line), ColorOut(Color::fgBlue, fInfos.func));
                         break;
                     case VSpec::Info::file_line:
-                        fColorOut << fmt::format("[{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line));
+                        fmt::format_to(fColorPrefix, "[{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line));
                         break;
                     case VSpec::Info::file:
-                        fColorOut << fmt::format("[{}]", ColorOut(Color::fgBlue, fInfos.file));
+                        fmt::format_to(fColorPrefix, "[{}]", ColorOut(Color::fgBlue, fInfos.file));
                         break;
                     default:
                         break;
@@ -275,14 +235,13 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
             }
 
             if (spec.fSize > 0) {
-                fColorOut << " ";
+                fmt::format_to(fColorPrefix, " ");
             }
         }
 
         if (!fCustomSinks.empty()) {
             FillTimeInfos();
         }
-
     }
 }
 
@@ -300,23 +259,21 @@ Logger::~Logger() noexcept(false)
         }
     }
 
-    fContent << "\n"; // "\n" + flush instead of endl makes output thread safe.
-
-    fBWOut << fContent.str();
+    // "\n" + flush instead of endl makes output thread safe.
 
     if (LoggingToConsole()) {
         if (fColored) {
-            fColorOut << fContent.str();
-            cout << fColorOut.str() << flush;
+            fmt::print("{}{}\n", to_string(fColorPrefix), fContent.str());
         } else {
-            cout << fBWOut.str() << flush;
+            fmt::print("{}{}\n", to_string(fBWPrefix), fContent.str());
         }
+        cout << flush;
     }
 
     if (LoggingToFile()) {
         lock_guard<mutex> lock(fMtx);
         if (fFileStream.is_open()) {
-            fFileStream << fBWOut.str() << flush;
+            fFileStream << fmt::format("{}{}\n", to_string(fBWPrefix), fContent.str()) << flush;
         }
     }
 
@@ -386,7 +343,7 @@ void Logger::SetCustomSeverity(const string& key, const string& severityStr)
     }
 }
 
-auto Logger::CycleConsoleSeverityUp() -> void
+void Logger::CycleConsoleSeverityUp()
 {
     int current = static_cast<int>(fConsoleSeverity);
     if (current == static_cast<int>(fSeverityNames.size()) - 1) {
@@ -405,7 +362,7 @@ auto Logger::CycleConsoleSeverityUp() -> void
     cout << ss.str() << flush;
 }
 
-auto Logger::CycleConsoleSeverityDown() -> void
+void Logger::CycleConsoleSeverityDown()
 {
     int current = static_cast<int>(fConsoleSeverity);
     if (current == 0) {
@@ -424,7 +381,7 @@ auto Logger::CycleConsoleSeverityDown() -> void
     cout << ss.str() << flush;
 }
 
-auto Logger::CycleVerbosityUp() -> void
+void Logger::CycleVerbosityUp()
 {
     int current = static_cast<int>(fVerbosity);
     if (current == static_cast<int>(fVerbosityNames.size() - 1)) {
@@ -443,7 +400,7 @@ auto Logger::CycleVerbosityUp() -> void
     cout << ss.str() << flush;
 }
 
-auto Logger::CycleVerbosityDown() -> void
+void Logger::CycleVerbosityDown()
 {
     int current = static_cast<int>(fVerbosity);
     if (current == 0) {
@@ -652,6 +609,16 @@ Logger& Logger::operator<<(ostream& (*manip) (ostream&))
 {
     fContent << manip;
     return *this;
+}
+
+void Logger::FillTimeInfos()
+{
+    if (!fTimeCalculated) {
+        chrono::time_point<chrono::system_clock> now = chrono::system_clock::now();
+        fInfos.timestamp = chrono::system_clock::to_time_t(now);
+        fInfos.us = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()) % 1000000;
+        fTimeCalculated = true;
+    }
 }
 
 } // namespace fair
