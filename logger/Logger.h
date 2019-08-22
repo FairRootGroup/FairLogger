@@ -79,7 +79,7 @@ enum class Severity : int
 // verylow:  message
 // low:      [severity] message
 // medium:   [HH:MM:SS][severity] message
-// high:     [process name][HH:MM:SS:µS][severity] message
+// high:     [process name][HH:MM:SS][severity] message
 // veryhigh: [process name][HH:MM:SS:µS][severity][file:line:function] message
 enum class Verbosity : int
 {
