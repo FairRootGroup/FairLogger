@@ -209,4 +209,6 @@ else()
 endif()
 message(STATUS "  ${BWhite}tests${CR}       ${testing_summary}")
 message(STATUS "  ")
+message(STATUS "  ${Cyan}INSTALL PREFIX${CR}     ${BGreen}${CMAKE_INSTALL_PREFIX}${CR} (change with ${BMagenta}-DCMAKE_INSTALL_PREFIX=...${CR})")
+message(STATUS "  ")
 ################################################################################
