@@ -53,6 +53,7 @@ On command line:
   * `-DDISABLE_COLOR=ON` disables coloured console output.
   * `-DBUILD_TESTING=OFF` disables building of unit tests.
   * `-DUSE_BOOST_PRETTY_FUNCTION=ON` enables usage of `BOOST_PRETTY_FUNCTION` macro.
+  * `-DUSE_EXTERNAL_FMT=ON` uses external fmt instead of the bundled one.
 
 ## Documentation
 
