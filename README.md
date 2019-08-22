@@ -37,7 +37,14 @@ find_package(FairLogger)
 
 `find_package(FairLogger)` will define an imported target `FairLogger::FairLogger`.
 
-In case of external fmt, the using project will need to find it.
+If FairLogger is built with `-DUSE_BOOST_PRETTY_FUNCTION=ON` and/or `-DUSE_EXTERNAL_FMT=ON`, your project needs to find the external dependencies, too, e.g.
+
+```cmake
+find_package(FairLogger)
+foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
+￼  find_package(${dep} ${FairLogger_${dep}_VERSION})
+endforeach()
+```
 
 ## CMake options
 
