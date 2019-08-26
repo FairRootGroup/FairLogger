@@ -26,7 +26,7 @@ option(USE_BOOST_PRETTY_FUNCTION "Use Boost BOOST_PRETTY_FUNCTION macro" OFF)
 option(USE_EXTERNAL_FMT "Use external fmt library instead of the bundled one" OFF)
 ################################################################################
 
-# Dependencies ###################################################################
+# Dependencies #################################################################
 if(USE_BOOST_PRETTY_FUNCTION)
   if(NOT DEFINED Boost_NO_BOOST_CMAKE AND CMAKE_VERSION VERSION_LESS 3.15)
     # Since Boost 1.70 a CMake package is shipped by default. Unfortunately, it has a number
@@ -59,6 +59,9 @@ if(USE_BOOST_PRETTY_FUNCTION)
   target_compile_definitions(FairLogger PUBLIC FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION)
 endif()
 
+# legacy paths
+list(APPEND FAIRLOGGER_INSTALL_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
+
 if(USE_EXTERNAL_FMT)
   target_link_libraries(FairLogger PUBLIC fmt::fmt)
 else()
@@ -69,6 +72,7 @@ else()
   )
   target_compile_definitions(fmt INTERFACE FMT_HEADER_ONLY)
   target_link_libraries(FairLogger PUBLIC fmt)
+  list(APPEND FAIRLOGGER_INSTALL_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_INCDIR}/bundled)
 endif()
 
 target_include_directories(FairLogger
