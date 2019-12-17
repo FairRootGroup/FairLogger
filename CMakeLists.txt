@@ -7,7 +7,7 @@
 ################################################################################
 
 cmake_minimum_required(VERSION 3.9.4 FATAL_ERROR)
-cmake_policy(VERSION 3.9...3.14)
+cmake_policy(VERSION 3.9...3.15)
 
 # Project ######################################################################
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -100,7 +100,6 @@ if(NOT USE_EXTERNAL_FMT)
 endif()
 install(TARGETS
   FairLogger
-  ${test_targets}
   ${fmt_target}
 
   EXPORT ${PROJECT_EXPORT_SET}
