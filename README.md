@@ -207,6 +207,14 @@ Here is an example adding a custom sink for all severities ("trace" and above). 
 
 If only output from custom sinks is desirable, console/file sinks must be deactivated by setting their severity to `"nolog"`.
 
+## Naming conflicts?
+
+By default these macros are defined: `LOG`, `LOGV`, `LOGF`, `LOGP`, `LOGN`, `LOGD`, `LOG_IF` and `FAIR_LOG`, `FAIR_LOGV`, `FAIR_LOGF`, `FAIR_LOGP`, `FAIR_LOGN`, `FAIR_LOGD`, `FAIR_LOG_IF`.
+
+If you experience naming conflicts with the unprefixed macro names, you can prevent their defining any of the following before including the `Logger.h`:
+
+`FAIR_NO_LOG`, `FAIR_NO_LOGV`, `FAIR_NO_LOGF`, `FAIR_NO_LOGP`, `FAIR_NO_LOGN`, `FAIR_NO_LOGD`, `FAIR_NO_LOG_IF`.
+
 ## License
 
 GNU Lesser General Public Licence (LGPL) version 3, see [LICENSE](LICENSE).

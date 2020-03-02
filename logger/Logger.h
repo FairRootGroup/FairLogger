@@ -356,31 +356,67 @@ class Logger
 #define MSG_ORIGIN __FILE__, CONVERTTOSTRING(__LINE__), static_cast<const char*>(__FUNCTION__)
 #endif
 
+// allow user of this header file to prevent definition of the LOG macro, by defining FAIR_NO_LOG before including this header
+#ifndef FAIR_NO_LOG
+#undef LOG
+#define LOG FAIR_LOG
+#endif
+// allow user of this header file to prevent definition of the LOGV macro, by defining FAIR_NO_LOGV before including this header
+#ifndef FAIR_NO_LOGV
+#undef LOGV
+#define LOGV FAIR_LOGV
+#endif
+// allow user of this header file to prevent definition of the LOGF macro, by defining FAIR_NO_LOGF before including this header
+#ifndef FAIR_NO_LOGF
+#undef LOGF
+#define LOGF FAIR_LOGF
+#endif
+// allow user of this header file to prevent definition of the LOGP macro, by defining FAIR_NO_LOGP before including this header
+#ifndef FAIR_NO_LOGP
+#undef LOGP
+#define LOGP FAIR_LOGP
+#endif
+// allow user of this header file to prevent definition of the LOGN macro, by defining FAIR_NO_LOGN before including this header
+#ifndef FAIR_NO_LOGN
+#undef LOGN
+#define LOGN FAIR_LOGN
+#endif
+// allow user of this header file to prevent definition of the LOGD macro, by defining FAIR_NO_LOGD before including this header
+#ifndef FAIR_NO_LOGD
+#undef LOGD
+#define LOGD FAIR_LOGD
+#endif
+// allow user of this header file to prevent definition of the LOG_IF macro, by defining FAIR_NO_LOG_IF before including this header
+#ifndef FAIR_NO_LOG_IF
+#undef LOG_IF
+#define LOG_IF FAIR_LOG_IF
+#endif
+
 // Log line if the provided severity is below or equals the configured one
-#define LOG(severity) \
+#define FAIR_LOG(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
         fair::Logger(fair::Severity::severity, MSG_ORIGIN)
 
 // Log line with the given verbosity if the provided severity is below or equals the configured one
-#define LOGV(severity, verbosity) \
+#define FAIR_LOGV(severity, verbosity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
         fair::Logger(fair::Severity::severity, fair::Verbosity::verbosity, MSG_ORIGIN)
 
 // Log with fmt- or printf-like formatting
-#define LOGF(severity, ...) LOG(severity) << fmt::format(__VA_ARGS__)
-#define LOGP(severity, ...) LOG(severity) << fmt::sprintf(__VA_ARGS__)
+#define FAIR_LOGF(severity, ...) LOG(severity) << fmt::format(__VA_ARGS__)
+#define FAIR_LOGP(severity, ...) LOG(severity) << fmt::sprintf(__VA_ARGS__)
 
 // Log an empty line
-#define LOGN(severity) \
+#define FAIR_LOGN(severity) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
         fair::Logger(fair::Severity::severity, fair::Verbosity::verylow, MSG_ORIGIN).LogEmptyLine()
 
 // Log with custom file, line, function
-#define LOGD(severity, file, line, f) \
+#define FAIR_LOGD(severity, file, line, f) \
     for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
         fair::Logger(severity, file, line, f)
 
-#define LOG_IF(severity, condition) \
+#define FAIR_LOG_IF(severity, condition) \
     for (bool fairLOggerunLikelyvariable2 = false; condition && !fairLOggerunLikelyvariable2; fairLOggerunLikelyvariable2 = true) \
         LOG(severity)
 
