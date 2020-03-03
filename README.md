@@ -209,11 +209,15 @@ If only output from custom sinks is desirable, console/file sinks must be deacti
 
 ## Naming conflicts?
 
-By default these macros are defined: `LOG`, `LOGV`, `LOGF`, `LOGP`, `LOGN`, `LOGD`, `LOG_IF` and `FAIR_LOG`, `FAIR_LOGV`, `FAIR_LOGF`, `FAIR_LOGP`, `FAIR_LOGN`, `FAIR_LOGD`, `FAIR_LOG_IF`.
+By default, `<fairlogger/Logger.h>` defines unprefixed macros: `LOG`, `LOGV`, `LOGF`, `LOGP`, `LOGN`, `LOGD`, `LOG_IF`.
 
-If you experience naming conflicts with the unprefixed macro names, you can prevent their defining any of the following before including the `Logger.h`:
+Define an option `FAIR_NO_LOG*` to prevent the above unprefixed macros to be defined, e.g.
 
-`FAIR_NO_LOG`, `FAIR_NO_LOGV`, `FAIR_NO_LOGF`, `FAIR_NO_LOGP`, `FAIR_NO_LOGN`, `FAIR_NO_LOGD`, `FAIR_NO_LOG_IF`.
+ \```cpp
+#define FAIR_NO_LOG
+#define FAIR_NO_LOGF
+#include <fairlogger/Logger.h>
+ \```
 
 ## License
 
