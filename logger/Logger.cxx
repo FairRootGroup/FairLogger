@@ -7,7 +7,11 @@
  ********************************************************************************/
 #include "Logger.h"
 
+#if FMT_VERSION < 60000
 #include <fmt/time.h>
+#else
+#include <fmt/chrono.h>
+#endif
 
 #include <cstdio> // printf
 #include <iostream>
