@@ -347,6 +347,10 @@ class Logger
 
 } // namespace fair
 
+// Instantiate string stream, this is needed since Logger.cxx will create the symbol only for the CXXSTD used to compile FairLogger
+// When other packages include this header while using a different CXXSTD, the symbol for that CXXSTD will be missing.
+template class std::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >;
+
 #define IMP_CONVERTTOSTRING(s) # s
 #define CONVERTTOSTRING(s) IMP_CONVERTTOSTRING(s)
 
