@@ -112,17 +112,17 @@ const array<string, 12> Logger::fSeverityNames =
 {
     {
         "NOLOG",
-        "FATAL",
-        "ERROR",
-        "WARN",
-        "STATE",
-        "INFO",
-        "DEBUG",
-        "DEBUG1",
-        "DEBUG2",
-        "DEBUG3",
+        "TRACE",
         "DEBUG4",
-        "TRACE"
+        "DEBUG3",
+        "DEBUG2",
+        "DEBUG1",
+        "DEBUG",
+        "INFO",
+        "STATE",
+        "WARN",
+        "ERROR",
+        "FATAL"
     }
 };
 
@@ -425,25 +425,26 @@ void Logger::CycleVerbosityDown()
 
 void Logger::UpdateMinSeverity()
 {
-    fMinSeverity = (fConsoleSeverity <= fFileSeverity) ? fFileSeverity : fConsoleSeverity;
+    if (fFileSeverity == Severity::nolog) {
+        fMinSeverity = fConsoleSeverity;
+    } else {
+        fMinSeverity = std::min(fConsoleSeverity, fFileSeverity);
+    }
 
     for (auto& it : fCustomSinks) {
-        if (fMinSeverity <= it.second.first) {
-            fMinSeverity = it.second.first;
+        if (fMinSeverity == Severity::nolog) {
+            fMinSeverity = std::max(fMinSeverity, it.second.first);
+        } else if (it.second.first != Severity::nolog) {
+            fMinSeverity = std::min(fMinSeverity, it.second.first);
         }
     }
 }
 
 bool Logger::Logging(Severity severity)
 {
-    if (Severity::fatal == severity) {
-        return true;
-    }
-    if (severity <= fMinSeverity && severity > Severity::nolog) {
-        return true;
-    } else {
-        return false;
-    }
+    return (severity >= fMinSeverity &&
+            fMinSeverity > Severity::nolog) ||
+            severity == Severity::fatal;
 }
 
 bool Logger::Logging(const string& severityStr)
@@ -548,22 +549,22 @@ void Logger::RemoveFileSink()
 
 bool Logger::LoggingToConsole() const
 {
-    return (fInfos.severity <= fConsoleSeverity &&
-            fInfos.severity >  Severity::nolog) ||
+    return (fInfos.severity >= fConsoleSeverity &&
+            fConsoleSeverity > Severity::nolog) ||
             fInfos.severity == Severity::fatal;
 }
 
 bool Logger::LoggingToFile() const
 {
-    return (fInfos.severity <= fFileSeverity &&
-            fInfos.severity >  Severity::nolog) ||
+    return (fInfos.severity >= fFileSeverity &&
+            fFileSeverity   >  Severity::nolog) ||
             fInfos.severity == Severity::fatal;
 }
 
 bool Logger::LoggingCustom(const Severity severity) const
 {
-    return (fInfos.severity <= severity &&
-            fInfos.severity >  Severity::nolog) ||
+    return (fInfos.severity >= severity &&
+            severity        > Severity::nolog) ||
             fInfos.severity == Severity::fatal;
 }
 
