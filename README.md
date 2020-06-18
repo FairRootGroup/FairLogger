@@ -42,7 +42,7 @@ If FairLogger is built with `-DUSE_BOOST_PRETTY_FUNCTION=ON` and/or `-DUSE_EXTER
 ```cmake
 find_package(FairLogger)
 foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
-￼  find_package(${dep} ${FairLogger_${dep}_VERSION})
+  find_package(${dep} ${FairLogger_${dep}_VERSION})
 endforeach()
 ```
 
@@ -87,20 +87,31 @@ where severity level is one of the following:
 
 ```C++
 "nolog",
-"fatal",
-"error",
-"warn",
-"state",
-"info",
-"debug",
-"debug1",
-"debug2",
-"debug3",
-"debug4",
 "trace",
+"debug4",
+"debug3",
+"debug2",
+"debug1",
+"debug",
+"info",
+"state",
+"warn",
+"error",
+"fatal",
 ```
 
 Logger will log the chosen severity and all above it (except "nolog", which deactivates logging for that sink completely). Fatal severity is always logged.
+
+## 3.1 Compile-time severity switch
+
+The minimum severity level can be configured at compile time via definition of `FAIR_MIN_SEVERITY`:
+
+```C++
+#define FAIR_MIN_SEVERITY warn // only allow severities >= warn
+#include <fairlogger/Logger.h>
+```
+
+When `FAIR_MIN_SEVERITY` is not provided, it will be set to `info` if `NDEBUG` is defined, otherwise all severities will be enabled.
 
 ## 4. Verbosity
 
@@ -213,14 +224,14 @@ By default, `<fairlogger/Logger.h>` defines unprefixed macros: `LOG`, `LOGV`, `L
 
 Define an option `FAIR_NO_LOG*` to prevent the above unprefixed macros to be defined, e.g.
 
- \```cpp
+```C++
 #define FAIR_NO_LOG
 #define FAIR_NO_LOGF
 #include <fairlogger/Logger.h>
- \```
+```
 
 ## License
 
 GNU Lesser General Public Licence (LGPL) version 3, see [LICENSE](LICENSE).
 
-Copyright (C) 2017-2018 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH
+Copyright (C) 2017-2020 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH
