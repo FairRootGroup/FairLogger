@@ -66,8 +66,8 @@ All log calls go through the provided LOG(severity) macro. Output through this m
 A number of additional logging macros are provided:
 
 - `LOGV(severity, verbosity)` Log the line with the provided verbosity, e.g. `LOG(info, veryhigh) << "abcd";`
-- `LOGF(severity, ...)` The arguments are given to `fmt::format` and the result is logged, e.g. `LOGF(info, "Hello {}!", "world");`
-- `LOGP(severity, ...)` The arguments are given to `fmt::printf` and the result is logged, e.g. `LOGP(info, "Hello %s!", "world");`
+- `LOGF(severity, ...)` The arguments are given to `fmt::printf`, which formats the string using a [printf syntax](https://fmt.dev/dev/api.html#printf-formatting) and the result is logged, e.g. `LOGF(info, "Hello %s!", "world");`
+- `LOGP(severity, ...)` The arguments are given to `fmt::format`, which formats the string using a [Python-like syntax](https://fmt.dev/dev/syntax.html) and the result is logged, e.g. `LOGP(info, "Hello {}!", "world");`
 - `LOGN(severity)` Logs an empty line, e.g. `LOGN(info);`
 - `LOG_IF(severity, condition)` Logs the line if the provided condition if true
 - `LOGD(severity, file, line, f)` Logs the line with the provided file, line and function parameters (only if the active verbosity allows it).
