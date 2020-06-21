@@ -418,8 +418,8 @@ class Logger
             fair::Logger(fair::Severity::severity, fair::Verbosity::verbosity, MSG_ORIGIN)
 
 // Log with fmt- or printf-like formatting
-#define FAIR_LOGF(severity, ...) LOG(severity) << fmt::format(__VA_ARGS__)
-#define FAIR_LOGP(severity, ...) LOG(severity) << fmt::sprintf(__VA_ARGS__)
+#define FAIR_LOGP(severity, ...) LOG(severity) << fmt::format(__VA_ARGS__)
+#define FAIR_LOGF(severity, ...) LOG(severity) << fmt::sprintf(__VA_ARGS__)
 
 // Log an empty line
 #define FAIR_LOGN(severity) \

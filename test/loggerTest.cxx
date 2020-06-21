@@ -190,8 +190,8 @@ int main()
     cout << "cout: setting severity to 'trace'" << endl;
     Logger::SetConsoleSeverity(Severity::trace);
 
-    LOGF(info, "Hello {} {}!", "world", ":-)");
-    LOGP(info, "Hello %s %s!", "world", ":-)");
+    LOGP(info, "Hello {} {}!", "world", ":-)");
+    LOGF(info, "Hello %s %s!", "world", ":-)");
 
     cout << "cout: setting verbosity to 'high'" << endl;
     Logger::SetVerbosity(Verbosity::high);
