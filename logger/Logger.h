@@ -255,7 +255,12 @@ class Logger
     static void CycleVerbosityUp();
     static void CycleVerbosityDown();
 
-    static bool Logging(const Severity severity);
+    static bool Logging(const Severity severity)
+    {
+        return (severity >= fMinSeverity &&
+                fMinSeverity > Severity::nolog) ||
+                severity == Severity::fatal;
+    }
     static bool Logging(const std::string& severityStr);
 
     static void SetVerbosity(const Verbosity verbosity);

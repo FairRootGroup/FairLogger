@@ -440,13 +440,6 @@ void Logger::UpdateMinSeverity()
     }
 }
 
-bool Logger::Logging(Severity severity)
-{
-    return (severity >= fMinSeverity &&
-            fMinSeverity > Severity::nolog) ||
-            severity == Severity::fatal;
-}
-
 bool Logger::Logging(const string& severityStr)
 {
     if (fSeverityMap.count(severityStr)) {
