@@ -75,10 +75,14 @@ else()
   list(APPEND FAIRLOGGER_INSTALL_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_INCDIR}/bundled)
 endif()
 
+if(DEFINED FAIR_MIN_SEVERITY)
+  target_compile_definitions(FairLogger PUBLIC "FAIR_MIN_SEVERITY=${FAIR_MIN_SEVERITY}")
+endif()
+
 target_include_directories(FairLogger
-    PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/logger>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/logger>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 set_target_properties(FairLogger PROPERTIES
   VERSION ${PROJECT_GIT_VERSION}
@@ -211,6 +215,13 @@ else()
   set(testing_summary "${BRed} NO${CR}    (enable with ${BMagenta}-DBUILD_TESTING=ON${CR})")
 endif()
 message(STATUS "  ${BWhite}tests${CR}       ${testing_summary}")
+message(STATUS "  ")
+if(DEFINED FAIR_MIN_SEVERITY)
+  message(STATUS "  ${Cyan}FAIR_MIN_SEVERITY${CR}  ${BGreen}${FAIR_MIN_SEVERITY}${CR} (change with ${BMagenta}-DFAIR_MIN_SEVERITY=...${CR})")
+else()
+  message(STATUS "  ${Cyan}FAIR_MIN_SEVERITY${CR}  not defined${CR}, enabling all severities (starting with info if NDEBUG is defined)${CR}")
+  message(STATUS "                     (change with ${BMagenta}-DFAIR_MIN_SEVERITY=...${CR})")
+endif()
 message(STATUS "  ")
 message(STATUS "  ${Cyan}INSTALL PREFIX${CR}     ${BGreen}${CMAKE_INSTALL_PREFIX}${CR} (change with ${BMagenta}-DCMAKE_INSTALL_PREFIX=...${CR})")
 message(STATUS "  ")
