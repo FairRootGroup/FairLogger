@@ -428,7 +428,7 @@ void Logger::UpdateMinSeverity()
     if (fFileSeverity == Severity::nolog) {
         fMinSeverity = fConsoleSeverity;
     } else {
-        fMinSeverity = std::min(fConsoleSeverity, fFileSeverity);
+        fMinSeverity = std::max(fConsoleSeverity, fFileSeverity);
     }
 
     for (auto& it : fCustomSinks) {
@@ -544,6 +544,8 @@ void Logger::RemoveFileSink()
     lock_guard<mutex> lock(fMtx);
     if (fFileStream.is_open()) {
         fFileStream.close();
+        fFileSeverity = Severity::nolog;
+        UpdateMinSeverity();
     }
 }
 
