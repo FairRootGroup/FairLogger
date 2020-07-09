@@ -272,8 +272,8 @@ class Logger
 
     static void SetConsoleColor(const bool colored = true);
 
-    static void InitFileSink(const Severity severity, const std::string& filename, bool customizeName = true);
-    static void InitFileSink(const std::string& severityStr, const std::string& filename, bool customizeName = true);
+    static std::string InitFileSink(const Severity severity, const std::string& filename, bool customizeName = true);
+    static std::string InitFileSink(const std::string& severityStr, const std::string& filename, bool customizeName = true);
 
     static void RemoveFileSink();
 
