@@ -23,25 +23,6 @@ namespace fair
 
 using VSpec = VerbositySpec;
 
-string GetColoredSeverityString(Severity severity)
-{
-    switch (severity) {
-        case Severity::nolog:  return "\033[01;39mNOLOG\033[0m";  break;
-        case Severity::fatal:  return "\033[01;31mFATAL\033[0m";  break;
-        case Severity::error:  return "\033[01;31mERROR\033[0m";  break;
-        case Severity::warn:   return "\033[01;33mWARN\033[0m";   break;
-        case Severity::state:  return "\033[01;35mSTATE\033[0m";  break;
-        case Severity::info:   return "\033[01;32mINFO\033[0m";   break;
-        case Severity::debug:  return "\033[01;34mDEBUG\033[0m";  break;
-        case Severity::debug1: return "\033[01;34mDEBUG1\033[0m"; break;
-        case Severity::debug2: return "\033[01;34mDEBUG2\033[0m"; break;
-        case Severity::debug3: return "\033[01;34mDEBUG3\033[0m"; break;
-        case Severity::debug4: return "\033[01;34mDEBUG4\033[0m"; break;
-        case Severity::trace:  return "\033[01;36mTRACE\033[0m";  break;
-        default:               return "UNKNOWN";                  break;
-    }
-}
-
 bool Logger::fColored = false;
 fstream Logger::fFileStream;
 Verbosity Logger::fVerbosity = Verbosity::low;
@@ -292,6 +273,25 @@ void Logger::LogEmptyLine()
 {
     // do nothing, line break is added by the destructor
     // this call just to prevent any output to be added to the logger object
+}
+
+string Logger::GetColoredSeverityString(Severity severity)
+{
+    switch (severity) {
+        case Severity::nolog:  return "\033[01;39mNOLOG\033[0m";  break;
+        case Severity::fatal:  return "\033[01;31mFATAL\033[0m";  break;
+        case Severity::error:  return "\033[01;31mERROR\033[0m";  break;
+        case Severity::warn:   return "\033[01;33mWARN\033[0m";   break;
+        case Severity::state:  return "\033[01;35mSTATE\033[0m";  break;
+        case Severity::info:   return "\033[01;32mINFO\033[0m";   break;
+        case Severity::debug:  return "\033[01;34mDEBUG\033[0m";  break;
+        case Severity::debug1: return "\033[01;34mDEBUG1\033[0m"; break;
+        case Severity::debug2: return "\033[01;34mDEBUG2\033[0m"; break;
+        case Severity::debug3: return "\033[01;34mDEBUG3\033[0m"; break;
+        case Severity::debug4: return "\033[01;34mDEBUG4\033[0m"; break;
+        case Severity::trace:  return "\033[01;36mTRACE\033[0m";  break;
+        default:               return "UNKNOWN";                  break;
+    }
 }
 
 void Logger::SetConsoleSeverity(const Severity severity)
