@@ -489,7 +489,7 @@ void Logger::SetConsoleColor(const bool colored)
     fColored = colored;
 }
 
-void Logger::InitFileSink(const Severity severity, const string& filename, bool customizeName)
+string Logger::InitFileSink(const Severity severity, const string& filename, bool customizeName)
 {
     lock_guard<mutex> lock(fMtx);
     if (fFileStream.is_open()) {
@@ -520,15 +520,16 @@ void Logger::InitFileSink(const Severity severity, const string& filename, bool 
         cout << "Error opening file: " << fullName;
     }
 
+    return fullName;
 }
 
-void Logger::InitFileSink(const string& severityStr, const string& filename, bool customizeName)
+string Logger::InitFileSink(const string& severityStr, const string& filename, bool customizeName)
 {
     if (fSeverityMap.count(severityStr)) {
-        InitFileSink(fSeverityMap.at(severityStr), filename, customizeName);
+        return InitFileSink(fSeverityMap.at(severityStr), filename, customizeName);
     } else {
         LOG(error) << "Unknown severity setting: '" << severityStr << "', setting to default 'info'.";
-        InitFileSink(Severity::info, filename);
+        return InitFileSink(Severity::info, filename);
     }
 }
 
