@@ -577,6 +577,7 @@ void Logger::AddCustomSink(const string& key, Severity severity, function<void(c
         UpdateMinSeverity();
     } else {
         cout << "Logger::AddCustomSink: sink '" << key << "' already exists, will not add again. Remove first with Logger::RemoveCustomSink(const string& key)" << endl;
+        throw runtime_error("Adding a sink with a key that already exists. Remove first.");
     }
 }
 
@@ -597,6 +598,7 @@ void Logger::RemoveCustomSink(const string& key)
         UpdateMinSeverity();
     } else {
         cout << "Logger::RemoveCustomSink: sink '" << key << "' doesn't exists, will not remove." << endl;
+        throw runtime_error("Trying to remove a sink with a key that does not exist.");
     }
 }
 

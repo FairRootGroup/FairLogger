@@ -39,6 +39,7 @@
 #include <mutex>
 #include <ostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <time.h> // time_t
 #include <type_traits> // is_same
