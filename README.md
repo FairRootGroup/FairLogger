@@ -126,8 +126,8 @@ it is same for all sinks, and is one of the following values: `verylow`, `low`, 
 verylow:  message
 low:      [severity] message
 medium:   [HH:MM:SS][severity] message
-high:     [process name][HH:MM:SS][severity] message
-veryhigh: [process name][HH:MM:SS:µS][severity][file:line:function] message
+high:     [process_name][HH:MM:SS][severity] message
+veryhigh: [process_name][HH:MM:SS:µS][severity][file:line:function] message
 user1:    [severity] message
 user2:    [severity] message
 user3:    [severity] message
@@ -146,12 +146,12 @@ The `fair::Logger::VerbositySpec` object can e.g. be created like this:
 ```C++
 auto spec = fair::VerbositySpec::Make(VerbositySpec::Info::timestamp_s,
                                       VerbositySpec::Info::process_name);
-// results in [HH:MM:SS][process name] message
+// results in [HH:MM:SS][process_name] message
 ```
 
 | **Argument** | **Result** |
 | --- | --- |
-| `fair::VerbositySpec::Info::process_name`       | `[process name]`       |
+| `fair::VerbositySpec::Info::process_name`       | `[process_name]`       |
 | `fair::VerbositySpec::Info::timestamp_s`        | `[HH:MM:SS]`           |
 | `fair::VerbositySpec::Info::timestamp_us`       | `[HH:MM:SS:µS]`        |
 | `fair::VerbositySpec::Info::severity`           | `[severity]`           |
