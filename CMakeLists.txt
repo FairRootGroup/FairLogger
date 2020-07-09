@@ -90,8 +90,20 @@ set_target_properties(FairLogger PROPERTIES
 )
 
 if(BUILD_TESTING)
-  add_executable(loggerTest test/loggerTest.cxx)
-  target_link_libraries(loggerTest FairLogger pthread)
+  add_executable(loggerTest test/logger.cxx)
+  target_link_libraries(loggerTest FairLogger)
+  add_executable(macrosTest test/macros.cxx)
+  target_link_libraries(macrosTest FairLogger)
+  add_executable(nologTest test/nolog.cxx)
+  target_link_libraries(nologTest FairLogger)
+  add_executable(severityTest test/severity.cxx)
+  target_link_libraries(severityTest FairLogger)
+  add_executable(sinksTest test/sinks.cxx)
+  target_link_libraries(sinksTest FairLogger)
+  add_executable(threadsTest test/threads.cxx)
+  target_link_libraries(threadsTest FairLogger pthread)
+  add_executable(verbosityTest test/verbosity.cxx)
+  target_link_libraries(verbosityTest FairLogger)
 endif()
 ################################################################################
 
@@ -131,7 +143,13 @@ install_cmake_package()
 
 # Testing ######################################################################
 if(BUILD_TESTING)
-  add_test(NAME loggerTest COMMAND $<TARGET_FILE:loggerTest>)
+  add_test(NAME logger COMMAND $<TARGET_FILE:loggerTest>)
+  add_test(NAME macros COMMAND $<TARGET_FILE:macrosTest>)
+  add_test(NAME nolog COMMAND $<TARGET_FILE:nologTest>)
+  add_test(NAME severity COMMAND $<TARGET_FILE:severityTest>)
+  add_test(NAME sinks COMMAND $<TARGET_FILE:sinksTest>)
+  add_test(NAME threads COMMAND $<TARGET_FILE:threadsTest>)
+  add_test(NAME verbosity COMMAND $<TARGET_FILE:verbosityTest>)
 endif()
 ################################################################################
 
