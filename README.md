@@ -111,7 +111,7 @@ The minimum severity level can be configured at compile time via definition of `
 #include <fairlogger/Logger.h>
 ```
 
-When `FAIR_MIN_SEVERITY` is not provided, it will be set to `info` if `NDEBUG` is defined, otherwise all severities will be enabled.
+When `FAIR_MIN_SEVERITY` is not provided all severities are enabled.
 
 ## 4. Verbosity
 
