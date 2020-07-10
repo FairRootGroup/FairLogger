@@ -13,10 +13,6 @@
 #warning "The symbol 'DEBUG' is used in FairRoot Logger. undefining..."
 #endif
 
-#if !defined(FAIR_MIN_SEVERITY) && defined(NDEBUG)
-#define FAIR_MIN_SEVERITY info
-#endif
-
 #ifdef FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION
 #include <boost/current_function.hpp>
 #endif
@@ -324,7 +320,7 @@ class Logger
     static bool fIsDestructed;
     static struct DestructionHelper { ~DestructionHelper() { Logger::fIsDestructed = true; }} fDestructionHelper;
 
-    static bool constexpr SuppressSeverity(Severity sev)
+    static bool constexpr SuppressSeverity(Severity sev __attribute__((unused)))
     {
 #ifdef FAIR_MIN_SEVERITY
         return sev < Severity::FAIR_MIN_SEVERITY;
