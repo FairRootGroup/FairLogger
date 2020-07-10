@@ -26,9 +26,14 @@ using VSpec = VerbositySpec;
 bool Logger::fColored = false;
 fstream Logger::fFileStream;
 Verbosity Logger::fVerbosity = Verbosity::low;
+#ifdef FAIR_MIN_SEVERITY
+Severity Logger::fConsoleSeverity = Severity::FAIR_MIN_SEVERITY > Severity::info ? Severity::FAIR_MIN_SEVERITY : Severity::info;
+Severity Logger::fMinSeverity = Severity::FAIR_MIN_SEVERITY > Severity::info ? Severity::FAIR_MIN_SEVERITY : Severity::info;
+#else
 Severity Logger::fConsoleSeverity = Severity::info;
-Severity Logger::fFileSeverity = Severity::nolog;
 Severity Logger::fMinSeverity = Severity::info;
+#endif
+Severity Logger::fFileSeverity = Severity::nolog;
 function<void()> Logger::fFatalCallback;
 unordered_map<string, pair<Severity, function<void(const string& content, const LogMetaData& metadata)>>> Logger::fCustomSinks;
 mutex Logger::fMtx;
@@ -296,6 +301,12 @@ string Logger::GetColoredSeverityString(Severity severity)
 
 void Logger::SetConsoleSeverity(const Severity severity)
 {
+#ifdef FAIR_MIN_SEVERITY
+    if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
+        cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), ignoring" << endl;
+        return;
+    }
+#endif
     fConsoleSeverity = severity;
     UpdateMinSeverity();
 }
@@ -317,6 +328,12 @@ Severity Logger::GetConsoleSeverity()
 
 void Logger::SetFileSeverity(const Severity severity)
 {
+#ifdef FAIR_MIN_SEVERITY
+    if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
+        cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), ignoring" << endl;
+        return;
+    }
+#endif
     fFileSeverity = severity;
     UpdateMinSeverity();
 }
@@ -333,6 +350,12 @@ void Logger::SetFileSeverity(const string& severityStr)
 
 void Logger::SetCustomSeverity(const string& key, const Severity severity)
 {
+#ifdef FAIR_MIN_SEVERITY
+    if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
+        cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), ignoring" << endl;
+        return;
+    }
+#endif
     fCustomSinks.at(key).first = severity; // TODO: range checks
     UpdateMinSeverity();
 }
@@ -514,7 +537,16 @@ string Logger::InitFileSink(const Severity severity, const string& filename, boo
     fFileStream.open(fullName, fstream::out | fstream::app);
 
     if (fFileStream.is_open()) {
+#ifdef FAIR_MIN_SEVERITY
+        if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
+            cout << "Requested file sink severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), setting to " << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << endl;
+            fFileSeverity = Severity::FAIR_MIN_SEVERITY;
+        } else {
+            fFileSeverity = severity;
+        }
+#else
         fFileSeverity = severity;
+#endif
         UpdateMinSeverity();
     } else {
         cout << "Error opening file: " << fullName;
@@ -573,7 +605,16 @@ void Logger::AddCustomSink(const string& key, Severity severity, function<void(c
 {
     lock_guard<mutex> lock(fMtx);
     if (fCustomSinks.count(key) == 0) {
+#ifdef FAIR_MIN_SEVERITY
+        if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
+            cout << "Requested custom sink severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), setting to " << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << endl;
+            fCustomSinks.insert(make_pair(key, make_pair(Severity::FAIR_MIN_SEVERITY, func)));
+        } else {
+            fCustomSinks.insert(make_pair(key, make_pair(severity, func)));
+        }
+#else
         fCustomSinks.insert(make_pair(key, make_pair(severity, func)));
+#endif
         UpdateMinSeverity();
     } else {
         cout << "Logger::AddCustomSink: sink '" << key << "' already exists, will not add again. Remove first with Logger::RemoveCustomSink(const string& key)" << endl;
