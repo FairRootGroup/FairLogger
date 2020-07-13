@@ -7,7 +7,6 @@
  ********************************************************************************/
 
 #include "Common.h"
-
 #include <Logger.h>
 
 #include <iostream>
@@ -19,10 +18,10 @@ using namespace fair::logger::test;
 
 int main()
 {
-    Logger::SetConsoleColor(false);
-    Logger::SetConsoleSeverity(Severity::fatal);
-
     try {
+        Logger::SetConsoleColor(false);
+        Logger::SetConsoleSeverity(Severity::fatal);
+
         auto spec1 = VerbositySpec::Make(VerbositySpec::Info::file_line_function, VerbositySpec::Info::process_name);
         auto spec2 = VerbositySpec::Make(VerbositySpec::Info::process_name, VerbositySpec::Info::file_line_function);
 

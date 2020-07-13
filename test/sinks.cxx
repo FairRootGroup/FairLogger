@@ -20,18 +20,18 @@ using namespace fair::logger::test;
 
 int main()
 {
-    Logger::SetConsoleColor(false);
-    Logger::SetVerbosity(Verbosity::low);
-
-    Logger::SetConsoleSeverity(Severity::nolog);
+#ifdef FAIR_MIN_SEVERITY
+    if (static_cast<int>(Severity::FAIR_MIN_SEVERITY) > static_cast<int>(Severity::warn)) {
+        cout << "test requires at least FAIR_MIN_SEVERITY == warn to run, skipping" << endl;
+        return 0;
+    }
+#endif
 
     try {
-#ifdef FAIR_MIN_SEVERITY
-        if (static_cast<int>(Severity::FAIR_MIN_SEVERITY) > static_cast<int>(Severity::warn)) {
-            cout << "test requires at least FAIR_MIN_SEVERITY == warn to run, skipping" << endl;
-            return 0;
-        }
-#endif
+        Logger::SetConsoleColor(false);
+        Logger::SetConsoleSeverity(Severity::nolog);
+        Logger::SetVerbosity(Verbosity::low);
+
         if (Logger::Logging(Severity::warn)) { cout << "Logger expected to NOT log warn, but it reports to do so" << endl; return 1; }
         if (Logger::Logging(Severity::error)) { cout << "Logger expected to NOT log error, but it reports to do so" << endl; return 1; }
         if (!Logger::Logging(Severity::fatal)) { cout << "Logger expected to log fatal, but it reports not to" << endl; return 1; }
@@ -43,7 +43,7 @@ int main()
         string name = Logger::InitFileSink(Severity::warn, string("test_log_" + to_string(distrib(gen))), true);
 
         if (Logger::GetFileSeverity() != Severity::warn) {
-            throw runtime_error(ToStr("File sink severity (", Logger::fSeverityNames.at(static_cast<int>(Logger::GetFileSeverity())), ") does not match the expected one (", Logger::fSeverityNames.at(static_cast<int>(Severity::warn)), ")"));
+            throw runtime_error(ToStr("File sink severity (", Logger::GetFileSeverity(), ") does not match the expected one (", Severity::warn, ")"));
         }
 
         CheckOutput("^\\[FATAL] fatal\n$", [](){
@@ -81,7 +81,7 @@ int main()
             cout << "CustomSink " << content << endl;
 
             if (metadata.severity != Severity::warn && metadata.severity != Severity::error && metadata.severity != Severity::fatal) {
-                throw runtime_error(ToStr("unexpected severity message arrived at custom sink that accepts only warn,error,fatal: ", Logger::fSeverityNames.at(static_cast<int>(metadata.severity))));
+                throw runtime_error(ToStr("unexpected severity message arrived at custom sink that accepts only warn,error,fatal: ", metadata.severity));
             }
 
             if (metadata.severity_name != "WARN" && metadata.severity_name != "ERROR" && metadata.severity_name != "FATAL") {
@@ -90,7 +90,7 @@ int main()
         });
 
         if (Logger::GetCustomSeverity("CustomSink") != Severity::warn) {
-            throw runtime_error(ToStr("File sink severity (", Logger::fSeverityNames.at(static_cast<int>(Logger::GetCustomSeverity("CustomSink"))), ") does not match the expected one (", Logger::fSeverityNames.at(static_cast<int>(Severity::warn)), ")"));
+            throw runtime_error(ToStr("File sink severity (", Logger::GetCustomSeverity("CustomSink"), ") does not match the expected one (", Severity::warn, ")"));
         }
 
         bool oorThrown = false;

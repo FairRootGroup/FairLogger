@@ -303,7 +303,7 @@ void Logger::SetConsoleSeverity(const Severity severity)
 {
 #ifdef FAIR_MIN_SEVERITY
     if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
-        cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), ignoring" << endl;
+        cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), ignoring" << endl;
         return;
     }
 #endif
@@ -330,7 +330,7 @@ void Logger::SetFileSeverity(const Severity severity)
 {
 #ifdef FAIR_MIN_SEVERITY
     if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
-        cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), ignoring" << endl;
+        cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), ignoring" << endl;
         return;
     }
 #endif
@@ -353,11 +353,11 @@ void Logger::SetCustomSeverity(const string& key, const Severity severity)
     try {
 #ifdef FAIR_MIN_SEVERITY
         if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
-            cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), ignoring" << endl;
+            cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), ignoring" << endl;
             return;
         }
 #endif
-        fCustomSinks.at(key).first = severity; // TODO: range checks
+        fCustomSinks.at(key).first = severity;
         UpdateMinSeverity();
     } catch (const out_of_range& oor) {
         LOG(error) << "No custom sink with id '" << key << "' found";
@@ -554,7 +554,7 @@ string Logger::InitFileSink(const Severity severity, const string& filename, boo
     if (fFileStream.is_open()) {
 #ifdef FAIR_MIN_SEVERITY
         if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
-            cout << "Requested file sink severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), setting to " << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << endl;
+            cout << "Requested file sink severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), setting to " << Severity::FAIR_MIN_SEVERITY << endl;
             fFileSeverity = Severity::FAIR_MIN_SEVERITY;
         } else {
             fFileSeverity = severity;
@@ -622,7 +622,7 @@ void Logger::AddCustomSink(const string& key, Severity severity, function<void(c
     if (fCustomSinks.count(key) == 0) {
 #ifdef FAIR_MIN_SEVERITY
         if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
-            cout << "Requested custom sink severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), setting to " << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << endl;
+            cout << "Requested custom sink severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), setting to " << Severity::FAIR_MIN_SEVERITY << endl;
             fCustomSinks.insert(make_pair(key, make_pair(Severity::FAIR_MIN_SEVERITY, func)));
         } else {
             fCustomSinks.insert(make_pair(key, make_pair(severity, func)));

@@ -5,6 +5,7 @@
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
+
 #ifndef FAIR_LOGGER_TEST_COMMON_H
 #define FAIR_LOGGER_TEST_COMMON_H
 
