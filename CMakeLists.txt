@@ -90,6 +90,8 @@ set_target_properties(FairLogger PROPERTIES
 )
 
 if(BUILD_TESTING)
+  add_executable(cycleTest test/cycle.cxx)
+  target_link_libraries(cycleTest FairLogger)
   add_executable(loggerTest test/logger.cxx)
   target_link_libraries(loggerTest FairLogger)
   add_executable(macrosTest test/macros.cxx)
@@ -143,6 +145,7 @@ install_cmake_package()
 
 # Testing ######################################################################
 if(BUILD_TESTING)
+  add_test(NAME cycle COMMAND $<TARGET_FILE:cycleTest>)
   add_test(NAME logger COMMAND $<TARGET_FILE:loggerTest>)
   add_test(NAME macros COMMAND $<TARGET_FILE:macrosTest>)
   add_test(NAME nolog COMMAND $<TARGET_FILE:nologTest>)

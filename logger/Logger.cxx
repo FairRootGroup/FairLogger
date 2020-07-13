@@ -389,7 +389,11 @@ void Logger::CycleConsoleSeverityUp()
 {
     int current = static_cast<int>(fConsoleSeverity);
     if (current == static_cast<int>(fSeverityNames.size()) - 1) {
+#ifdef FAIR_MIN_SEVERITY
+        SetConsoleSeverity(Severity::FAIR_MIN_SEVERITY);
+#else
         SetConsoleSeverity(static_cast<Severity>(0));
+#endif
     } else {
         SetConsoleSeverity(static_cast<Severity>(current + 1));
     }
@@ -397,7 +401,7 @@ void Logger::CycleConsoleSeverityUp()
     stringstream ss;
 
     for (int i = 0; i < static_cast<int>(fSeverityNames.size()); ++i) {
-        ss << (i == newCurrent ? ">" : " ") << fSeverityNames.at(i) << (i == newCurrent ? "<" : " ");
+        ss << (i == newCurrent ? "<" : " ") << fSeverityNames.at(i) << (i == newCurrent ? ">" : " ");
     }
 
     ss << "\n\n";
@@ -407,7 +411,11 @@ void Logger::CycleConsoleSeverityUp()
 void Logger::CycleConsoleSeverityDown()
 {
     int current = static_cast<int>(fConsoleSeverity);
+#ifdef FAIR_MIN_SEVERITY
+    if (current == static_cast<int>(Severity::FAIR_MIN_SEVERITY)) {
+#else
     if (current == 0) {
+#endif
         SetConsoleSeverity(static_cast<Severity>(fSeverityNames.size() - 1));
     } else {
         SetConsoleSeverity(static_cast<Severity>(current - 1));
@@ -416,7 +424,7 @@ void Logger::CycleConsoleSeverityDown()
     stringstream ss;
 
     for (int i = 0; i < static_cast<int>(fSeverityNames.size()); ++i) {
-        ss << (i == newCurrent ? ">" : " ") << fSeverityNames.at(i) << (i == newCurrent ? "<" : " ");
+        ss << (i == newCurrent ? "<" : " ") << fSeverityNames.at(i) << (i == newCurrent ? ">" : " ");
     }
 
     ss << "\n\n";
@@ -435,7 +443,7 @@ void Logger::CycleVerbosityUp()
     stringstream ss;
 
     for (int i = 0; i < static_cast<int>(fVerbosityNames.size()); ++i) {
-        ss << (i == newCurrent ? ">" : " ") << fVerbosityNames.at(i) << (i == newCurrent ? "<" : " ");
+        ss << (i == newCurrent ? "<" : " ") << fVerbosityNames.at(i) << (i == newCurrent ? ">" : " ");
     }
 
     ss << "\n\n";
@@ -454,7 +462,7 @@ void Logger::CycleVerbosityDown()
     stringstream ss;
 
     for (int i = 0; i < static_cast<int>(fVerbosityNames.size()); ++i) {
-        ss << (i == newCurrent ? ">" : " ") << fVerbosityNames.at(i) << (i == newCurrent ? "<" : " ");
+        ss << (i == newCurrent ? "<" : " ") << fVerbosityNames.at(i) << (i == newCurrent ? ">" : " ");
     }
 
     ss << "\n\n";
