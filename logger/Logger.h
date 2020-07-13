@@ -244,9 +244,11 @@ class Logger
 
     static void SetFileSeverity(const Severity severity);
     static void SetFileSeverity(const std::string& severityStr);
+    static Severity GetFileSeverity() { return fFileSeverity; }
 
     static void SetCustomSeverity(const std::string& key, const Severity severity);
     static void SetCustomSeverity(const std::string& key, const std::string& severityStr);
+    static Severity GetCustomSeverity(const std::string& key);
 
     static void CycleConsoleSeverityUp();
     static void CycleConsoleSeverityDown();

@@ -42,6 +42,10 @@ int main()
         uniform_int_distribution<> distrib(1, 65536);
         string name = Logger::InitFileSink(Severity::warn, string("test_log_" + to_string(distrib(gen))), true);
 
+        if (Logger::GetFileSeverity() != Severity::warn) {
+            throw runtime_error(ToStr("File sink severity (", Logger::fSeverityNames.at(static_cast<int>(Logger::GetFileSeverity())), ") does not match the expected one (", Logger::fSeverityNames.at(static_cast<int>(Severity::warn)), ")"));
+        }
+
         CheckOutput("^\\[FATAL] fatal\n$", [](){
             LOG(state) << "state";
             LOG(warn) << "warning";
@@ -84,6 +88,20 @@ int main()
                 throw runtime_error(ToStr("unexpected severity name arrived at custom sink that accepts only warn,error,fatal: ", metadata.severity_name));
             }
         });
+
+        if (Logger::GetCustomSeverity("CustomSink") != Severity::warn) {
+            throw runtime_error(ToStr("File sink severity (", Logger::fSeverityNames.at(static_cast<int>(Logger::GetCustomSeverity("CustomSink"))), ") does not match the expected one (", Logger::fSeverityNames.at(static_cast<int>(Severity::warn)), ")"));
+        }
+
+        bool oorThrown = false;
+        try {
+            Logger::GetCustomSeverity("NonExistentSink");
+        } catch (const out_of_range& oor) {
+            oorThrown = true;
+        }
+        if (!oorThrown) {
+            throw runtime_error("Did not detect a severity request from a non-existent sink");
+        }
 
         CheckOutput("^CustomSink warning\nCustomSink error\nCustomSink fatal\n\\[FATAL] fatal\n$", [](){
             LOG(state) << "state";
