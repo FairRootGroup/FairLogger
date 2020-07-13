@@ -36,7 +36,7 @@ void printAllVerbositiesWithSeverity(Severity sev)
     Logger::SetConsoleSeverity(sev);
 
     for (uint32_t i = 0; i < Logger::fVerbosityNames.size(); ++i) {
-        cout << "##### testing severity '" << Logger::fSeverityNames.at(static_cast<int>(sev)) << "' with verbosity '" << Logger::fVerbosityNames.at(i) << "'" << endl;
+        cout << "##### testing severity '" << sev << "' with verbosity '" << Logger::fVerbosityNames.at(i) << "'" << endl;
         Logger::SetVerbosity(static_cast<Verbosity>(i));
         printEverySeverity();
     }

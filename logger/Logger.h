@@ -363,6 +363,9 @@ class Logger
     static std::map<Verbosity, VerbositySpec> fVerbosities;
 };
 
+inline std::ostream& operator<<(std::ostream& os, const Severity& s) { return os << Logger::SeverityName(s); }
+inline std::ostream& operator<<(std::ostream& os, const Verbosity& v) { return os << Logger::VerbosityName(v); }
+
 } // namespace fair
 
 #define IMP_CONVERTTOSTRING(s) # s

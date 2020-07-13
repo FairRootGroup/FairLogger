@@ -7,7 +7,6 @@
  ********************************************************************************/
 
 #include "Common.h"
-
 #include <Logger.h>
 
 #include <cstdint>
@@ -48,21 +47,21 @@ void CheckSeverity(Severity severity)
         if (sev == Severity::nolog) {
             if (i == 11) {
                 if (!Logger::Logging(static_cast<Severity>(i))) {
-                    throw runtime_error(ToStr("expecting to be logging ", Logger::fSeverityNames.at(i), " during ", Logger::fSeverityNames.at(static_cast<int>(sev)), ", but it is not."));
+                    throw runtime_error(ToStr("expecting to be logging ", Logger::fSeverityNames.at(i), " during ", sev, ", but it is not."));
                 }
             } else {
                 if (Logger::Logging(static_cast<Severity>(i))) {
-                    throw runtime_error(ToStr("expecting to NOT be logging ", Logger::fSeverityNames.at(i), " during ", Logger::fSeverityNames.at(static_cast<int>(sev)), ", but it is."));
+                    throw runtime_error(ToStr("expecting to NOT be logging ", Logger::fSeverityNames.at(i), " during ", sev, ", but it is."));
                 }
             }
         } else {
             if (i >= static_cast<unsigned int>(sev)) {
                 if (!Logger::Logging(static_cast<Severity>(i))) {
-                    throw runtime_error(ToStr("expecting to be logging ", Logger::fSeverityNames.at(i), " during ", Logger::fSeverityNames.at(static_cast<int>(sev)), ", but it is not."));
+                    throw runtime_error(ToStr("expecting to be logging ", Logger::fSeverityNames.at(i), " during ", sev, ", but it is not."));
                 }
             } else {
                 if (Logger::Logging(static_cast<Severity>(i))) {
-                    throw runtime_error(ToStr("expecting to NOT be logging ", Logger::fSeverityNames.at(i), " during ", Logger::fSeverityNames.at(static_cast<int>(sev)), ", but it is."));
+                    throw runtime_error(ToStr("expecting to NOT be logging ", Logger::fSeverityNames.at(i), " during ", sev, ", but it is."));
                 }
             }
         }
@@ -83,9 +82,9 @@ void CheckSeverity(Severity severity)
 
 int main()
 {
-    Logger::SetConsoleColor(true);
-
     try {
+        Logger::SetConsoleColor(true);
+
         cout << "##### testing " << Logger::fSeverityNames.size() << " severities..." << endl;
         for (uint32_t i = 0; i < Logger::fSeverityNames.size(); ++i) {
             CheckSeverity(static_cast<Severity>(i));
