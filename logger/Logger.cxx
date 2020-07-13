@@ -350,14 +350,19 @@ void Logger::SetFileSeverity(const string& severityStr)
 
 void Logger::SetCustomSeverity(const string& key, const Severity severity)
 {
+    try {
 #ifdef FAIR_MIN_SEVERITY
-    if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
-        cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), ignoring" << endl;
-        return;
-    }
+        if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
+            cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << fSeverityNames.at(static_cast<int>(Severity::FAIR_MIN_SEVERITY)) << "), ignoring" << endl;
+            return;
+        }
 #endif
-    fCustomSinks.at(key).first = severity; // TODO: range checks
-    UpdateMinSeverity();
+        fCustomSinks.at(key).first = severity; // TODO: range checks
+        UpdateMinSeverity();
+    } catch (const out_of_range& oor) {
+        LOG(error) << "No custom sink with id '" << key << "' found";
+        throw;
+    }
 }
 
 void Logger::SetCustomSeverity(const string& key, const string& severityStr)
@@ -367,6 +372,16 @@ void Logger::SetCustomSeverity(const string& key, const string& severityStr)
     } else {
         LOG(error) << "Unknown severity setting: '" << severityStr << "', setting to default 'info'.";
         SetCustomSeverity(key, Severity::info);
+    }
+}
+
+Severity Logger::GetCustomSeverity(const std::string& key)
+{
+    try {
+        return fCustomSinks.at(key).first;
+    } catch (const out_of_range& oor) {
+        LOG(error) << "No custom sink with id '" << key << "' found";
+        throw;
     }
 }
 
