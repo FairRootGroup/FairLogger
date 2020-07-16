@@ -30,11 +30,11 @@ int main()
         Logger::SetVerbosity(Verbosity::veryhigh);
 
         CheckOutput(
-R"(^\[.*]\[\d{2}:\d{2}:\d{2}\.\d{6}]\[FATAL]\[.*:\d+:.*] abcdefghijklmnopqrstuvwxyz
-\[.*]\[\d{2}:\d{2}:\d{2}\.\d{6}]\[FATAL]\[.*:\d+:.*] abcdefghijklmnopqrstuvwxyz
-\[.*]\[\d{2}:\d{2}:\d{2}\.\d{6}]\[FATAL]\[.*:\d+:.*] abcdefghijklmnopqrstuvwxyz
-\[.*]\[\d{2}:\d{2}:\d{2}\.\d{6}]\[FATAL]\[.*:\d+:.*] abcdefghijklmnopqrstuvwxyz
-\[.*]\[\d{2}:\d{2}:\d{2}\.\d{6}]\[FATAL]\[.*:\d+:.*] abcdefghijklmnopqrstuvwxyz
+R"(^\[.*\]\[\d{2}:\d{2}:\d{2}\.\d{6}\]\[FATAL\]\[.*:\d+:.*\] abcdefghijklmnopqrstuvwxyz
+\[.*\]\[\d{2}:\d{2}:\d{2}\.\d{6}\]\[FATAL\]\[.*:\d+:.*\] abcdefghijklmnopqrstuvwxyz
+\[.*\]\[\d{2}:\d{2}:\d{2}\.\d{6}\]\[FATAL\]\[.*:\d+:.*\] abcdefghijklmnopqrstuvwxyz
+\[.*\]\[\d{2}:\d{2}:\d{2}\.\d{6}\]\[FATAL\]\[.*:\d+:.*\] abcdefghijklmnopqrstuvwxyz
+\[.*\]\[\d{2}:\d{2}:\d{2}\.\d{6}\]\[FATAL\]\[.*:\d+:.*\] abcdefghijklmnopqrstuvwxyz
 $)", []() {
             thread t1(f);
             thread t2(f);

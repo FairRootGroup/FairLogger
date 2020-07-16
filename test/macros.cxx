@@ -37,7 +37,7 @@ int main()
         CheckOutput("^Hello world :-\\)!\n$", []() { LOGP(fatal, "Hello {} {}!", "world", ":-)"); });
         CheckOutput("^Hello world :-\\)!\n$", []() { LOGF(fatal, "Hello %s %s!", "world", ":-)"); });
 
-        CheckOutput(ToStr(R"(^\[FATAL])", " content\n$"), []() { LOGV(fatal, low) << "content"; });
+        CheckOutput(ToStr(R"(^\[FATAL\])", " content\n$"), []() { LOGV(fatal, low) << "content"; });
 
         CheckOutput("^\n\n\n\n$", []() {
             LOGN(fatal);
@@ -48,7 +48,7 @@ int main()
 
         Logger::SetVerbosity(Verbosity::veryhigh);
 
-        CheckOutput(ToStr(R"(^\[.*]\[\d{2}:\d{2}:\d{2}\.\d{6}]\[FATAL]\[a:4:b])", " c\n$"), []() {
+        CheckOutput(ToStr(R"(^\[.*\]\[\d{2}:\d{2}:\d{2}\.\d{6}\]\[FATAL\]\[a:4:b\])", " c\n$"), []() {
             LOGD(Severity::fatal, "a", "4", "b") << "c";
         });
     } catch (runtime_error& rte) {

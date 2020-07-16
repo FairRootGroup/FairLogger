@@ -46,7 +46,7 @@ int main()
             throw runtime_error(ToStr("File sink severity (", Logger::GetFileSeverity(), ") does not match the expected one (", Severity::warn, ")"));
         }
 
-        CheckOutput("^\\[FATAL] fatal\n$", [](){
+        CheckOutput("^\\[FATAL\\] fatal\n$", [](){
             LOG(state) << "state";
             LOG(warn) << "warning";
             LOG(error) << "error";
@@ -103,7 +103,7 @@ int main()
             throw runtime_error("Did not detect a severity request from a non-existent sink");
         }
 
-        CheckOutput("^CustomSink warning\nCustomSink error\nCustomSink fatal\n\\[FATAL] fatal\n$", [](){
+        CheckOutput("^CustomSink warning\nCustomSink error\nCustomSink fatal\n\\[FATAL\\] fatal\n$", [](){
             LOG(state) << "state";
             LOG(warn) << "warning";
             LOG(error) << "error";
