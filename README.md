@@ -106,10 +106,10 @@ Logger will log the chosen severity and all above it (except "nolog", which deac
 
 The minimum severity level can be configured at compile time via definition of `FAIR_MIN_SEVERITY`:
 
-```C++
-#define FAIR_MIN_SEVERITY warn // only allow severities >= warn
-#include <fairlogger/Logger.h>
 ```
+cmake -DFAIR_MIN_SEVERITY=warn ..
+```
+The above would only log severities equal to or above `warn`.
 
 When `FAIR_MIN_SEVERITY` is not provided all severities are enabled.
 

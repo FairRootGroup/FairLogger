@@ -26,13 +26,8 @@ using VSpec = VerbositySpec;
 bool Logger::fColored = false;
 fstream Logger::fFileStream;
 Verbosity Logger::fVerbosity = Verbosity::low;
-#ifdef FAIR_MIN_SEVERITY
 Severity Logger::fConsoleSeverity = Severity::FAIR_MIN_SEVERITY > Severity::info ? Severity::FAIR_MIN_SEVERITY : Severity::info;
 Severity Logger::fMinSeverity = Severity::FAIR_MIN_SEVERITY > Severity::info ? Severity::FAIR_MIN_SEVERITY : Severity::info;
-#else
-Severity Logger::fConsoleSeverity = Severity::info;
-Severity Logger::fMinSeverity = Severity::info;
-#endif
 Severity Logger::fFileSeverity = Severity::nolog;
 function<void()> Logger::fFatalCallback;
 unordered_map<string, pair<Severity, function<void(const string& content, const LogMetaData& metadata)>>> Logger::fCustomSinks;
@@ -50,48 +45,48 @@ const string Logger::fProcessName = "?";
 
 const unordered_map<string, Verbosity> Logger::fVerbosityMap =
 {
-    { "veryhigh", Verbosity::veryhigh  },
-    { "high",     Verbosity::high      },
-    { "medium",   Verbosity::medium    },
-    { "low",      Verbosity::low       },
-    { "verylow",  Verbosity::verylow   },
-    { "VERYHIGH", Verbosity::veryhigh  },
-    { "HIGH",     Verbosity::high      },
-    { "MEDIUM",   Verbosity::medium    },
-    { "LOW",      Verbosity::low       },
-    { "VERYLOW",  Verbosity::verylow   },
-    { "user1",    Verbosity::user1     },
-    { "user2",    Verbosity::user2     },
-    { "user3",    Verbosity::user3     },
-    { "user4",    Verbosity::user4     }
+    { "veryhigh", Verbosity::veryhigh },
+    { "high",     Verbosity::high     },
+    { "medium",   Verbosity::medium   },
+    { "low",      Verbosity::low      },
+    { "verylow",  Verbosity::verylow  },
+    { "VERYHIGH", Verbosity::veryhigh },
+    { "HIGH",     Verbosity::high     },
+    { "MEDIUM",   Verbosity::medium   },
+    { "LOW",      Verbosity::low      },
+    { "VERYLOW",  Verbosity::verylow  },
+    { "user1",    Verbosity::user1    },
+    { "user2",    Verbosity::user2    },
+    { "user3",    Verbosity::user3    },
+    { "user4",    Verbosity::user4    }
 };
 
 const unordered_map<string, Severity> Logger::fSeverityMap =
 {
-    { "nolog",   Severity::nolog   },
-    { "NOLOG",   Severity::nolog   },
-    { "error",   Severity::error   },
-    { "ERROR",   Severity::error   },
-    { "warn",    Severity::warn    },
-    { "WARN",    Severity::warn    },
-    { "warning", Severity::warn    },
-    { "WARNING", Severity::warn    },
-    { "state",   Severity::state   },
-    { "STATE",   Severity::state   },
-    { "info",    Severity::info    },
-    { "INFO",    Severity::info    },
-    { "debug",   Severity::debug   },
-    { "DEBUG",   Severity::debug   },
-    { "debug1",  Severity::debug1  },
-    { "DEBUG1",  Severity::debug1  },
-    { "debug2",  Severity::debug2  },
-    { "DEBUG2",  Severity::debug2  },
-    { "debug3",  Severity::debug3  },
-    { "DEBUG3",  Severity::debug3  },
-    { "debug4",  Severity::debug4  },
-    { "DEBUG4",  Severity::debug4  },
-    { "trace",   Severity::trace   },
-    { "TRACE",   Severity::trace   }
+    { "nolog",   Severity::nolog  },
+    { "NOLOG",   Severity::nolog  },
+    { "error",   Severity::error  },
+    { "ERROR",   Severity::error  },
+    { "warn",    Severity::warn   },
+    { "WARN",    Severity::warn   },
+    { "warning", Severity::warn   },
+    { "WARNING", Severity::warn   },
+    { "state",   Severity::state  },
+    { "STATE",   Severity::state  },
+    { "info",    Severity::info   },
+    { "INFO",    Severity::info   },
+    { "debug",   Severity::debug  },
+    { "DEBUG",   Severity::debug  },
+    { "debug1",  Severity::debug1 },
+    { "DEBUG1",  Severity::debug1 },
+    { "debug2",  Severity::debug2 },
+    { "DEBUG2",  Severity::debug2 },
+    { "debug3",  Severity::debug3 },
+    { "DEBUG3",  Severity::debug3 },
+    { "debug4",  Severity::debug4 },
+    { "DEBUG4",  Severity::debug4 },
+    { "trace",   Severity::trace  },
+    { "TRACE",   Severity::trace  }
 };
 
 const array<string, 12> Logger::fSeverityNames =
@@ -301,12 +296,10 @@ string Logger::GetColoredSeverityString(Severity severity)
 
 void Logger::SetConsoleSeverity(const Severity severity)
 {
-#ifdef FAIR_MIN_SEVERITY
     if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
         cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), ignoring" << endl;
         return;
     }
-#endif
     fConsoleSeverity = severity;
     UpdateMinSeverity();
 }
@@ -328,12 +321,10 @@ Severity Logger::GetConsoleSeverity()
 
 void Logger::SetFileSeverity(const Severity severity)
 {
-#ifdef FAIR_MIN_SEVERITY
     if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
         cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), ignoring" << endl;
         return;
     }
-#endif
     fFileSeverity = severity;
     UpdateMinSeverity();
 }
@@ -351,12 +342,10 @@ void Logger::SetFileSeverity(const string& severityStr)
 void Logger::SetCustomSeverity(const string& key, const Severity severity)
 {
     try {
-#ifdef FAIR_MIN_SEVERITY
         if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
             cout << "Requested severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), ignoring" << endl;
             return;
         }
-#endif
         fCustomSinks.at(key).first = severity;
         UpdateMinSeverity();
     } catch (const out_of_range& oor) {
@@ -389,11 +378,7 @@ void Logger::CycleConsoleSeverityUp()
 {
     int current = static_cast<int>(fConsoleSeverity);
     if (current == static_cast<int>(fSeverityNames.size()) - 1) {
-#ifdef FAIR_MIN_SEVERITY
         SetConsoleSeverity(Severity::FAIR_MIN_SEVERITY);
-#else
-        SetConsoleSeverity(static_cast<Severity>(0));
-#endif
     } else {
         SetConsoleSeverity(static_cast<Severity>(current + 1));
     }
@@ -411,11 +396,7 @@ void Logger::CycleConsoleSeverityUp()
 void Logger::CycleConsoleSeverityDown()
 {
     int current = static_cast<int>(fConsoleSeverity);
-#ifdef FAIR_MIN_SEVERITY
     if (current == static_cast<int>(Severity::FAIR_MIN_SEVERITY)) {
-#else
-    if (current == 0) {
-#endif
         SetConsoleSeverity(static_cast<Severity>(fSeverityNames.size() - 1));
     } else {
         SetConsoleSeverity(static_cast<Severity>(current - 1));
@@ -560,16 +541,12 @@ string Logger::InitFileSink(const Severity severity, const string& filename, boo
     fFileStream.open(fullName, fstream::out | fstream::app);
 
     if (fFileStream.is_open()) {
-#ifdef FAIR_MIN_SEVERITY
         if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
             cout << "Requested file sink severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), setting to " << Severity::FAIR_MIN_SEVERITY << endl;
             fFileSeverity = Severity::FAIR_MIN_SEVERITY;
         } else {
             fFileSeverity = severity;
         }
-#else
-        fFileSeverity = severity;
-#endif
         UpdateMinSeverity();
     } else {
         cout << "Error opening file: " << fullName;
@@ -628,16 +605,12 @@ void Logger::AddCustomSink(const string& key, Severity severity, function<void(c
 {
     lock_guard<mutex> lock(fMtx);
     if (fCustomSinks.count(key) == 0) {
-#ifdef FAIR_MIN_SEVERITY
         if (severity < Severity::FAIR_MIN_SEVERITY && severity != Severity::nolog) {
             cout << "Requested custom sink severity is higher than the enabled compile-time FAIR_MIN_SEVERITY (" << Severity::FAIR_MIN_SEVERITY << "), setting to " << Severity::FAIR_MIN_SEVERITY << endl;
             fCustomSinks.insert(make_pair(key, make_pair(Severity::FAIR_MIN_SEVERITY, func)));
         } else {
             fCustomSinks.insert(make_pair(key, make_pair(severity, func)));
         }
-#else
-        fCustomSinks.insert(make_pair(key, make_pair(severity, func)));
-#endif
         UpdateMinSeverity();
     } else {
         cout << "Logger::AddCustomSink: sink '" << key << "' already exists, will not add again. Remove first with Logger::RemoveCustomSink(const string& key)" << endl;
