@@ -115,7 +115,6 @@ int main()
         if (!Logger::Logging(Severity::error)) { cout << "Logger expected to log error, but it reports not to" << endl; return 1; }
         if (!Logger::Logging(Severity::fatal)) { cout << "Logger expected to log fatal, but it reports not to" << endl; return 1; }
 
-
         cout << "##### removing custom sink with error severity" << endl;
 
         bool caught = false;
