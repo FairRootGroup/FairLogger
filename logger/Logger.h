@@ -415,13 +415,13 @@ inline std::ostream& operator<<(std::ostream& os, const Verbosity& v) { return o
 
 // Log line if the provided severity is below or equals the configured one
 #define FAIR_LOG(severity) \
-    if (fair::Logger::SuppressSeverity(fair::Severity::severity)) ; else \
+    for (bool fairLOggerunLikelyvariable3 = false; !fair::Logger::SuppressSeverity(fair::Severity::severity) && !fairLOggerunLikelyvariable3; fairLOggerunLikelyvariable3 = true) \
         for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
             fair::Logger(fair::Severity::severity, MSG_ORIGIN)
 
 // Log line with the given verbosity if the provided severity is below or equals the configured one
 #define FAIR_LOGV(severity, verbosity) \
-    if (fair::Logger::SuppressSeverity(fair::Severity::severity)) ; else \
+    for (bool fairLOggerunLikelyvariable3 = false; !fair::Logger::SuppressSeverity(fair::Severity::severity) && !fairLOggerunLikelyvariable3; fairLOggerunLikelyvariable3 = true) \
         for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
             fair::Logger(fair::Severity::severity, fair::Verbosity::verbosity, MSG_ORIGIN)
 
@@ -431,18 +431,18 @@ inline std::ostream& operator<<(std::ostream& os, const Verbosity& v) { return o
 
 // Log an empty line
 #define FAIR_LOGN(severity) \
-    if (fair::Logger::SuppressSeverity(fair::Severity::severity)) ; else \
+    for (bool fairLOggerunLikelyvariable3 = false; !fair::Logger::SuppressSeverity(fair::Severity::severity) && !fairLOggerunLikelyvariable3; fairLOggerunLikelyvariable3 = true) \
         for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(fair::Severity::severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
             fair::Logger(fair::Severity::severity, fair::Verbosity::verylow, MSG_ORIGIN).LogEmptyLine()
 
 // Log with custom file, line, function
 #define FAIR_LOGD(severity, file, line, f) \
-    if (fair::Logger::SuppressSeverity(severity)) ; else \
+    for (bool fairLOggerunLikelyvariable3 = false; !fair::Logger::SuppressSeverity(severity) && !fairLOggerunLikelyvariable3; fairLOggerunLikelyvariable3 = true) \
         for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
             fair::Logger(severity, file, line, f)
 
 #define FAIR_LOG_IF(severity, condition) \
-    if (fair::Logger::SuppressSeverity(fair::Severity::severity)) ; else \
+    for (bool fairLOggerunLikelyvariable4 = false; !fair::Logger::SuppressSeverity(fair::Severity::severity) && !fairLOggerunLikelyvariable4; fairLOggerunLikelyvariable4 = true) \
         for (bool fairLOggerunLikelyvariable2 = false; condition && !fairLOggerunLikelyvariable2; fairLOggerunLikelyvariable2 = true) \
             LOG(severity)
 
