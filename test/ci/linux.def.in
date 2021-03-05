@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: @DOCKER_TAG@
+
+%files
+    @PACKAGE_SETUP_SCRIPT@ /setup.sh
+
+%post
+    bash /setup.sh

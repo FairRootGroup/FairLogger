@@ -156,6 +156,14 @@ if(BUILD_TESTING)
 endif()
 ################################################################################
 
+# Utils ########################################################################
+find_program(BASH bash HINTS "/bin")
+find_program(SINGULARITY singularity)
+if(BASH AND SINGULARITY)
+  add_subdirectory(test/ci)
+endif()
+################################################################################
+
 # Summary ######################################################################
 message(STATUS "  ")
 message(STATUS "  ${Cyan}CXX STANDARD${CR}       ${BGreen}C++${CMAKE_CXX_STANDARD}${CR} (>= C++${PROJECT_MIN_CXX_STANDARD}, change with ${BMagenta}-DCMAKE_CXX_STANDARD=17${CR})")

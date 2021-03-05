@@ -1,69 +1,62 @@
 ################################################################################
-#    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
+#    Copyright (C) 2021 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
 #                                                                              #
 #              This software is distributed under the terms of the             #
 #              GNU Lesser General Public Licence (LGPL) version 3,             #
 #                  copied verbatim in the file "LICENSE"                       #
 ################################################################################
-Set(CTEST_SOURCE_DIRECTORY $ENV{SOURCEDIR})
-Set(CTEST_BINARY_DIRECTORY $ENV{BUILDDIR})
-Set(CTEST_SITE $ENV{SITE})
-Set(CTEST_BUILD_NAME $ENV{LABEL})
-Set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
-Set(CTEST_PROJECT_NAME "FairLogger")
 
-Find_Program(CTEST_GIT_COMMAND NAMES git)
-Set(CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
+cmake_host_system_information(RESULT fqdn QUERY FQDN)
 
-Set(BUILD_COMMAND "make")
-Set(CTEST_BUILD_COMMAND "${BUILD_COMMAND} -j$ENV{number_of_processors}")
+set(CTEST_SOURCE_DIRECTORY .)
+set(CTEST_BINARY_DIRECTORY build)
+set(CTEST_CMAKE_GENERATOR "Ninja")
+set(CTEST_USE_LAUNCHERS ON)
+set(CTEST_CONFIGURATION_TYPE "RelWithDebInfo")
 
-String(TOUPPER $ENV{ctest_model} _Model)
-Set(configure_options "-DCMAKE_BUILD_TYPE=${_Model}")
+if(NOT NCPUS)
+  if(ENV{SLURM_CPUS_PER_TASK})
+    set(NCPUS $ENV{SLURM_CPUS_PER_TASK})
+  else()
+    include(ProcessorCount)
+    ProcessorCount(NCPUS)
+    if(NCPUS EQUAL 0)
+      set(NCPUS 1)
+    endif()
+  endif()
+endif()
 
-Set(CTEST_USE_LAUNCHERS 1)
-Set(configure_options "${configure_options};-DCTEST_USE_LAUNCHERS=${CTEST_USE_LAUNCHERS}")
+if ("$ENV{CTEST_SITE}" STREQUAL "")
+  set(CTEST_SITE "${fqdn}")
+else()
+  set(CTEST_SITE $ENV{CTEST_SITE})
+endif()
 
-Set(configure_options "${configure_options};-DDISABLE_COLOR=ON")
+if ("$ENV{LABEL}" STREQUAL "")
+  set(CTEST_BUILD_NAME "build")
+else()
+  set(CTEST_BUILD_NAME $ENV{LABEL})
+endif()
 
-Set(EXTRA_FLAGS $ENV{EXTRA_FLAGS})
-If(EXTRA_FLAGS)
-  Set(configure_options "${configure_options};${EXTRA_FLAGS}") 
-EndIf()
+ctest_start(Continuous)
 
-If($ENV{ctest_model} MATCHES Nightly OR $ENV{ctest_model} MATCHES Profile)
+list(APPEND options
+  "-DDISABLE_COLOR=ON"
+  "-DUSE_EXTERNAL_FMT=ON"
+  "-DUSE_BOOST_PRETTY_FUNCTION=ON"
+  )
+list(JOIN options ";" optionsstr)
+ctest_configure(OPTIONS "${optionsstr}")
 
-  Find_Program(GCOV_COMMAND gcov)
-  If(GCOV_COMMAND)
-    Message("Found GCOV: ${GCOV_COMMAND}")
-    Set(CTEST_COVERAGE_COMMAND ${GCOV_COMMAND})
-  EndIf(GCOV_COMMAND)
+ctest_build(FLAGS "-j${NCPUS}")
 
-  Set(ENV{ctest_model} Nightly)
+ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}"
+           PARALLEL_LEVEL 1
+           SCHEDULE_RANDOM ON
+           RETURN_VALUE _ctest_test_ret_val)
 
-  CTEST_EMPTY_BINARY_DIRECTORY(${CTEST_BINARY_DIRECTORY})
+ctest_submit()
 
-EndIf()
-
-Ctest_Start($ENV{ctest_model})
-
-Ctest_Configure(BUILD "${CTEST_BINARY_DIRECTORY}"
-                OPTIONS "${configure_options}"
-               )
-
-Ctest_Build(BUILD "${CTEST_BINARY_DIRECTORY}")
-
-Ctest_Test(BUILD "${CTEST_BINARY_DIRECTORY}" 
-           PARALLEL_LEVEL $ENV{number_of_processors}
-           RETURN_VALUE _ctest_test_ret_val
-          )
-
-If(GCOV_COMMAND)
-  Ctest_Coverage(BUILD "${CTEST_BINARY_DIRECTORY}")
-EndIf()
-
-Ctest_Submit()
- 
-if (_ctest_test_ret_val)
+if(_ctest_test_ret_val)
   Message(FATAL_ERROR "Some tests failed.")
 endif()
