@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (C) 2018-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  #
+# Copyright (C) 2018-2021 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  #
 #                                                                              #
 #              This software is distributed under the terms of the             #
 #              GNU Lesser General Public Licence (LGPL) version 3,             #
@@ -7,7 +7,7 @@
 ################################################################################
 
 cmake_minimum_required(VERSION 3.9.4 FATAL_ERROR)
-cmake_policy(VERSION 3.9...3.15)
+cmake_policy(VERSION 3.9...3.19)
 
 # Project ######################################################################
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -59,20 +59,16 @@ if(USE_BOOST_PRETTY_FUNCTION)
   target_compile_definitions(FairLogger PUBLIC FAIRLOGGER_USE_BOOST_PRETTY_FUNCTION)
 endif()
 
-# legacy paths
-list(APPEND FAIRLOGGER_INSTALL_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
-
 if(USE_EXTERNAL_FMT)
   target_link_libraries(FairLogger PUBLIC fmt::fmt)
 else()
   add_library(fmt INTERFACE)
   target_include_directories(fmt INTERFACE
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/logger/bundled>
-    $<INSTALL_INTERFACE:${PROJECT_INSTALL_INCDIR}/bundled>
+    $<INSTALL_INTERFACE:${PROJECT_INSTALL_BUNDLEDINCDIR}>
   )
   target_compile_definitions(fmt INTERFACE FMT_HEADER_ONLY)
   target_link_libraries(FairLogger PUBLIC fmt)
-  list(APPEND FAIRLOGGER_INSTALL_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_INCDIR}/bundled)
 endif()
 
 if(DEFINED FAIR_MIN_SEVERITY)

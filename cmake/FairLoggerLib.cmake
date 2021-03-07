@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (C) 2018-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  #
+# Copyright (C) 2018-2021 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  #
 #                                                                              #
 #              This software is distributed under the terms of the             #
 #              GNU Lesser General Public Licence (LGPL) version 3,             #
@@ -122,6 +122,7 @@ macro(set_fairlogger_defaults)
   set(PROJECT_INSTALL_BINDIR ${CMAKE_INSTALL_BINDIR})
   set(PROJECT_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
   set(PROJECT_INSTALL_INCDIR ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME_LOWER})
+  set(PROJECT_INSTALL_BUNDLEDINCDIR ${PROJECT_INSTALL_INCDIR}/bundled)
   set(PROJECT_INSTALL_DATADIR ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME_LOWER})
 
   # https://cmake.org/Wiki/CMake_RPATH_handling
@@ -227,6 +228,13 @@ macro(install_cmake_package)
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
   )
+  unset(PACKAGE_INSTALL_INCDIRS)
+  list(APPEND PACKAGE_INSTALL_INCDIRS
+    \$\{PACKAGE_PREFIX_DIR\}/${CMAKE_INSTALL_INCLUDEDIR})
+  if(NOT USE_EXTERNAL_FMT)
+    list(APPEND PACKAGE_INSTALL_INCDIRS
+      \$\{PACKAGE_PREFIX_DIR\}/${PROJECT_INSTALL_BUNDLEDINCDIR})
+  endif()
   generate_package_dependencies() # fills ${PACKAGE_DEPENDENCIES}
   string(TOUPPER ${CMAKE_BUILD_TYPE} PROJECT_BUILD_TYPE_UPPER)
   set(PROJECT_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${PROJECT_BUILD_TYPE_UPPER}})

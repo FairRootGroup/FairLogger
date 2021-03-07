@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (C) 2018-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  #
+# Copyright (C) 2018-2021 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  #
 #                                                                              #
 #              This software is distributed under the terms of the             #
 #              GNU Lesser General Public Licence (LGPL) version 3,             #
@@ -15,8 +15,8 @@ set(@PROJECT_NAME@_GIT_DATE @PROJECT_GIT_DATE@)
 
 set_and_check(@PROJECT_NAME@_PREFIX @PACKAGE_CMAKE_INSTALL_PREFIX@)
 set(@PROJECT_NAME@_BINDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@PROJECT_INSTALL_BINDIR@)
-set(@PROJECT_NAME@_INCDIR @FAIRLOGGER_INSTALL_INCLUDE_DIRS@)
-set(@PROJECT_NAME@_INCDIRS @FAIRLOGGER_INSTALL_INCLUDE_DIRS@)
+set(@PROJECT_NAME@_INCDIR @PACKAGE_INSTALL_INCDIRS@)
+set(@PROJECT_NAME@_INCDIRS @PACKAGE_INSTALL_INCDIRS@)
 set_and_check(@PROJECT_NAME@_LIBDIR @PACKAGE_CMAKE_INSTALL_PREFIX@/@PROJECT_INSTALL_LIBDIR@)
 
 set(@PROJECT_NAME@_CXX_STANDARD_REQUIRED @CMAKE_CXX_STANDARD_REQUIRED@)
