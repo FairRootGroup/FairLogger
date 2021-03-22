@@ -95,13 +95,9 @@ macro(set_fairlogger_defaults)
 
   # Handle C++ standard level
   set(PROJECT_MIN_CXX_STANDARD 11)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD ${PROJECT_MIN_CXX_STANDARD})
-  elseif(${CMAKE_CXX_STANDARD} LESS ${PROJECT_MIN_CXX_STANDARD})
+  if(CMAKE_CXX_STANDARD LESS PROJECT_MIN_CXX_STANDARD)
     message(FATAL_ERROR "A minimum CMAKE_CXX_STANDARD of ${PROJECT_MIN_CXX_STANDARD} is required.")
   endif()
-  set(CMAKE_CXX_EXTENSIONS OFF)
 
   # Generate compile_commands.json file (https://clang.llvm.org/docs/JSONCompilationDatabase.html)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
