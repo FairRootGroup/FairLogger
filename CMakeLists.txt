@@ -53,6 +53,7 @@ add_library(FairLogger
   logger/Logger.cxx
   logger/Logger.h
 )
+target_compile_features(FairLogger PUBLIC cxx_std_11)
 
 if(USE_BOOST_PRETTY_FUNCTION)
   target_link_libraries(FairLogger PUBLIC Boost::boost)
@@ -67,6 +68,7 @@ else()
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/logger/bundled>
     $<INSTALL_INTERFACE:${PROJECT_INSTALL_BUNDLEDINCDIR}>
   )
+  target_compile_features(fmt PUBLIC cxx_std_11)
   target_compile_definitions(fmt INTERFACE FMT_HEADER_ONLY)
   target_link_libraries(FairLogger PUBLIC fmt)
 endif()
