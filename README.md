@@ -234,4 +234,4 @@ Define an option `FAIR_NO_LOG*` to prevent the above unprefixed macros to be def
 
 GNU Lesser General Public Licence (LGPL) version 3, see [LICENSE](LICENSE).
 
-Copyright (C) 2017-2020 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH
+Copyright (C) 2017-2021 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH
