@@ -12,6 +12,7 @@ cmake_policy(VERSION 3.9...3.19)
 # Project ######################################################################
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(FairLoggerLib)
+include(FairFindPackage2)
 
 get_git_version()
 
