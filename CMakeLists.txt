@@ -68,7 +68,7 @@ else()
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/logger/bundled>
     $<INSTALL_INTERFACE:${PROJECT_INSTALL_BUNDLEDINCDIR}>
   )
-  target_compile_features(fmt PUBLIC cxx_std_11)
+  target_compile_features(fmt INTERFACE cxx_std_11)
   target_compile_definitions(fmt INTERFACE FMT_HEADER_ONLY)
   target_link_libraries(FairLogger PUBLIC fmt)
 endif()
