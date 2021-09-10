@@ -38,7 +38,7 @@ int main()
         Logger::SetConsoleSeverity(Severity::fatal);
         cout << "initial severity >" << Logger::GetConsoleSeverity() << "<" << endl << endl;
 
-        array<Severity, 12> severitiesUp{{ Severity::nolog, Severity::trace, Severity::debug4, Severity::debug3, Severity::debug2, Severity::debug1, Severity::debug, Severity::info, Severity::state, Severity::warn, Severity::error, Severity::fatal }};
+        array<Severity, 14> severitiesUp{{ Severity::nolog, Severity::trace, Severity::debug4, Severity::debug3, Severity::debug2, Severity::debug1, Severity::debug, Severity::info, Severity::state, Severity::warn, Severity::important, Severity::alarm, Severity::error, Severity::fatal }};
 #ifdef FAIR_MIN_SEVERITY
         for (unsigned int i = static_cast<int>(Severity::FAIR_MIN_SEVERITY); i < severitiesUp.size(); ++i) {
 #else
@@ -57,7 +57,7 @@ int main()
         Logger::SetConsoleSeverity(Severity::fatal);
         cout << "initial severity >" << Logger::GetConsoleSeverity() << "<" << endl << endl;
 
-        array<Severity, 12> severitiesDown{{ Severity::error, Severity::warn, Severity::state, Severity::info, Severity::debug, Severity::debug1, Severity::debug2, Severity::debug3, Severity::debug4, Severity::trace, Severity::nolog, Severity::fatal }};
+        array<Severity, 14> severitiesDown{{ Severity::error, Severity::alarm, Severity::important, Severity::warn, Severity::state, Severity::info, Severity::debug, Severity::debug1, Severity::debug2, Severity::debug3, Severity::debug4, Severity::trace, Severity::nolog, Severity::fatal }};
 #ifdef FAIR_MIN_SEVERITY
         for (unsigned int i = 0; i < severitiesDown.size() - static_cast<int>(Severity::FAIR_MIN_SEVERITY) - 1; ++i) {
 #else

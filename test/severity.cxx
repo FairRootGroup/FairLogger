@@ -20,18 +20,20 @@ using namespace fair::logger::test;
 
 uint32_t printEverySeverity(uint32_t i)
 {
-    LOG(nolog)  << "nolog message, counter: "   << i++;
-    LOG(trace)  << "trace message, counter: "   << i++;
-    LOG(debug4) << "debug4 message, counter: "  << i++;
-    LOG(debug3) << "debug3 message, counter: "  << i++;
-    LOG(debug2) << "debug2 message, counter: "  << i++;
-    LOG(debug1) << "debug1 message, counter: "  << i++;
-    LOG(debug)  << "debug message, counter: "   << i++;
-    LOG(info)   << "info message, counter: "    << i++;
-    LOG(state)  << "state message, counter: "   << i++;
-    LOG(warn)   << "warning message, counter: " << i++;
-    LOG(error)  << "error message, counter: "   << i++;
-    LOG(fatal)  << "fatal message, counter: "   << i++;
+    LOG(nolog)     << "nolog message, counter: "     << i++;
+    LOG(trace)     << "trace message, counter: "     << i++;
+    LOG(debug4)    << "debug4 message, counter: "    << i++;
+    LOG(debug3)    << "debug3 message, counter: "    << i++;
+    LOG(debug2)    << "debug2 message, counter: "    << i++;
+    LOG(debug1)    << "debug1 message, counter: "    << i++;
+    LOG(debug)     << "debug message, counter: "     << i++;
+    LOG(info)      << "info message, counter: "      << i++;
+    LOG(state)     << "state message, counter: "     << i++;
+    LOG(warn)      << "warning message, counter: "   << i++;
+    LOG(important) << "important message, counter: " << i++;
+    LOG(alarm)     << "alarm message, counter: "     << i++;
+    LOG(error)     << "error message, counter: "     << i++;
+    LOG(fatal)     << "fatal message, counter: "     << i++;
 
     return i;
 }
@@ -45,7 +47,7 @@ void CheckSeverity(Severity severity)
 
     for (uint32_t i = 0; i < Logger::fSeverityNames.size(); ++i) {
         if (sev == Severity::nolog) {
-            if (i == 11) {
+            if (i == static_cast<int>(fair::Severity::fatal)) {
                 if (!Logger::Logging(static_cast<Severity>(i))) {
                     throw runtime_error(ToStr("expecting to be logging ", Logger::fSeverityNames.at(i), " during ", sev, ", but it is not."));
                 }
