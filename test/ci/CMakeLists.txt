@@ -7,24 +7,12 @@
 ################################################################################
 
 function(container)
-  cmake_parse_arguments(ARGS "" "OS;VERSION;DOCKER_TAG;PACKAGE_SETUP_SCRIPT" "" ${ARGN})
-
-  if(ARGS_DOCKER_TAG)
-    set(DOCKER_TAG ${ARGS_DOCKER_TAG})
-  else()
-    set(DOCKER_TAG "${ARGS_OS}:${ARGS_VERSION}")
-  endif()
-
-  if(ARGS_PACKAGE_SETUP_SCRIPT)
-    set(PACKAGE_SETUP_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${ARGS_PACKAGE_SETUP_SCRIPT}")
-  else()
-    set(PACKAGE_SETUP_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/setup-${ARGS_OS}.sh")
-  endif()
+  cmake_parse_arguments(ARGS "" "OS;VERSION" "" ${ARGN})
 
   set(container "${ARGS_OS}.${ARGS_VERSION}")
   set(def "${container}.def")
   set(log "${container}.log")
-  set(target "${container}.fairlogger.sif")
+  set(target "${container}.sif")
 
   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/linux.def.in" ${def} @ONLY)
 
@@ -41,6 +29,8 @@ function(container)
   set(containers ${containers} PARENT_SCOPE)
 endfunction()
 
+container(OS fedora VERSION 32)
 container(OS fedora VERSION 33)
+container(OS fedora VERSION 34)
 
 add_custom_target(all-containers DEPENDS ${containers})
