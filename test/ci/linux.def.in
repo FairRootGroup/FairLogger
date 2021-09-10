@@ -1,8 +1,8 @@
 Bootstrap: docker
-From: @DOCKER_TAG@
+From: @ARGS_OS@:@ARGS_VERSION@
 
 %files
-    @PACKAGE_SETUP_SCRIPT@ /setup.sh
+    @CMAKE_CURRENT_SOURCE_DIR@/setup-@ARGS_OS@.sh /setup.sh
 
 %post
-    bash /setup.sh
+    bash /setup.sh @ARGS_VERSION@

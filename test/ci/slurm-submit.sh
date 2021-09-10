@@ -3,18 +3,12 @@
 label="$1"
 jobsh="$2"
 
-if [ -z "$ALFACI_SLURM_CPUS" ]
-then
-	ALFACI_SLURM_CPUS=32
-fi
+ALFACI_SLURM_CPUS=4
 if [ -z "$ALFACI_SLURM_EXTRA_OPTS" ]
 then
 	ALFACI_SLURM_EXTRA_OPTS="--hint=compute_bound"
 fi
-if [ -z "$ALFACI_SLURM_TIMEOUT" ]
-then
-	ALFACI_SLURM_TIMEOUT=30
-fi
+ALFACI_SLURM_TIMEOUT=10
 if [ -z "$ALFACI_SLURM_QUEUE" ]
 then
 	ALFACI_SLURM_QUEUE=main
