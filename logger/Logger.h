@@ -61,9 +61,13 @@ enum class Severity : int
     info = 7,
     state = 8,
     warn = 9,
-    error = 10,
-    fatal = 11,
-    // backwards-compatibility:
+    important = 10,
+    alarm = 11,
+    error = 12,
+    fatal = 13,
+    // aliases
+    warning = warn,
+    // backwards-compatibility
     NOLOG = nolog,
     TRACE = trace,
     DEBUG4 = debug4,
@@ -74,7 +78,6 @@ enum class Severity : int
     INFO = info,
     STATE = state,
     WARNING = warn,
-    warning = warn,
     WARN = warn,
     ERROR = error,
     FATAL = fatal
@@ -319,7 +322,7 @@ class Logger
 
     static const std::unordered_map<std::string, Verbosity> fVerbosityMap;
     static const std::unordered_map<std::string, Severity> fSeverityMap;
-    static const std::array<std::string, 12> fSeverityNames;
+    static const std::array<std::string, 14> fSeverityNames;
     static const std::array<std::string, 9> fVerbosityNames;
 
     // protection for use after static destruction took place

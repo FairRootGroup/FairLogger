@@ -63,33 +63,35 @@ const unordered_map<string, Verbosity> Logger::fVerbosityMap =
 
 const unordered_map<string, Severity> Logger::fSeverityMap =
 {
-    { "nolog",   Severity::nolog  },
-    { "NOLOG",   Severity::nolog  },
-    { "error",   Severity::error  },
-    { "ERROR",   Severity::error  },
-    { "warn",    Severity::warn   },
-    { "WARN",    Severity::warn   },
-    { "warning", Severity::warn   },
-    { "WARNING", Severity::warn   },
-    { "state",   Severity::state  },
-    { "STATE",   Severity::state  },
-    { "info",    Severity::info   },
-    { "INFO",    Severity::info   },
-    { "debug",   Severity::debug  },
-    { "DEBUG",   Severity::debug  },
-    { "debug1",  Severity::debug1 },
-    { "DEBUG1",  Severity::debug1 },
-    { "debug2",  Severity::debug2 },
-    { "DEBUG2",  Severity::debug2 },
-    { "debug3",  Severity::debug3 },
-    { "DEBUG3",  Severity::debug3 },
-    { "debug4",  Severity::debug4 },
-    { "DEBUG4",  Severity::debug4 },
-    { "trace",   Severity::trace  },
-    { "TRACE",   Severity::trace  }
+    { "nolog",     Severity::nolog     },
+    { "NOLOG",     Severity::nolog     },
+    { "error",     Severity::error     },
+    { "ERROR",     Severity::error     },
+    { "alarm",     Severity::alarm     },
+    { "important", Severity::important },
+    { "warn",      Severity::warn      },
+    { "WARN",      Severity::warn      },
+    { "warning",   Severity::warn      },
+    { "WARNING",   Severity::warn      },
+    { "state",     Severity::state     },
+    { "STATE",     Severity::state     },
+    { "info",      Severity::info      },
+    { "INFO",      Severity::info      },
+    { "debug",     Severity::debug     },
+    { "DEBUG",     Severity::debug     },
+    { "debug1",    Severity::debug1    },
+    { "DEBUG1",    Severity::debug1    },
+    { "debug2",    Severity::debug2    },
+    { "DEBUG2",    Severity::debug2    },
+    { "debug3",    Severity::debug3    },
+    { "DEBUG3",    Severity::debug3    },
+    { "debug4",    Severity::debug4    },
+    { "DEBUG4",    Severity::debug4    },
+    { "trace",     Severity::trace     },
+    { "TRACE",     Severity::trace     }
 };
 
-const array<string, 12> Logger::fSeverityNames =
+const array<string, 14> Logger::fSeverityNames =
 {
     {
         "NOLOG",
@@ -102,6 +104,8 @@ const array<string, 12> Logger::fSeverityNames =
         "INFO",
         "STATE",
         "WARN",
+        "IMPORTANT",
+        "ALARM",
         "ERROR",
         "FATAL"
     }
@@ -278,19 +282,21 @@ void Logger::LogEmptyLine()
 string Logger::GetColoredSeverityString(Severity severity)
 {
     switch (severity) {
-        case Severity::nolog:  return "\033[01;39mNOLOG\033[0m";  break;
-        case Severity::fatal:  return "\033[01;31mFATAL\033[0m";  break;
-        case Severity::error:  return "\033[01;31mERROR\033[0m";  break;
-        case Severity::warn:   return "\033[01;33mWARN\033[0m";   break;
-        case Severity::state:  return "\033[01;35mSTATE\033[0m";  break;
-        case Severity::info:   return "\033[01;32mINFO\033[0m";   break;
-        case Severity::debug:  return "\033[01;34mDEBUG\033[0m";  break;
-        case Severity::debug1: return "\033[01;34mDEBUG1\033[0m"; break;
-        case Severity::debug2: return "\033[01;34mDEBUG2\033[0m"; break;
-        case Severity::debug3: return "\033[01;34mDEBUG3\033[0m"; break;
-        case Severity::debug4: return "\033[01;34mDEBUG4\033[0m"; break;
-        case Severity::trace:  return "\033[01;36mTRACE\033[0m";  break;
-        default:               return "UNKNOWN";                  break;
+        case Severity::nolog:     return "\033[01;39mNOLOG\033[0m";     break;
+        case Severity::fatal:     return "\033[01;31mFATAL\033[0m";     break;
+        case Severity::error:     return "\033[01;31mERROR\033[0m";     break;
+        case Severity::alarm:     return "\033[01;33mALARM\033[0m";     break;
+        case Severity::important: return "\033[01;32mIMPORTANT\033[0m"; break;
+        case Severity::warn:      return "\033[01;33mWARN\033[0m";      break;
+        case Severity::state:     return "\033[01;35mSTATE\033[0m";     break;
+        case Severity::info:      return "\033[01;32mINFO\033[0m";      break;
+        case Severity::debug:     return "\033[01;34mDEBUG\033[0m";     break;
+        case Severity::debug1:    return "\033[01;34mDEBUG1\033[0m";    break;
+        case Severity::debug2:    return "\033[01;34mDEBUG2\033[0m";    break;
+        case Severity::debug3:    return "\033[01;34mDEBUG3\033[0m";    break;
+        case Severity::debug4:    return "\033[01;34mDEBUG4\033[0m";    break;
+        case Severity::trace:     return "\033[01;36mTRACE\033[0m";     break;
+        default:                  return "UNKNOWN";                     break;
     }
 }
 

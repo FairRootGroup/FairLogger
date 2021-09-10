@@ -96,6 +96,8 @@ where severity level is one of the following:
 "info",
 "state",
 "warn",
+"important",
+"alarm",
 "error",
 "fatal",
 ```
