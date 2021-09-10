@@ -68,19 +68,19 @@ enum class Severity : int
     // aliases
     warning = warn,
     // backwards-compatibility
-    NOLOG = nolog,
-    TRACE = trace,
-    DEBUG4 = debug4,
-    DEBUG3 = debug3,
-    DEBUG2 = debug2,
-    DEBUG1 = debug1,
-    DEBUG = debug,
-    INFO = info,
-    STATE = state,
-    WARNING = warn,
-    WARN = warn,
-    ERROR = error,
-    FATAL = fatal
+    NOLOG   [[deprecated("Use 'nolog' instead")]]   = nolog,
+    TRACE   [[deprecated("Use 'trace' instead")]]   = trace,
+    DEBUG4  [[deprecated("Use 'debug4' instead")]]  = debug4,
+    DEBUG3  [[deprecated("Use 'debug3' instead")]]  = debug3,
+    DEBUG2  [[deprecated("Use 'debug2' instead")]]  = debug2,
+    DEBUG1  [[deprecated("Use 'debug1' instead")]]  = debug1,
+    DEBUG   [[deprecated("Use 'debug' instead")]]   = debug,
+    INFO    [[deprecated("Use 'info' instead")]]    = info,
+    STATE   [[deprecated("Use 'state' instead")]]   = state,
+    WARNING [[deprecated("Use 'warning' instead")]] = warn,
+    WARN    [[deprecated("Use 'warn' instead")]]    = warn,
+    ERROR   [[deprecated("Use 'error' instead")]]   = error,
+    FATAL   [[deprecated("Use 'fatal' instead")]]   = fatal
 };
 
 // verbosity levels:
