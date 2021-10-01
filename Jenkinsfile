@@ -63,6 +63,7 @@ pipeline{
             [os: 'fedora', ver: '33',    arch: 'x86_64', compiler: 'gcc-10'],
             [os: 'fedora', ver: '34',    arch: 'x86_64', compiler: 'gcc-11'],
             [os: 'macos',  ver: '11',    arch: 'x86_64', compiler: 'apple-clang-12'],
+            [os: 'macos',  ver: '11',    arch: 'arm64',  compiler: 'apple-clang-13'],
           ])
 
           parallel(builds)
