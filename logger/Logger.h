@@ -26,6 +26,7 @@
 
 #include <fmt/core.h>
 #include <fmt/printf.h>
+#include <fmt/ostream.h>
 
 #pragma GCC diagnostic pop
 
