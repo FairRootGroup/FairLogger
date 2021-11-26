@@ -15,6 +15,7 @@
 
 #include <cstdio> // printf
 #include <iostream>
+#include <iterator> // std::back_inserter
 
 using namespace std;
 
@@ -160,27 +161,27 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
             for (const auto info : spec.fInfos) {
                 switch (info) {
                     case VSpec::Info::process_name:
-                        fmt::format_to(fBWPrefix, "[{}]", fInfos.process_name);
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{}]", fInfos.process_name);
                         break;
                     case VSpec::Info::timestamp_us:
                         FillTimeInfos();
-                        fmt::format_to(fBWPrefix, "[{:%H:%M:%S}.{:06}]", fmt::localtime(fInfos.timestamp), fInfos.us.count());
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{:%H:%M:%S}.{:06}]", fmt::localtime(fInfos.timestamp), fInfos.us.count());
                         break;
                     case VSpec::Info::timestamp_s:
                         FillTimeInfos();
-                        fmt::format_to(fBWPrefix, "[{:%H:%M:%S}]", fmt::localtime(fInfos.timestamp));
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{:%H:%M:%S}]", fmt::localtime(fInfos.timestamp));
                         break;
                     case VSpec::Info::severity:
-                        fmt::format_to(fBWPrefix, "[{}]", fInfos.severity_name);
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{}]", fInfos.severity_name);
                         break;
                     case VSpec::Info::file_line_function:
-                        fmt::format_to(fBWPrefix, "[{}:{}:{}]", fInfos.file, fInfos.line, fInfos.func);
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{}:{}:{}]", fInfos.file, fInfos.line, fInfos.func);
                         break;
                     case VSpec::Info::file_line:
-                        fmt::format_to(fBWPrefix, "[{}:{}]", fInfos.file, fInfos.line);
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{}:{}]", fInfos.file, fInfos.line);
                         break;
                     case VSpec::Info::file:
-                        fmt::format_to(fBWPrefix, "[{}]", fInfos.file);
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{}]", fInfos.file);
                         break;
                     default:
                         break;
@@ -188,7 +189,7 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
             }
 
             if (spec.fSize > 0) {
-                fmt::format_to(fBWPrefix, " ");
+                fmt::format_to(std::back_inserter(fBWPrefix), " ");
             }
         }
 
@@ -196,27 +197,27 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
             for (const auto info : spec.fInfos) {
                 switch (info) {
                     case VSpec::Info::process_name:
-                        fmt::format_to(fColorPrefix, "[{}]", ColorOut(Color::fgBlue, fInfos.process_name));
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}]", ColorOut(Color::fgBlue, fInfos.process_name));
                         break;
                     case VSpec::Info::timestamp_us:
                         FillTimeInfos();
-                        fmt::format_to(fColorPrefix, "[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), fInfos.us.count(), endColor());
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), fInfos.us.count(), endColor());
                         break;
                     case VSpec::Info::timestamp_s:
                         FillTimeInfos();
-                        fmt::format_to(fColorPrefix, "[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), endColor());
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), endColor());
                         break;
                     case VSpec::Info::severity:
-                        fmt::format_to(fColorPrefix, "[{}]", GetColoredSeverityString(fInfos.severity));
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}]", GetColoredSeverityString(fInfos.severity));
                         break;
                     case VSpec::Info::file_line_function:
-                        fmt::format_to(fColorPrefix, "[{}:{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line), ColorOut(Color::fgBlue, fInfos.func));
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}:{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line), ColorOut(Color::fgBlue, fInfos.func));
                         break;
                     case VSpec::Info::file_line:
-                        fmt::format_to(fColorPrefix, "[{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line));
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}:{}]", ColorOut(Color::fgBlue, fInfos.file), ColorOut(Color::fgYellow, fInfos.line));
                         break;
                     case VSpec::Info::file:
-                        fmt::format_to(fColorPrefix, "[{}]", ColorOut(Color::fgBlue, fInfos.file));
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}]", ColorOut(Color::fgBlue, fInfos.file));
                         break;
                     default:
                         break;
@@ -224,7 +225,7 @@ Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const
             }
 
             if (spec.fSize > 0) {
-                fmt::format_to(fColorPrefix, " ");
+                fmt::format_to(std::back_inserter(fColorPrefix), " ");
             }
         }
 
