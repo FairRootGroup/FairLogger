@@ -93,6 +93,7 @@ where severity level is one of the following:
 "debug2",
 "debug1",
 "debug",
+"detail",
 "info",
 "state",
 "warn",

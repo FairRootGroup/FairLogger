@@ -27,6 +27,7 @@ uint32_t printEverySeverity(uint32_t i)
     LOG(debug2)    << "debug2 message, counter: "    << i++;
     LOG(debug1)    << "debug1 message, counter: "    << i++;
     LOG(debug)     << "debug message, counter: "     << i++;
+    LOG(detail)    << "detail message, counter: "    << i++;
     LOG(info)      << "info message, counter: "      << i++;
     LOG(state)     << "state message, counter: "     << i++;
     LOG(warn)      << "warning message, counter: "   << i++;
