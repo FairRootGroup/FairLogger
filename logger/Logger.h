@@ -59,29 +59,30 @@ enum class Severity : int
     debug2 = 4,
     debug1 = 5,
     debug = 6,
-    info = 7,
-    state = 8,
-    warn = 9,
-    important = 10,
-    alarm = 11,
-    error = 12,
-    fatal = 13,
+    detail = 7,
+    info = 8,
+    state = 9,
+    warn = 10,
+    important = 11,
+    alarm = 12,
+    error = 13,
+    fatal = 14,
     // aliases
     warning = warn,
     // backwards-compatibility
-    NOLOG __attribute__((deprecated("Use LOG(nolog) instead (lowercase severity name)."))) = nolog,
-    FATAL __attribute__((deprecated("Use LOG(fatal) instead (lowercase severity name)."))) = fatal,
-    ERROR __attribute__((deprecated("Use LOG(error) instead (lowercase severity name)."))) = error,
-    WARN __attribute__((deprecated("Use LOG(warn) instead (lowercase severity name)."))) = warn,
+    NOLOG   __attribute__((deprecated("Use LOG(nolog) instead (lowercase severity name)."))) = nolog,
+    FATAL   __attribute__((deprecated("Use LOG(fatal) instead (lowercase severity name)."))) = fatal,
+    ERROR   __attribute__((deprecated("Use LOG(error) instead (lowercase severity name)."))) = error,
+    WARN    __attribute__((deprecated("Use LOG(warn) instead (lowercase severity name)."))) = warn,
     WARNING __attribute__((deprecated("Use LOG(warning) instead (lowercase severity name)."))) = warn,
-    STATE __attribute__((deprecated("Use LOG(state) instead (lowercase severity name)."))) = state,
-    INFO __attribute__((deprecated("Use LOG(info) instead (lowercase severity name)."))) = info,
-    DEBUG __attribute__((deprecated("Use LOG(debug) instead (lowercase severity name)."))) = debug,
-    DEBUG1 __attribute__((deprecated("Use LOG(debug1) instead (lowercase severity name)."))) = debug1,
-    DEBUG2 __attribute__((deprecated("Use LOG(debug2) instead (lowercase severity name)."))) = debug2,
-    DEBUG3 __attribute__((deprecated("Use LOG(debug3) instead (lowercase severity name)."))) = debug3,
-    DEBUG4 __attribute__((deprecated("Use LOG(debug4) instead (lowercase severity name)."))) = debug4,
-    TRACE __attribute__((deprecated("Use LOG(trace) instead (lowercase severity name)."))) = trace
+    STATE   __attribute__((deprecated("Use LOG(state) instead (lowercase severity name)."))) = state,
+    INFO    __attribute__((deprecated("Use LOG(info) instead (lowercase severity name)."))) = info,
+    DEBUG   __attribute__((deprecated("Use LOG(debug) instead (lowercase severity name)."))) = debug,
+    DEBUG1  __attribute__((deprecated("Use LOG(debug1) instead (lowercase severity name)."))) = debug1,
+    DEBUG2  __attribute__((deprecated("Use LOG(debug2) instead (lowercase severity name)."))) = debug2,
+    DEBUG3  __attribute__((deprecated("Use LOG(debug3) instead (lowercase severity name)."))) = debug3,
+    DEBUG4  __attribute__((deprecated("Use LOG(debug4) instead (lowercase severity name)."))) = debug4,
+    TRACE   __attribute__((deprecated("Use LOG(trace) instead (lowercase severity name)."))) = trace
 };
 
 // verbosity levels:
@@ -323,7 +324,7 @@ class Logger
 
     static const std::unordered_map<std::string, Verbosity> fVerbosityMap;
     static const std::unordered_map<std::string, Severity> fSeverityMap;
-    static const std::array<std::string, 14> fSeverityNames;
+    static const std::array<std::string, 15> fSeverityNames;
     static const std::array<std::string, 9> fVerbosityNames;
 
     // protection for use after static destruction took place

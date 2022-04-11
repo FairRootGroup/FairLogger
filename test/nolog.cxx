@@ -13,19 +13,20 @@ using namespace fair;
 
 void printEverySeverity()
 {
-    LOG(nolog)     << "nolog message, counter: ";
-    LOG(trace)     << "trace message, counter: ";
-    LOG(debug4)    << "debug4 message, counter: ";
-    LOG(debug3)    << "debug3 message, counter: ";
-    LOG(debug2)    << "debug2 message, counter: ";
-    LOG(debug1)    << "debug1 message, counter: ";
-    LOG(debug)     << "debug message, counter: ";
-    LOG(info)      << "info message, counter: ";
-    LOG(state)     << "state message, counter: ";
-    LOG(warn)      << "warning message, counter: ";
-    LOG(important) << "important message, counter: ";
-    LOG(alarm)     << "alarm message, counter: ";
-    LOG(error)     << "error message, counter: ";
+    LOG(nolog)     << "nolog message ";
+    LOG(trace)     << "trace message ";
+    LOG(debug4)    << "debug4 message ";
+    LOG(debug3)    << "debug3 message ";
+    LOG(debug2)    << "debug2 message ";
+    LOG(debug1)    << "debug1 message ";
+    LOG(debug)     << "debug message ";
+    LOG(detail)    << "detail message ";
+    LOG(info)      << "info message ";
+    LOG(state)     << "state message ";
+    LOG(warn)      << "warning message ";
+    LOG(important) << "important message ";
+    LOG(alarm)     << "alarm message ";
+    LOG(error)     << "error message ";
 }
 
 void silentlyPrintAllVerbositiesWithSeverity(Severity sev)

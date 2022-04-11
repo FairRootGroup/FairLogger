@@ -78,6 +78,7 @@ const unordered_map<string, Severity> Logger::fSeverityMap =
     { "STATE",     Severity::state     },
     { "info",      Severity::info      },
     { "INFO",      Severity::info      },
+    { "detail",    Severity::detail    },
     { "debug",     Severity::debug     },
     { "DEBUG",     Severity::debug     },
     { "debug1",    Severity::debug1    },
@@ -92,7 +93,7 @@ const unordered_map<string, Severity> Logger::fSeverityMap =
     { "TRACE",     Severity::trace     }
 };
 
-const array<string, 14> Logger::fSeverityNames =
+const array<string, 15> Logger::fSeverityNames =
 {
     {
         "NOLOG",
@@ -102,6 +103,7 @@ const array<string, 14> Logger::fSeverityNames =
         "DEBUG2",
         "DEBUG1",
         "DEBUG",
+        "DETAIL",
         "INFO",
         "STATE",
         "WARN",
@@ -291,6 +293,7 @@ string Logger::GetColoredSeverityString(Severity severity)
         case Severity::warn:      return "\033[01;33mWARN\033[0m";      break;
         case Severity::state:     return "\033[01;35mSTATE\033[0m";     break;
         case Severity::info:      return "\033[01;32mINFO\033[0m";      break;
+        case Severity::detail:    return "\033[01;32mDETAIL\033[0m";    break;
         case Severity::debug:     return "\033[01;34mDEBUG\033[0m";     break;
         case Severity::debug1:    return "\033[01;34mDEBUG1\033[0m";    break;
         case Severity::debug2:    return "\033[01;34mDEBUG2\033[0m";    break;
