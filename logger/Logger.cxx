@@ -66,6 +66,7 @@ const unordered_map<string, Severity> Logger::fSeverityMap =
 {
     { "nolog",     Severity::nolog     },
     { "NOLOG",     Severity::nolog     },
+    { "fatal",     Severity::fatal     },
     { "error",     Severity::error     },
     { "ERROR",     Severity::error     },
     { "alarm",     Severity::alarm     },
