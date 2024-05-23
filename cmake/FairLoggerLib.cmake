@@ -94,7 +94,7 @@ macro(set_fairlogger_defaults)
   endif()
 
   # Handle C++ standard level
-  set(PROJECT_MIN_CXX_STANDARD 14)
+  set(PROJECT_MIN_CXX_STANDARD 17)
   if(CMAKE_CXX_STANDARD LESS PROJECT_MIN_CXX_STANDARD)
     message(FATAL_ERROR "A minimum CMAKE_CXX_STANDARD of ${PROJECT_MIN_CXX_STANDARD} is required.")
   endif()

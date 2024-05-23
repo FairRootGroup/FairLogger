@@ -54,7 +54,7 @@ add_library(FairLogger
   logger/Logger.cxx
   logger/Logger.h
 )
-target_compile_features(FairLogger PUBLIC cxx_std_14)
+target_compile_features(FairLogger PUBLIC cxx_std_17)
 
 if(USE_BOOST_PRETTY_FUNCTION)
   target_link_libraries(FairLogger PUBLIC Boost::boost)
