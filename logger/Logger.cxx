@@ -6,6 +6,7 @@
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #include "Logger.h"
+#include <string_view>
 
 #if FMT_VERSION < 60000
 #include <fmt/time.h>
@@ -44,58 +45,58 @@ const string Logger::fProcessName = program_invocation_short_name;
 const string Logger::fProcessName = "?";
 #endif
 
-const unordered_map<string, Verbosity> Logger::fVerbosityMap =
+const unordered_map<string_view, Verbosity> Logger::fVerbosityMap =
 {
-    { "veryhigh", Verbosity::veryhigh },
-    { "high",     Verbosity::high     },
-    { "medium",   Verbosity::medium   },
-    { "low",      Verbosity::low      },
-    { "verylow",  Verbosity::verylow  },
-    { "VERYHIGH", Verbosity::veryhigh },
-    { "HIGH",     Verbosity::high     },
-    { "MEDIUM",   Verbosity::medium   },
-    { "LOW",      Verbosity::low      },
-    { "VERYLOW",  Verbosity::verylow  },
-    { "user1",    Verbosity::user1    },
-    { "user2",    Verbosity::user2    },
-    { "user3",    Verbosity::user3    },
-    { "user4",    Verbosity::user4    }
+    { {"veryhigh"}, Verbosity::veryhigh },
+    { {"high"},     Verbosity::high     },
+    { {"medium"},   Verbosity::medium   },
+    { {"low"},      Verbosity::low      },
+    { {"verylow"},  Verbosity::verylow  },
+    { {"VERYHIGH"}, Verbosity::veryhigh },
+    { {"HIGH"},     Verbosity::high     },
+    { {"MEDIUM"},   Verbosity::medium   },
+    { {"LOW"},      Verbosity::low      },
+    { {"VERYLOW"},  Verbosity::verylow  },
+    { {"user1"},    Verbosity::user1    },
+    { {"user2"},    Verbosity::user2    },
+    { {"user3"},    Verbosity::user3    },
+    { {"user4"},    Verbosity::user4    }
 };
 
-const unordered_map<string, Severity> Logger::fSeverityMap =
+const unordered_map<string_view, Severity> Logger::fSeverityMap =
 {
-    { "nolog",     Severity::nolog     },
-    { "NOLOG",     Severity::nolog     },
-    { "fatal",     Severity::fatal     },
-    { "FATAL",     Severity::fatal     },
-    { "error",     Severity::error     },
-    { "ERROR",     Severity::error     },
-    { "alarm",     Severity::alarm     },
-    { "important", Severity::important },
-    { "warn",      Severity::warn      },
-    { "WARN",      Severity::warn      },
-    { "warning",   Severity::warn      },
-    { "WARNING",   Severity::warn      },
-    { "state",     Severity::state     },
-    { "STATE",     Severity::state     },
-    { "info",      Severity::info      },
-    { "INFO",      Severity::info      },
-    { "detail",    Severity::detail    },
-    { "debug",     Severity::debug     },
-    { "DEBUG",     Severity::debug     },
-    { "debug1",    Severity::debug1    },
-    { "DEBUG1",    Severity::debug1    },
-    { "debug2",    Severity::debug2    },
-    { "DEBUG2",    Severity::debug2    },
-    { "debug3",    Severity::debug3    },
-    { "DEBUG3",    Severity::debug3    },
-    { "debug4",    Severity::debug4    },
-    { "DEBUG4",    Severity::debug4    },
-    { "trace",     Severity::trace     },
-    { "TRACE",     Severity::trace     }
+    { {"nolog"},     Severity::nolog     },
+    { {"NOLOG"},     Severity::nolog     },
+    { {"fatal"},     Severity::fatal     },
+    { {"FATAL"},     Severity::fatal     },
+    { {"error"},     Severity::error     },
+    { {"ERROR"},     Severity::error     },
+    { {"alarm"},     Severity::alarm     },
+    { {"important"}, Severity::important },
+    { {"warn"},      Severity::warn      },
+    { {"WARN"},      Severity::warn      },
+    { {"warning"},   Severity::warn      },
+    { {"WARNING"},   Severity::warn      },
+    { {"state"},     Severity::state     },
+    { {"STATE"},     Severity::state     },
+    { {"info"},      Severity::info      },
+    { {"INFO"},      Severity::info      },
+    { {"detail"},    Severity::detail    },
+    { {"debug"},     Severity::debug     },
+    { {"DEBUG"},     Severity::debug     },
+    { {"debug1"},    Severity::debug1    },
+    { {"DEBUG1"},    Severity::debug1    },
+    { {"debug2"},    Severity::debug2    },
+    { {"DEBUG2"},    Severity::debug2    },
+    { {"debug3"},    Severity::debug3    },
+    { {"DEBUG3"},    Severity::debug3    },
+    { {"debug4"},    Severity::debug4    },
+    { {"DEBUG4"},    Severity::debug4    },
+    { {"trace"},     Severity::trace     },
+    { {"TRACE"},     Severity::trace     }
 };
 
-const array<string, 15> Logger::fSeverityNames =
+const array<string_view, 15> Logger::fSeverityNames =
 {
     {
         "NOLOG",
@@ -116,7 +117,7 @@ const array<string, 15> Logger::fSeverityNames =
     }
 };
 
-const array<string, 9> Logger::fVerbosityNames =
+const array<string_view, 9> Logger::fVerbosityNames =
 {
     {
         "verylow",
@@ -144,12 +145,11 @@ map<Verbosity, VSpec> Logger::fVerbosities =
     { Verbosity::user4,    VSpec::Make(VSpec::Info::severity)                                                                                        }
 };
 
-Logger::Logger(Severity severity, Verbosity verbosity, const string& file, const string& line, const string& func)
+Logger::Logger(Severity severity, Verbosity verbosity, std::string_view file, std::string_view line, std::string_view func)
     : fTimeCalculated(false)
 {
     if (!fIsDestructed) {
         size_t pos = file.rfind("/");
-
         // fInfos.timestamp is filled conditionally
         // fInfos.us is filled conditionally
         fInfos.process_name = fProcessName;
