@@ -45,6 +45,7 @@
 #include <time.h> // time_t
 #include <type_traits> // is_same
 #include <unordered_map>
+#include <string_view>
 #include <utility> // pair
 
 namespace fair
@@ -175,19 +176,19 @@ struct LogMetaData
 {
     std::time_t timestamp;
     std::chrono::microseconds us;
-    std::string process_name;
-    std::string file;
-    std::string line;
-    std::string func;
-    std::string severity_name;
+    std::string_view process_name;
+    std::string_view file;
+    std::string_view line;
+    std::string_view func;
+    std::string_view severity_name;
     fair::Severity severity;
 };
 
 class Logger
 {
   public:
-    Logger(Severity severity, Verbosity verbosity, const std::string& file, const std::string& line, const std::string& func);
-    Logger(Severity severity, const std::string& file, const std::string& line, const std::string& func)
+    Logger(Severity severity, Verbosity verbosity, std::string_view file, std::string_view line, std::string_view func);
+    Logger(Severity severity, std::string_view file, std::string_view line, std::string_view func)
         : Logger(severity, fVerbosity, file, line, func)
     {}
     virtual ~Logger() noexcept(false);
@@ -244,7 +245,7 @@ class Logger
 
     static std::string startColor(Color color) { return fmt::format("\033[01;{}m", static_cast<int>(color)); }
     static std::string endColor() { return "\033[0m"; }
-    static std::string ColorOut(Color c, const std::string& s) { return fmt::format("\033[01;{}m{}\033[0m", static_cast<int>(c), s); }
+    static std::string ColorOut(Color c, std::string_view s) { return fmt::format("\033[01;{}m{}\033[0m", static_cast<int>(c), s); }
     static std::string GetColoredSeverityString(Severity severity);
 
     static void SetConsoleSeverity(const Severity severity);
@@ -285,8 +286,8 @@ class Logger
 
     static void RemoveFileSink();
 
-    static std::string SeverityName(Severity s) { return fSeverityNames.at(static_cast<size_t>(s)); }
-    static std::string VerbosityName(Verbosity v) { return fVerbosityNames.at(static_cast<size_t>(v)); }
+    static std::string_view SeverityName(Severity s) { return fSeverityNames.at(static_cast<size_t>(s)); }
+    static std::string_view VerbosityName(Verbosity v) { return fVerbosityNames.at(static_cast<size_t>(v)); }
 
     static void OnFatal(std::function<void()> func);
 
@@ -322,10 +323,10 @@ class Logger
     Logger& operator<<(std::ios_base& (*manip) (std::ios_base&));
     Logger& operator<<(std::ostream& (*manip) (std::ostream&));
 
-    static const std::unordered_map<std::string, Verbosity> fVerbosityMap;
-    static const std::unordered_map<std::string, Severity> fSeverityMap;
-    static const std::array<std::string, 15> fSeverityNames;
-    static const std::array<std::string, 9> fVerbosityNames;
+    static const std::unordered_map<std::string_view, Verbosity> fVerbosityMap;
+    static const std::unordered_map<std::string_view, Severity> fSeverityMap;
+    static const std::array<std::string_view, 15> fSeverityNames;
+    static const std::array<std::string_view, 9> fVerbosityNames;
 
     // protection for use after static destruction took place
     static bool fIsDestructed;
