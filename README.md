@@ -100,6 +100,7 @@ where severity level is one of the following:
 "important",
 "alarm",
 "error",
+"critical",
 "fatal",
 ```
 

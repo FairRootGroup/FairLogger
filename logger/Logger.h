@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (C) 2014-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  *
+ * Copyright (C) 2014-2025 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  *
  *                                                                              *
  *              This software is distributed under the terms of the             *
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
@@ -67,7 +67,8 @@ enum class Severity : int
     important = 11,
     alarm = 12,
     error = 13,
-    fatal = 14,
+    critical = 14,
+    fatal = 15,
     // aliases
     warning = warn,
     // backwards-compatibility
@@ -325,7 +326,7 @@ class Logger
 
     static const std::unordered_map<std::string_view, Verbosity> fVerbosityMap;
     static const std::unordered_map<std::string_view, Severity> fSeverityMap;
-    static const std::array<std::string_view, 15> fSeverityNames;
+    static const std::array<std::string_view, 16> fSeverityNames;
     static const std::array<std::string_view, 9> fVerbosityNames;
 
     // protection for use after static destruction took place
