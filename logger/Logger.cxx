@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (C) 2014-2019 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  *
+ * Copyright (C) 2014-2025 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH  *
  *                                                                              *
  *              This software is distributed under the terms of the             *
  *              GNU Lesser General Public Licence (LGPL) version 3,             *
@@ -69,6 +69,7 @@ const unordered_map<string_view, Severity> Logger::fSeverityMap =
     { {"NOLOG"},     Severity::nolog     },
     { {"fatal"},     Severity::fatal     },
     { {"FATAL"},     Severity::fatal     },
+    { {"critical"},  Severity::critical  },
     { {"error"},     Severity::error     },
     { {"ERROR"},     Severity::error     },
     { {"alarm"},     Severity::alarm     },
@@ -96,7 +97,7 @@ const unordered_map<string_view, Severity> Logger::fSeverityMap =
     { {"TRACE"},     Severity::trace     }
 };
 
-const array<string_view, 15> Logger::fSeverityNames =
+const array<string_view, 16> Logger::fSeverityNames =
 {
     {
         "NOLOG",
@@ -113,6 +114,7 @@ const array<string_view, 15> Logger::fSeverityNames =
         "IMPORTANT",
         "ALARM",
         "ERROR",
+        "CRITICAL",
         "FATAL"
     }
 };
@@ -289,6 +291,7 @@ string Logger::GetColoredSeverityString(Severity severity)
     switch (severity) {
         case Severity::nolog:     return "\033[01;39mNOLOG\033[0m";     break;
         case Severity::fatal:     return "\033[01;31mFATAL\033[0m";     break;
+        case Severity::critical:  return "\033[01;31mCRITICAL\033[0m";  break;
         case Severity::error:     return "\033[01;31mERROR\033[0m";     break;
         case Severity::alarm:     return "\033[01;33mALARM\033[0m";     break;
         case Severity::important: return "\033[01;32mIMPORTANT\033[0m"; break;

@@ -31,6 +31,7 @@ void printEverySeverity()
     LOG(important) << "important message, counter: " << i++;
     LOG(alarm)     << "alarm message, counter: "     << i++;
     LOG(error)     << "error message, counter: "     << i++;
+    LOG(critical)  << "critical message, counter: "  << i++;
     LOG(fatal)     << "fatal message, counter: "     << i++;
 }
 

@@ -27,6 +27,7 @@ void printEverySeverity()
     LOG(important) << "important message ";
     LOG(alarm)     << "alarm message ";
     LOG(error)     << "error message ";
+    LOG(critical)  << "critical message ";
 }
 
 void silentlyPrintAllVerbositiesWithSeverity(Severity sev)
