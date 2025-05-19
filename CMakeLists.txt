@@ -16,7 +16,7 @@ include(FairFindPackage2)
 
 get_git_version()
 
-project(FairLogger VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
+project(FairLogger VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 message(STATUS "${BWhite}${PROJECT_NAME}${CR} ${PROJECT_GIT_VERSION} from ${PROJECT_DATE}")
 
 set_fairlogger_defaults()
