@@ -433,8 +433,8 @@ inline std::ostream& operator<<(std::ostream& os, const Verbosity& v) { return o
             fair::Logger(fair::Severity::severity, fair::Verbosity::verbosity, MSG_ORIGIN)
 
 // Log with fmt- or printf-like formatting
-#define FAIR_LOGP(severity, ...) LOG(severity) << fmt::format(__VA_ARGS__)
-#define FAIR_LOGF(severity, ...) LOG(severity) << fmt::sprintf(__VA_ARGS__)
+#define FAIR_LOGP(severity, ...) FAIR_LOG(severity) << fmt::format(__VA_ARGS__)
+#define FAIR_LOGF(severity, ...) FAIR_LOG(severity) << fmt::sprintf(__VA_ARGS__)
 
 // Log an empty line
 #define FAIR_LOGN(severity) \
@@ -451,6 +451,6 @@ inline std::ostream& operator<<(std::ostream& os, const Verbosity& v) { return o
 #define FAIR_LOG_IF(severity, condition) \
     for (bool fairLOggerunLikelyvariable4 = false; !fair::Logger::SuppressSeverity(fair::Severity::severity) && !fairLOggerunLikelyvariable4; fairLOggerunLikelyvariable4 = true) \
         for (bool fairLOggerunLikelyvariable2 = false; condition && !fairLOggerunLikelyvariable2; fairLOggerunLikelyvariable2 = true) \
-            LOG(severity)
+            FAIR_LOG(severity)
 
 #endif // FAIR_LOGGER_H
