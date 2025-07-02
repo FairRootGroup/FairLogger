@@ -394,15 +394,15 @@ inline std::ostream& operator<<(std::ostream& os, const Verbosity& v) { return o
 #undef LOGV
 #define LOGV FAIR_LOGV
 #endif
-// allow user of this header file to prevent definition of the LOGF macro, by defining FAIR_NO_LOGF before including this header
-#ifndef FAIR_NO_LOGF
-#undef LOGF
-#define LOGF FAIR_LOGF
-#endif
 // allow user of this header file to prevent definition of the LOGP macro, by defining FAIR_NO_LOGP before including this header
 #ifndef FAIR_NO_LOGP
 #undef LOGP
 #define LOGP FAIR_LOGP
+#endif
+// allow user of this header file to prevent definition of the LOGF macro, by defining FAIR_NO_LOGF before including this header
+#ifndef FAIR_NO_LOGF
+#undef LOGF
+#define LOGF FAIR_LOGF
 #endif
 // allow user of this header file to prevent definition of the LOGN macro, by defining FAIR_NO_LOGN before including this header
 #ifndef FAIR_NO_LOGN
@@ -418,6 +418,16 @@ inline std::ostream& operator<<(std::ostream& os, const Verbosity& v) { return o
 #ifndef FAIR_NO_LOG_IF
 #undef LOG_IF
 #define LOG_IF FAIR_LOG_IF
+#endif
+// allow user of this header file to prevent definition of the LOGPD macro, by defining FAIR_NO_LOGPD before including this header
+#ifndef FAIR_NO_LOGPD
+#undef LOGPD
+#define LOGPD FAIR_LOGPD
+#endif
+// allow user of this header file to prevent definition of the LOGFD macro, by defining FAIR_NO_LOGFD before including this header
+#ifndef FAIR_NO_LOGFD
+#undef LOGFD
+#define LOGFD FAIR_LOGFD
 #endif
 
 // Log line if the provided severity is below or equals the configured one
@@ -435,6 +445,17 @@ inline std::ostream& operator<<(std::ostream& os, const Verbosity& v) { return o
 // Log with fmt- or printf-like formatting
 #define FAIR_LOGP(severity, ...) FAIR_LOG(severity) << fmt::format(__VA_ARGS__)
 #define FAIR_LOGF(severity, ...) FAIR_LOG(severity) << fmt::sprintf(__VA_ARGS__)
+
+// Log with fmt- or printf-like formatting (dynamic severity)
+#define FAIR_LOGPD(severity, ...) \
+    for (bool fairLOggerunLikelyvariable3 = false; !fair::Logger::SuppressSeverity(severity) && !fairLOggerunLikelyvariable3; fairLOggerunLikelyvariable3 = true) \
+        for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
+            fair::Logger(severity, MSG_ORIGIN) << fmt::format(__VA_ARGS__)
+
+#define FAIR_LOGFD(severity, ...) \
+    for (bool fairLOggerunLikelyvariable3 = false; !fair::Logger::SuppressSeverity(severity) && !fairLOggerunLikelyvariable3; fairLOggerunLikelyvariable3 = true) \
+        for (bool fairLOggerunLikelyvariable = false; fair::Logger::Logging(severity) && !fairLOggerunLikelyvariable; fairLOggerunLikelyvariable = true) \
+            fair::Logger(severity, MSG_ORIGIN) << fmt::sprintf(__VA_ARGS__)
 
 // Log an empty line
 #define FAIR_LOGN(severity) \
