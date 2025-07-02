@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        fedora: [38, 39, 40]
+        include:
+          - fedora: 38
+            gcc: 13
+          - fedora: 39
+            gcc: 13
+          - fedora: 40
+            gcc: 14
+
+    container: ghcr.io/fairrootgroup/fairmq-dev/fedora-${{ matrix.fedora }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install additional dependencies
+      run: |
+        dnf install -y fmt-devel || true
+
+    - name: Configure
+      run: |
+        cmake -B build -G Ninja \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DDISABLE_COLOR=ON \
+          -DUSE_EXTERNAL_FMT=ON \
+          -DUSE_BOOST_PRETTY_FUNCTION=ON
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Test
+      run: |
+        cd build
+        ctest -V --output-on-failure
+
+  build-macos:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-13, macos-14, macos-15]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Cache Homebrew packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/Library/Caches/Homebrew
+          /usr/local/Homebrew/Library/Taps
+        key: ${{ runner.os }}-${{ matrix.os }}-brew-${{ hashFiles('.github/workflows/ci.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.os }}-brew-
+
+    - name: Install dependencies
+      run: |
+        brew install cmake ninja boost fmt
+
+    - name: Configure
+      run: |
+        cmake -B build -G Ninja \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DDISABLE_COLOR=ON \
+          -DUSE_EXTERNAL_FMT=ON \
+          -DUSE_BOOST_PRETTY_FUNCTION=ON
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Test
+      run: |
+        cd build
+        ctest -V --output-on-failure
