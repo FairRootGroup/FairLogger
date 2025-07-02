@@ -68,9 +68,11 @@ A number of additional logging macros are provided:
 - `LOGV(severity, verbosity)` Log the line with the provided verbosity, e.g. `LOG(info, veryhigh) << "abcd";`
 - `LOGF(severity, ...)` The arguments are given to `fmt::printf`, which formats the string using a [printf syntax](https://fmt.dev/dev/api.html#printf-formatting) and the result is logged, e.g. `LOGF(info, "Hello %s!", "world");`
 - `LOGP(severity, ...)` The arguments are given to `fmt::format`, which formats the string using a [Python-like syntax](https://fmt.dev/dev/syntax.html) and the result is logged, e.g. `LOGP(info, "Hello {}!", "world");`
+- `LOGPD(severity, ...)` Same as `LOGP`, but accepts dynamic severity (runtime variable), e.g. `LOGPD(dynamicSeverity, "Hello {}!", "world");`
+- `LOGFD(severity, ...)` Same as `LOGF`, but accepts dynamic severity (runtime variable), e.g. `LOGFD(dynamicSeverity, "Hello %s!", "world");`
 - `LOGN(severity)` Logs an empty line, e.g. `LOGN(info);`
 - `LOG_IF(severity, condition)` Logs the line if the provided condition if true
-- `LOGD(severity, file, line, f)` Logs the line with the provided file, line and function parameters (only if the active verbosity allows it).
+- `LOGD(severity, file, line, f)` Logs the line with the provided file, line and function parameters (accepts severity as a variable), e.g. `LOGD(dynamicSeverity, "main.cpp", "42", "main");`
 
 ## 3. Severity
 
@@ -224,7 +226,7 @@ If only output from custom sinks is desirable, console/file sinks must be deacti
 
 ## Naming conflicts?
 
-By default, `<fairlogger/Logger.h>` defines unprefixed macros: `LOG`, `LOGV`, `LOGF`, `LOGP`, `LOGN`, `LOGD`, `LOG_IF`.
+By default, `<fairlogger/Logger.h>` defines unprefixed macros: `LOG`, `LOGV`, `LOGF`, `LOGP`, `LOGPD`, `LOGFD`, `LOGN`, `LOGD`, `LOG_IF`.
 
 Define an option `FAIR_NO_LOG*` to prevent the above unprefixed macros to be defined, e.g.
 

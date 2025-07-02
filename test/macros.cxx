@@ -51,6 +51,13 @@ int main()
         CheckOutput(ToStr(R"(^\[.*\]\[\d{2}:\d{2}:\d{2}\.\d{6}\]\[FATAL\]\[a:4:b\])", " c\n$"), []() {
             LOGD(Severity::fatal, "a", "4", "b") << "c";
         });
+
+        // Test dynamic severity macros
+        Logger::SetVerbosity(Verbosity::verylow);
+        Severity dynamicSeverity = Severity::fatal;
+
+        CheckOutput("^Hello dynamic world :-\\)!\n$", [&]() { LOGPD(dynamicSeverity, "Hello {} {}!", "dynamic world", ":-)"); });
+        CheckOutput("^Hello dynamic world :-\\)!\n$", [&]() { LOGFD(dynamicSeverity, "Hello %s %s!", "dynamic world", ":-)"); });
     } catch (runtime_error& rte) {
         cout << rte.what() << endl;
         return 1;
