@@ -15,6 +15,7 @@
 #endif
 
 #include <cstdio> // printf
+#include <ctime> // std::localtime
 #include <iostream>
 #include <iterator> // std::back_inserter
 
@@ -171,11 +172,11 @@ Logger::Logger(Severity severity, Verbosity verbosity, std::string_view file, st
                         break;
                     case VSpec::Info::timestamp_us:
                         FillTimeInfos();
-                        fmt::format_to(std::back_inserter(fBWPrefix), "[{:%H:%M:%S}.{:06}]", fmt::localtime(fInfos.timestamp), fInfos.us.count());
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{:%H:%M:%S}.{:06}]", *std::localtime(&fInfos.timestamp), fInfos.us.count());
                         break;
                     case VSpec::Info::timestamp_s:
                         FillTimeInfos();
-                        fmt::format_to(std::back_inserter(fBWPrefix), "[{:%H:%M:%S}]", fmt::localtime(fInfos.timestamp));
+                        fmt::format_to(std::back_inserter(fBWPrefix), "[{:%H:%M:%S}]", *std::localtime(&fInfos.timestamp));
                         break;
                     case VSpec::Info::severity:
                         fmt::format_to(std::back_inserter(fBWPrefix), "[{}]", fInfos.severity_name);
@@ -207,11 +208,11 @@ Logger::Logger(Severity severity, Verbosity verbosity, std::string_view file, st
                         break;
                     case VSpec::Info::timestamp_us:
                         FillTimeInfos();
-                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), fInfos.us.count(), endColor());
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}{:%H:%M:%S}.{:06}{}]", startColor(Color::fgCyan), *std::localtime(&fInfos.timestamp), fInfos.us.count(), endColor());
                         break;
                     case VSpec::Info::timestamp_s:
                         FillTimeInfos();
-                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), fmt::localtime(fInfos.timestamp), endColor());
+                        fmt::format_to(std::back_inserter(fColorPrefix), "[{}{:%H:%M:%S}{}]", startColor(Color::fgCyan), *std::localtime(&fInfos.timestamp), endColor());
                         break;
                     case VSpec::Info::severity:
                         fmt::format_to(std::back_inserter(fColorPrefix), "[{}]", GetColoredSeverityString(fInfos.severity));
