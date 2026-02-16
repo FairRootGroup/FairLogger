@@ -83,3 +83,25 @@ jobs:
       run: |
         cd build
         ctest -V --output-on-failure
+
+  build-macos-self-hosted:
+    runs-on: macOS_15.7
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure
+      run: |
+        cmake -B build -G Ninja \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DDISABLE_COLOR=ON \
+          -DUSE_EXTERNAL_FMT=ON \
+          -DUSE_BOOST_PRETTY_FUNCTION=ON
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Test
+      run: |
+        cd build
+        ctest -V --output-on-failure
