@@ -244,9 +244,10 @@ class Logger
         bgWhite        = 107
     };
 
-    static std::string startColor(Color color) { return fmt::format("\033[01;{}m", static_cast<int>(color)); }
+    static std::string startColor(Color color) { return fmt::format(fmt::runtime("\033[01;{}m"), static_cast<int>(color)); }
+
     static std::string endColor() { return "\033[0m"; }
-    static std::string ColorOut(Color c, std::string_view s) { return fmt::format("\033[01;{}m{}\033[0m", static_cast<int>(c), s); }
+    static std::string ColorOut(Color c, std::string_view s) { return fmt::format(fmt::runtime("\033[01;{}m{}\033[0m"), static_cast<int>(c), s); }
     static std::string GetColoredSeverityString(Severity severity);
 
     static void SetConsoleSeverity(const Severity severity);
