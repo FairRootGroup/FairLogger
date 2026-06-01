@@ -14,7 +14,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(FairLoggerLib)
 include(FairFindPackage2)
 
-get_git_version()
+get_git_version(DEFAULT_VERSION ${PROJECT_VERSION})
 
 project(FairLogger VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 message(STATUS "${BWhite}${PROJECT_NAME}${CR} ${PROJECT_GIT_VERSION} from ${PROJECT_DATE}")
